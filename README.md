@@ -86,7 +86,7 @@ git merge feature/be/user/login
 
 - `gitlab` 의 푸시알림 확인
 - `merge request` 만들기
-- 내용 입력 후 `delete branch after merge request` 체크되어있는지 확인
+- 내용 입력 후 `delete branch after merge request` 체크되어있는지 확인, **체크 해제**
 - `merge` 
 
 ##### 10. develop branch pull
