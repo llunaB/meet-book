@@ -66,14 +66,14 @@ git push origin feature/be/user/login
 - 방법 1 : `feature branch` 에서 `develop branch` 로 `push` 
 
 ```bash
-# [ feature ]
+# feature 
 git push origin develop
 ```
 
 - 방법 2 : `develop branch` 에서 `feature branch` 를 `merge` 
 
 ```bash
-# [ develop ]
+# develop 
 git merge feature/be/user/login
 ```
 
