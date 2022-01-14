@@ -53,7 +53,9 @@ git pull origin develop
 ```bash
 git add .
 git commit -m "feat: profile-history schrollbar add"
-git push origin develop
+
+# push 와 동시에 remote branch 생성
+git push --set-upstream origin feature/be/user/login
 ```
 
 ##### 7. feature branch 에서 개발 진행
