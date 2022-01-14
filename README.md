@@ -56,11 +56,13 @@ git commit -m "feat: profile-history schrollbar add"
 git push origin feature/be/user/login
 ```
 
-##### 7. merge request 진행
+##### 7. feature branch 에서 개발 진행
 
-- `assignee` 와 `reviewer`는 필요시 등록합니다.
+- `convention` 참고
 
 ##### 8. develop branch에 merge 진행
+- `assignee` 와 `reviewer`는 필요시 등록합니다.
+
 - 방법 1 : `feature branch` 에서 `develop branch` 로 `push` 
 
 ```bash
