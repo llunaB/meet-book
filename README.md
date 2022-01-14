@@ -61,20 +61,18 @@ git push origin feature/be/user/login
 - `assignee` 와 `reviewer`는 필요시 등록합니다.
 
 ##### 8. develop branch에 merge 진행
-
-- branch 가 `develop` 인지 확인하고 진행!
-- 방법 1 : `develop branch` 에서 `feature branch` 를 `merge` 
-
-```bash
-# [ develop ]
-git merge feature/be/user/login
-```
-
-- 방법 2 : `feature branch` 에서 `develop branch` 로 `push` 
+- 방법 1 : `feature branch` 에서 `develop branch` 로 `push` 
 
 ```bash
 # [ feature ]
 git push origin develop
+```
+
+- 방법 2 : `develop branch` 에서 `feature branch` 를 `merge` 
+
+```bash
+# [ develop ]
+git merge feature/be/user/login
 ```
 
 ##### 9. merge request 작성
