@@ -48,19 +48,24 @@ git pull origin develop
 
 ##### 6. 개발 후 add - commit - push 진행
 
-- 일반적으로는 `develop` 브랜치에 바로 `push` 하지만,  ssafy project에서는 진행사항 확인을 위해  `feat branch` 도 `remote` 에 올립니다.
+- 일반적으로는 `develop` 브랜치에 바로 `push` 하지만,  ssafy project에서는 진행사항 확인을 위해  `feature branch` 도 `remote` 에 올립니다.
 
+```bash
+git add .
+git commit -m "feat: profile-history schrollbar add"
+git push origin develop
+```
+
+##### 7. feature branch 에서 개발 진행
+
+- `convention` 참고
 ```bash
 git add .
 git commit -m "feat: profile-history schrollbar add"
 git push origin feature/be/user/login
 ```
 
-##### 7. feature branch 에서 개발 진행
-
-- `convention` 참고
-
-##### 8. develop branch에 merge 진행
+##### 8. 테스트까지 진행 후 develop branch에 merge 진행
 - `assignee` 와 `reviewer`는 필요시 등록합니다.
 
 - 방법 1 : `feature branch` 에서 `develop branch` 로 `push` 
