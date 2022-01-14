@@ -86,3 +86,7 @@ git push origin develop
 
 ##### 10. develop branch pull
 - `pull` 은 매번 해주기
+```bash
+git pull origin develop
+```
+
