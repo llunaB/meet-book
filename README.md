@@ -3,3 +3,5 @@ kdh = 권도혁
 develop 브랜치
 test
 
+Assign
+Review 설정
