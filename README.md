@@ -63,7 +63,7 @@ git push origin feature/be/user/login
 ##### 8. develop branch에 merge 진행
 
 - branch 가 `develop` 인지 확인하고 진행!
-- 방법 1 : `develop branch` 에서` feature branch` 를 `merge` 
+- 방법 1 : `develop branch` 에서 `feature branch` 를 `merge` 
 
 ```bash
 # [ develop ]
@@ -83,3 +83,6 @@ git push origin develop
 - `merge request` 만들기
 - 내용 입력 후 `delete branch after merge request` 체크되어있는지 확인
 - `merge` 
+
+##### 10. develop branch pull
+- `pull` 은 매번 해주기
