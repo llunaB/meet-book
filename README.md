@@ -18,7 +18,7 @@ feat: profile-history schrollbar add
 ##### 1. git clone
 
 ```bash
-git clone https://lab.ssafy.com/s06-webmobile1-sub1/S06P11A206.git
+git clone https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A206.git
 ```
 
 ##### 2. develop 브랜치로 이동
