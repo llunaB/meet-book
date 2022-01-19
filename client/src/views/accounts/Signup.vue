@@ -4,43 +4,34 @@
         <div class="col-lg-4 col-md-6 col-sm-8 mx-auto">
           <!-- 회원가입 전체 Form Start-->
           <div class="card flex-grid signup">
-            <main>
-              <h2>Sign Up</h2>
-            </main>
-            <form class="form-group">
+            <main><h2>Sign Up</h2></main>
+            <form class="form-group my-2">
               <!-- username 회원가입 Form -->
-              <div class="field text-start" id="username-signup-form">
-                <label for="username-signup">Username</label>
-                <input type="text" v-model="state.username" class="form-control" placeholder="Username" id="username-signup" required>
-              </div>
+              <v-text-field
+                type="text" label="Username" hide-details="auto"
+                v-model="username" id="username-login" required/>
               <!-- Email 회원가입 Form -->
-              <div class="field text-start" id="email-signup-form">
-                <label for="email-signup">Email</label>
-                <input type="email" v-model="state.email" class="form-control" placeholder="Email" id="email-signup" required>
-              </div>
+              <v-text-field
+                type="email" label="Email" hide-details="auto"
+                v-model="useremail" id="useremail-login" required/>
               <!-- Password 회원가입 Form -->
-              <div class="field text-start" id="password-signup-form">
-                <label for="password-signup">Password</label>
-                <input type="password" v-model="state.password" class="form-control" placeholder="Password" id="password-signup" required>
-              </div>
+              <v-text-field
+                type="password" label="Password" hide-details="auto"
+                v-model="password" id="password-login" required/>
               <!-- PasswordConfirm 회원가입 Form -->
-              <div class="field text-start" id="password-signup-confirm-form">
-                <label for="password-signup-confirm">Password Confirm</label>
-                <input type="password" v-model="state.passwordConfirm" class="form-control" placeholder="Password Confirm" id="password-signupconfirm-" required>
-              </div>
-              <p>{{ state }}</p>
+              <v-text-field
+                type="password" label="passwordConfirm" hide-details="auto"
+                v-model="passwordConfirm" id="passwordConfirm-login" required/>
               <!-- 회원가입 제출 버튼 -->
               <div class="field" id="submit-signup-form">
-                <button type="submit" class="btn btn-dark action-button expand-right">Submit</button><br>
+                <v-btn type="submit" class="primary" @click="login">Submit</v-btn>
+                <br>
                 <a role="link" :href="'Login'">Already have an account?</a>
               </div>
             </form>
             <!-- 소셜 회원가입 전체 Form Start-->
             <form class="social-form-group">
               <div class="hr-sect">Sign Up With</div>
-              <vue-feather type="chrome" class="m-3"></vue-feather>
-              <vue-feather type="github" class="m-3"></vue-feather>
-              <vue-feather type="facebook" class="m-3"></vue-feather>
             </form>
             <!-- 소셜 회원가입 전체 Form End -->
           </div>
@@ -51,18 +42,15 @@
 </template>
 
 <script>
-import { reactive } from '@vue/reactivity'
 export default {
  name: 'Signup',
- setup() {
-     const state = reactive({
-         username: '',
-         email: '',
-         password: '',
-         passwordConfirm: '',
-     })
-
-     return { state }
+ data() {
+   return{
+    username: null,
+    useremail: null,
+    password: null,
+    passwordConfirm: null,
+  }
  }
 
 }
@@ -102,10 +90,9 @@ p {
   -webkit-backdrop-filter: blur(12px);
 }
 
-.signup-page {
+/* .signup-page {
   align-items: center;
-  /* background-color: black; */
-}
+} */
 
 .hr-sect {
 	display: flex;
