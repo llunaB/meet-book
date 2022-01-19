@@ -36,8 +36,8 @@
         <v-text-field
           v-model="date"
           label="회의 일시"
-          :rules="[v => !!v || '날짜를 설정해주세요.']"
-          readonly
+          :rules="dateRules"
+          
           v-bind="attrs"
           v-on="on"
         ></v-text-field>
@@ -46,6 +46,8 @@
         v-model="date"
         @input="menu2 = false"
         :min="nowDate"
+        locale="ko"
+        no-title
       ></v-date-picker>
     </v-menu>
 
@@ -134,7 +136,10 @@ export default {
       date_menu: false,
       date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
       nowDate: new Date().toISOString().slice(0,10),
-
+      dateRules: [
+        v => !!v || '날짜를 설정해주세요.',
+        // v => v - this.nowDate < 0 || '오늘 이후의 날짜를 설정해주세요.',
+      ],
       conf_question: null,
       conf_answer: null,
 
