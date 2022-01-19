@@ -6,6 +6,7 @@ import Signup from '@/views/accounts/Signup'
 import ConferenceIndex from '@/views/conference/ConferenceIndex'
 import Profile from '@/views/accounts/Profile'
 import ConferenceMeeting from '@/views/conference/ConferenceMeeting'
+import Search from '@/views/Search'
 
 Vue.use(VueRouter)
 
@@ -54,7 +55,11 @@ const routes = [
     name: 'Bookinfo',
     component: () => import('@/views/Bookinfo')
   },
-
+  {
+    path: '/search/:type',
+    name: 'Search',
+    component: Search
+  },
 ]
 
 const router = new VueRouter({

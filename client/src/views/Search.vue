@@ -8,7 +8,7 @@
       </v-tabs>
     </v-row>
     <v-row>
-      <v-col>
+      <v-col class="col-9">
         <v-tabs-items>
           <v-tab-item
             v-for="i in 3"
@@ -18,8 +18,9 @@
 
         </v-tabs-items>
       </v-col>
-      <v-col>
-
+      <v-col class="col-3">
+        <p>"{{ keyword }}"에 대해 {{searchType}}로 검색한 결과입니다.</p>
+        <p>{{ $route.query.title}}</p>
       </v-col>
     </v-row>
   </div>
@@ -28,7 +29,12 @@
 <script>
 export default {
   name: 'Search',
-
+  data: function () {
+    return {
+      searchType: this.$route.params.type,
+      keyword: this.$route.query.keyword
+    }
+  },
 }
 </script>
 
