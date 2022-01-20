@@ -9,7 +9,11 @@
         </div>
         <div class="col-8">
           <h1>{{ book.title }}</h1>
-          <p>책 설명~</p>
+          <h3>{{ book.author }}</h3>
+          <h5 class="text-right">{{ book.publisher }} | {{ book.pubdate }}</h5>
+          <v-divider light class="my-5" />
+          <p class="caption text--secondary">{{ book.isbn }}</p>
+          <p>{{ book.contents }}</p>
         </div>
       </div>
     </div>
