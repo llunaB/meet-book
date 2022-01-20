@@ -1,14 +1,13 @@
 import axios from "axios"
 
-const API_URL = 'localhost:8080/api/auth/'
+const API_URL = 'localhost:8080/accounts/'
 
 class AuthService {
     login(user) {
-        return axios.post(API_URL + 'login', {
+        return axios.post(API_URL + 'api-token-auth/', {
             useremail: user.useremail,
             password: user.password
         })
-        .then(this.handleResponse)
         .then(res => {
             if (res.data.accessToken) {
                 localStorage.setItem('user', JSON.stringify(res.data))
@@ -17,18 +16,17 @@ class AuthService {
         })
     }
     logout (){
-        localStorage.removeItem('jwt')
+        localStorage.removeItem('user')
     }
-    handleResponse (res){
-        if (res.status === 401){
-            this.logout()
-            location.reload(true)
-    
-            const error = res.data && res.data.message
-            return Promise.reject(error)
-        }
-        return Promise.resolve(res)
-    }
+
+    register(user) {
+        return axios.post(API_URL + "signup/", {
+          username: user.username,
+          password: user.password,
+          passwordConfirmation: user.passwordConfirm,
+          email: user.email,
+        })
+      }
 }
 
 export default new AuthService()

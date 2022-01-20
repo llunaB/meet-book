@@ -11,15 +11,15 @@
               <!-- Email 로그인 Form -->
               <v-text-field
                 type="email" label="Email" hide-details="auto"
-                v-model="useremail" id="useremail-login" required/>
+                v-model="user.useremail" id="useremail-login" required/>
               <br>
               <!-- Password 로그인 Form -->
               <v-text-field
                 type="password" label="Password" hide-details="auto"
-                v-model="password" id="passwordLogin" required/>
+                v-model="user.password" id="passwordLogin" required/>
               <!-- 로그인 제출 버튼 -->
               <div class="field" id="submit-login-form">
-                <v-btn type="submit" class="primary" @click="loginSubmit">Submit</v-btn>
+                <v-btn type="submit" class="primary" @click="handleLogin">Submit</v-btn>
                 <br>
                 <p>Don't have an accounts? <a role="link" :href="'signup'">Sign Up</a></p>
                 <p><a href="#">Forgot your Password?</a></p>
@@ -41,7 +41,7 @@
 </template>
 
 <script>
-
+import User from '@/api/users.js'
 // const storage = window.sessionStorage
 
 
@@ -49,18 +49,51 @@ export default {
     name: 'Login',
     data() {
       return {
-          useremail: null,
-          password: null,
+        user: new User('', ''),
+        loading: false,
+      }
+    },
+    computed: {
+      loggedIn() {
+        return this.$store.state.auth.status.loggedIn
+      }
+    },
+    mounted() {
+      if (this.loggedIn) {
+        this.$router.push({name: 'Home'})
       }
     },
     methods: {
-      loginSubmit() {
-        this.$store.dispatch(
-          'login', {
-            useremail: this.useremail,
-            password: this.password
-        }).then(() => {this.$router.push({name: 'Home'})})
-      },
+      handleLogin() {
+        this.loading = true
+
+        if (this.user.useremail && this.user.password) {
+          this.$store.dispatch('auth/login', this.user).then(
+            () => {
+              this.$router.push({name: "Login"})
+            }).catch(error => {
+              console.log(this.user)
+              this.loading = false
+              console.log(error)
+            })
+        }
+      }
+    },
+
+
+
+
+
+
+
+    // methods: {
+    //   loginSubmit() {
+    //     this.$store.dispatch(
+    //       'login', {
+    //         useremail: this.useremail,
+    //         password: this.password
+    //     }).then(() => {this.$router.push({name: 'Home'})})
+    //   },
       // 
         // login() {
         //     storage.setItem('jwt-auth-token', '')
@@ -81,7 +114,7 @@ export default {
         //         console.log('fail' + e.message)
         //     })
         // }
-    }
+    // }
 }
 </script>
 

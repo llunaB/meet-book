@@ -1,8 +1,8 @@
 import AuthService from "../services/auth.service"
 
-const user = JSON.parse(localStorage.getItem('jwt'))
+const user = JSON.parse(localStorage.getItem('user'))
 const initialState = user ? {status: { logedIn: true }, user }
-: {status: { logedIn: false}, user: null }
+                        : {status: { logedIn: false}, user: null }
 
 export const auth = {
     namespace: true,
@@ -13,12 +13,9 @@ export const auth = {
                 user => {
                     commit('loginSuccess', user)
                     return Promise.resolve(user)
-                },
-                e => {
+                }).catch(e => {
                     commit('loginFailure')
-                    return Promise.reject(e.response.data)
-                }
-            )
+                    return Promise.reject(e.response.data)})
         },
         logout({ commit }) {
             AuthService.logout()
@@ -28,34 +25,30 @@ export const auth = {
             return AuthService.register(user).then(
                 res => {
                     commit('registerSuccess')
-                    console.log(res)
                     return Promise.resolve(res.data)
-                },
-                e => {
+                }).catch(e => {
                     commit('registerFailure')
-                    return Promise.reject(e.response.data)
-                }
-            )
+                    return Promise.reject(e)})
         }
     },
     mutations: {
         loginSuccess(state, user) {
-            state.status = { logedIn: true },
+            state.status.logedIn = true,
             state.user = user
         },
         loginFailure(state) {
-            state.status = {},
+            state.status.logedIn = false,
             state.user = null
         },
         logout(state) {
-            state.status = {},
+            state.status.logedIn = false,
             state.user = null
         },
         registerSuccess(state) {
-            state.status = {}
+            state.status.logedIn = false
         },
         registerFailure(state) {
-            state.status = {}
+            state.status.logedIn = false
         }
     }
 }
