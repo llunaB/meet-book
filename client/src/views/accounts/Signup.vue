@@ -30,8 +30,13 @@
               </div>
             </form>
             <!-- 소셜 회원가입 전체 Form Start-->
-            <form class="social-form-group">
+            <form class="social-form-group items-align-center">
               <div class="hr-sect">Sign Up With</div>
+              <div class="container row text-center">
+                <a href="#" class="text-decoration-none col"><v-icon>mdi-github</v-icon></a>
+                <a href="#" class="text-decoration-none col"><v-icon>mdi-google</v-icon></a>
+                <a href="#" class="text-decoration-none col"><v-icon>mdi-facebook</v-icon></a>
+              </div>
             </form>
             <!-- 소셜 회원가입 전체 Form End -->
           </div>

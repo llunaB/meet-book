@@ -26,12 +26,14 @@
               </div>
             </form>
             <!-- 소셜 로그인 전체 Form Start-->
-            <!-- <form class="social-form-group">
+            <form class="social-form-group">
               <div class="hr-sect">Log In With</div>
-              <i icon="brands facebook" />
-              <font-awesome-icon icon="fa-brands fa-google" />
-              <font-awesome-icon icon="fa-brands fa-github" />
-            </form> -->
+              <div class="container row text-center">
+                <a href="#" class="text-decoration-none col"><v-icon>mdi-github</v-icon></a>
+                <a href="#" class="text-decoration-none col"><v-icon>mdi-google</v-icon></a>
+                <a href="#" class="text-decoration-none col"><v-icon>mdi-facebook</v-icon></a>
+              </div>
+            </form>
             <!-- 소셜 로그인 전체 Form End -->
           </div>
             <!-- 로그인 전체 Form End -->

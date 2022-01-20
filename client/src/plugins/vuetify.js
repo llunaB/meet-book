@@ -11,8 +11,4 @@ library.add(fas) // Include needed icons
 
 Vue.use(Vuetify)
 
-export default new Vuetify({
-  icons: {
-    iconfont: 'faSvg',
-  },
-})
+export default new Vuetify()
