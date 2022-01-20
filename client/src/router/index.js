@@ -37,7 +37,13 @@ const routes = [
     path: '/profile',
     name: 'Profile',
     component: Profile
+  },
+  {
+    path: '/book/:id',
+    name: 'Bookinfo',
+    component: () => import('@/views/Bookinfo')
   }
+
 ]
 
 const router = new VueRouter({
