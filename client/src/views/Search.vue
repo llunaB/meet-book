@@ -2,9 +2,12 @@
   <div>
     <v-row class="searchtabs">
       <v-tabs>
-        <v-tab>회의</v-tab>
-        <v-tab>도서</v-tab>
-        <v-tab>사용자</v-tab>
+        <v-tab
+          :to="`conf?keyword=${keyword}`">회의</v-tab>
+        <v-tab
+          :to="`book?keyword=${keyword}`">도서</v-tab>
+        <v-tab
+          :to="`users?keyword=${keyword}`">사용자</v-tab>
       </v-tabs>
     </v-row>
     <v-row>
