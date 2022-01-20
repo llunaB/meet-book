@@ -80,7 +80,7 @@
       <v-list>
         <v-list-item
           v-for="(item, index) in profileMenuItems" :key="index">
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
+          <a href="item.to"><v-list-item-title>{{ item.title }}</v-list-item-title></a>
         </v-list-item>
       </v-list>
     </v-menu>

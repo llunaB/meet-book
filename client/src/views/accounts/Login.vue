@@ -7,7 +7,7 @@
             <main>
               <h2>Sign In</h2>
             </main>
-            <form class="form-group my-3">
+            <form class="form-group my-3" @submit.prevent="handleLogin">
               <!-- Email 로그인 Form -->
               <v-text-field
                 type="email" label="Email" hide-details="auto"
@@ -19,7 +19,7 @@
                 v-model="user.password" id="passwordLogin" required/>
               <!-- 로그인 제출 버튼 -->
               <div class="field" id="submit-login-form">
-                <v-btn type="submit" class="primary" @click="handleLogin">Submit</v-btn>
+                <v-btn type="submit" class="primary">Submit</v-btn>
                 <br>
                 <p>Don't have an accounts? <a role="link" :href="'signup'">Sign Up</a></p>
                 <p><a href="#">Forgot your Password?</a></p>
@@ -72,7 +72,7 @@ export default {
         if (this.user.useremail && this.user.password) {
           this.$store.dispatch('auth/login', this.user).then(
             () => {
-              this.$router.push({name: "Login"})
+              this.$router.push({name: "Home"})
             }).catch(error => {
               console.log(this.user)
               this.loading = false
