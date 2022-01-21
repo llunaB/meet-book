@@ -40,6 +40,9 @@
                 <p>아직 이 책에 대해 이야기 나눈 사람이 없어요!</p>
               </div>
             </div>
+            <div v-else>
+              <ProfileSmallcard v-for="(person, idx) in people" :key="idx" :person="person" />
+            </div>
         </div>
       </div>
     </div>
@@ -50,10 +53,11 @@
 const BASE_URL = ''
 import axios from 'axios'
 import ConferenceSlide from '@/components/home/ConferenceSlide'
+import ProfileSmallcard from '@/components/ProfileSmallcard'
 export default {
   name: "Bookinfo",
   components: {
-    ConferenceSlide,
+    ConferenceSlide, ProfileSmallcard,
   },
   data: function () {
     return {
@@ -80,7 +84,14 @@ export default {
 
       ],
       people: [
-
+        {id: 1,
+        nickname: '닉네임',
+        email: 'email@mail.com',
+        profile_image: ''},
+        {id: 2,
+        nickname: '다른사람',
+        email: 'wow@logemailaddress.com',
+        profile_image: ''},
       ],
     }
   },
