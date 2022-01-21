@@ -20,20 +20,22 @@
       <div class="row mt-5">
         <div class="col-12">
           <h3>{{ book.title }}을 읽은/읽을 모임</h3> <br>
-          <ConferenceSlide v-if="conferences" :conferences="conferences" />
 
-          <div>
+          <div v-if="conferences.length == 0">
             <div class="text-center">
               <p>아직 이 책에 관한 모임이 없어요!</p>
               <router-link to="#">지금 이 책 모임 만들기</router-link>
             </div>
           </div>
+
+          <ConferenceSlide v-else :conferences="conferences" />
+
         </div>
       </div>
       <div class="row mt-5">
         <div class="col-12">
           <h3>{{ book.title }}을 읽은 사람들</h3> <br>
-            <div>
+            <div v-if="people.length == 0">
               <div class="text-center">
                 <p>아직 이 책에 대해 이야기 나눈 사람이 없어요!</p>
               </div>
@@ -65,7 +67,19 @@ export default {
         pubdate: '2000',
         thumbnail_url: 'https://image.aladin.co.kr/product/25975/45/cover/k682737225_1.jpg',
       },
+      // conferences: [{"id":1, "title":"오이디푸스", "thumbnail":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"Welcome","isActive":true},
+      //   {"id":2, "title":"정의란 무엇인가", "thumbnail":"https://image.yes24.com/goods/15156691/XL", "description":"welcome2","isActive":true},
+      //   {"id":3, "title":"오이디푸스", "thumbnail":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"Welcome","isActive":true},
+      //   {"id":4, "title":"정의란 무엇인가", "thumbnail":"https://image.yes24.com/goods/15156691/XL", "description":"welcome2","isActive":false},
+      //   {"id":5, "title":"오이디푸스", "thumbnail":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"Welcome", "isActive":false},
+      //   {"id":6, "title":"정의란 무엇인가", "thumbnail":"https://image.yes24.com/goods/15156691/XL", "description":"welcome2", "isActive":false},
+      //   {"id":7, "title":"오이디푸스", "thumbnail":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"Welcome", "isActive":false},
+      //   {"id":8, "title":"정의란 무엇인가", "thumbnail":"https://image.yes24.com/goods/15156691/XL", "description":"welcome2", "isActive":false},
+      // ],
       conferences: [
+
+      ],
+      people: [
 
       ],
     }
