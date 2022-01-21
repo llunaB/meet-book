@@ -2,11 +2,7 @@
   <v-app>
     <Navbar />
     <v-main>
-<<<<<<< HEAD
-      <v-container>
-=======
       <v-container fluid>
->>>>>>> cb53a0f (feat: add create conference)
         <router-view/>
       </v-container>
     </v-main>

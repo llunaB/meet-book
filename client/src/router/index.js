@@ -9,6 +9,9 @@ import ConferenceMeeting from '@/views/conference/ConferenceMeeting'
 import Search from '@/views/Search'
 import Settings from "@/views/accounts/Settings";
 
+
+import CreateConference from '@/views/CreateConference'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -60,6 +63,11 @@ const routes = [
     path: '/search/:type',
     name: 'Search',
     component: Search
+  },
+  {
+    path: '/conference/new',
+    name: 'CreateConference',
+    component: CreateConference
   },
 ]
 
