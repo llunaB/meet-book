@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,17 +20,34 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.DTO.ConferenceDTO;
 import com.ssafy.DTO.LoginReqDTO;
 import com.ssafy.DTO.UserDTO;
+import com.ssafy.domain.user.UserService;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
+	private UserService service;
+	
+	@Autowired
+	public UserController(UserService service) {
+		this.service = service;
+	}
 	
 	@PostMapping("/signup")
 	public ResponseEntity<Map<String, String>> signup(@RequestBody UserDTO user){
-		
 		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("message", "회원가입 성공");
-		return new ResponseEntity<Map<String,String>>(map, HttpStatus.CREATED);
+		
+		if(service.createUser(user.getEntity())) {
+			System.out.println("user created");
+			map.put("message", "회원가입 성공");
+
+		}else {
+			System.out.println("fail user created");
+			map.put("message", "회원가입 실패");
+
+		}
+		
+		
+		return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
 	}
 	
 	@PostMapping("/login")
