@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '@/views/Home'
 import Login from '@/views/accounts/Login'
 import Signup from '@/views/accounts/Signup'
+import Profile from '@/views/accounts/Profile'
 
 Vue.use(VueRouter)
 
@@ -30,6 +31,11 @@ const routes = [
     name: 'Signup',
     component: Signup
   },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile
+  }
 ]
 
 const router = new VueRouter({

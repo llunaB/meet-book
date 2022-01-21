@@ -9,19 +9,23 @@
               <!-- username 회원가입 Form -->
               <v-text-field
                 type="text" label="Username" hide-details="auto"
-                v-model="user.username" id="username-login" required/>
+                v-model="user.username" id="username-signup" required/>
+              <!-- nickname 회원가입 Form -->
+              <v-text-field
+                type="text" label="Nickname" hide-details="auto"
+                v-model="user.username" id="nickname-signup" required/>
               <!-- Email 회원가입 Form -->
               <v-text-field
                 type="email" label="Email" hide-details="auto"
-                v-model="user.useremail" id="useremail-login" required/>
+                v-model="user.useremail" id="useremail-signup" required/>
               <!-- Password 회원가입 Form -->
               <v-text-field
                 type="password" label="Password" hide-details="auto"
-                v-model="user.password" id="password-login" required/>
+                v-model="user.password" id="password-signup" required/>
               <!-- PasswordConfirm 회원가입 Form -->
               <v-text-field
                 type="password" label="passwordConfirm" hide-details="auto"
-                v-model="user.passwordConfirm" id="passwordConfirm-login" required/>
+                v-model="user.passwordConfirm" id="passwordConfirm-signup" required/>
               <!-- 회원가입 제출 버튼 -->
               <div class="field" id="submit-signup-form">
                 <v-btn type="submit" class="primary">Submit</v-btn>
@@ -48,7 +52,7 @@ export default {
  name: 'Signup',
  data() {
    return{
-     user: new User("", "", "", ""),
+     user: new User("", "", "", "", ""),
      submitted: false,
      successful: false,
      message: "",
@@ -71,13 +75,13 @@ export default {
       console.log(localStorage('user'))
       this.$store.dispatch("auth/register", this.user).then(
         data => {
-          this.message = `${data.username}님 가입을 축하드립니다`
+          this.message = `${data.nickname}님 가입을 축하드립니다`
           this.successful = true
           setTimeout(()=>{this.$router.push({name: "Login"})}, 3000)
         }).catch(e => {
-          this.message =
-            (e.response && e.response.data) || e.message || e.toString()
-          this.successful = false})
+          this.message = (e.response && e.response.data) || e.message || e.toString()
+          this.successful = false
+          })
     },
   },
 
