@@ -35,9 +35,14 @@ export default {
   data: function () {
     return {
       searchType: this.$route.params.type,
-      keyword: this.$route.query.keyword
+      keyword: this.$route.query.keyword,
+      searchResult: null,
     }
   },
+  methods: {
+
+  },
+  
 }
 </script>
 
