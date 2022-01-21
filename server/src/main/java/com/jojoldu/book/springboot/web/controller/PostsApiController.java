@@ -1,4 +1,4 @@
-package com.jojoldu.book.springboot.web;
+package com.jojoldu.book.springboot.web.controller;
 
 import com.jojoldu.book.springboot.domain.posts.PostsService;
 import com.jojoldu.book.springboot.web.dto.PostsResponseDto;
