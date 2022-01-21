@@ -9,11 +9,11 @@
 </template>
 
 <script>
-  // import HelloWorld from '../components/HelloWorld'
-  import Carousel from '../components/home/Carousel'
-  import ConferenceSlide from '../components/home/ConferenceSlide'
+// import HelloWorld from '../components/HelloWorld'
+import Carousel from '../components/home/Carousel'
+import ConferenceSlide from '../components/home/ConferenceSlide'
 
-  export default {
+export default {
     name: 'Home',
     data(){
       return {

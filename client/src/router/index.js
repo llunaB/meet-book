@@ -4,6 +4,7 @@ import Home from '@/views/Home'
 import Login from '@/views/accounts/Login'
 import Signup from '@/views/accounts/Signup'
 import ConferenceIndex from '@/views/conference/ConferenceIndex'
+import Profile from '@/views/accounts/Profile'
 
 Vue.use(VueRouter)
 
@@ -35,7 +36,11 @@ const routes = [
     path: '/conference',
     name: 'ConferenceIndex',
     component: ConferenceIndex
-
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile
   }
 ]
 
