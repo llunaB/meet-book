@@ -1,6 +1,6 @@
 package com.ssafy.domain.book;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,10 +45,10 @@ public class Book {
 	private String isbn;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	private Timestamp book_pubdate;
+	private Date book_pubdate;
 	
 	@ManyToOne
-	@JoinColumn(name = "id")
+	@JoinColumn(name = "genre_id")
 	private Genre genre;
 	
 	@Column
