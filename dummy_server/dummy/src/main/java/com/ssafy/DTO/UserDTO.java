@@ -3,7 +3,9 @@ package com.ssafy.DTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
+@ToString
 @Getter
 @Setter
 @AllArgsConstructor
@@ -35,4 +37,5 @@ public class UserDTO {
 		profile_image = "url.of.image/user_id";
 		profile_description="description";
 	}
+
 }
