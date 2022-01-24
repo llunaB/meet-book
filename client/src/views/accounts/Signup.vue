@@ -13,11 +13,11 @@
               <!-- nickname 회원가입 Form -->
               <v-text-field
                 type="text" label="Nickname" hide-details="auto"
-                v-model="user.username" id="nickname-signup" required/>
+                v-model="user.nickname" id="nickname-signup" required/>
               <!-- Email 회원가입 Form -->
               <v-text-field
                 type="email" label="Email" hide-details="auto"
-                v-model="user.useremail" id="useremail-signup" required/>
+                v-model="user.email" id="useremail-signup" required/>
               <!-- Password 회원가입 Form -->
               <v-text-field
                 type="password" label="Password" hide-details="auto"
@@ -47,12 +47,13 @@
 
 <script>
 import User from '@/api/users'
+// import axios from "axios"
 
 export default {
  name: 'Signup',
  data() {
    return{
-     user: new User("", "", "", "", ""),
+     user: new User("", "", "", "", "", ""),
      submitted: false,
      successful: false,
      message: "",
@@ -72,7 +73,12 @@ export default {
     handleRegister() {
       this.message = ""
       this.submitted = true
-      console.log(localStorage('user'))
+      console.log(this.user)
+      // axios.post('http://localhost:8080/register', this.user)
+      //   .then(res => {
+      //     console.log(res)
+      //   })
+      // .catch(e => {console.log(e)})
       this.$store.dispatch("auth/register", this.user).then(
         data => {
           this.message = `${data.nickname}님 가입을 축하드립니다`

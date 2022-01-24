@@ -21,11 +21,11 @@ class AuthService {
 
     register(user) {
         return axios.post(API_URL + "signup/", {
-          username: user.username,
-          email: user.email,
-          nickname: user.nickname,
-          password: user.password,
-          passwordConfirmation: user.passwordConfirm
+            username: user.username,
+            useremail: user.useremail,
+            nickname: user.nickname,
+            password: user.password,
+            passwordConfirmation: user.passwordConfirm
         })
       }
 }

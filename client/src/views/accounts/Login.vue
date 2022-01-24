@@ -11,7 +11,7 @@
               <!-- Email 로그인 Form -->
               <v-text-field
                 type="email" label="Email" hide-details="auto"
-                v-model="user.useremail" id="useremail-login" required/>
+                v-model="user.email" id="useremail-login" required/>
               <br>
               <!-- Password 로그인 Form -->
               <v-text-field
@@ -22,7 +22,17 @@
                 <v-btn type="submit" class="primary" @click="handleLogin">Submit</v-btn>
                 <br>
                 <p>Don't have an accounts? <a role="link" :href="'signup'">Sign Up</a></p>
-                <p><a href="#">Forgot your Password?</a></p>
+                <v-dialog v-model="dialog" width="500">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn color="red lighten-2" dark
+                    v-bind="attrs" v-on="on">
+                      Forgot your Password?
+                    </v-btn>
+                  </template>
+                  <ForgotPassword v-if="dialog" />
+                </v-dialog>
+
+
               </div>
             </form>
             <!-- 소셜 로그인 전체 Form Start-->
@@ -42,15 +52,18 @@
 
 <script>
 import User from '@/api/users.js'
+import ForgotPassword from "@/components/ForgotPassword";
 // const storage = window.sessionStorage
 
 
 export default {
     name: 'Login',
-    data() {
+  components: {ForgotPassword},
+  data() {
       return {
         user: new User('', ''),
         loading: false,
+        dialog: false,
       }
     },
     computed: {
