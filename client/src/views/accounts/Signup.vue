@@ -17,7 +17,7 @@
               <!-- Email 회원가입 Form -->
               <v-text-field
                 type="email" label="Email" hide-details="auto"
-                v-model="user.email" id="useremail-signup" required/>
+                v-model="user.useremail" id="useremail-signup" required/>
               <!-- Password 회원가입 Form -->
               <v-text-field
                 type="password" label="Password" hide-details="auto"

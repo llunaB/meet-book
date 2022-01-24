@@ -11,7 +11,7 @@
               <!-- Email 로그인 Form -->
               <v-text-field
                 type="email" label="Email" hide-details="auto"
-                v-model="user.email" id="useremail-login" required/>
+                v-model="user.useremail" id="useremail-login" required/>
               <br>
               <!-- Password 로그인 Form -->
               <v-text-field
