@@ -5,7 +5,7 @@
       Meetbook
       </router-link>
     </v-toolbar-title>
-    <v-btn text plain to="/conf/list">
+    <v-btn text plain to="/conference">
       <span class="mr-2">모임</span>
     </v-btn>
 
