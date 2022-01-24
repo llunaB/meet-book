@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '@/views/Home'
 import Login from '@/views/accounts/Login'
 import Signup from '@/views/accounts/Signup'
+import ConferenceIndex from '@/views/conference/ConferenceIndex'
 
 Vue.use(VueRouter)
 
@@ -30,6 +31,12 @@ const routes = [
     name: 'Signup',
     component: Signup
   },
+  {
+    path: '/conference',
+    name: 'ConferenceIndex',
+    component: ConferenceIndex
+
+  }
 ]
 
 const router = new VueRouter({
