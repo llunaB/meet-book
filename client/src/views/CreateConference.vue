@@ -26,7 +26,8 @@
         required
       ></v-select>
 
-      <v-menu
+      <!-- 날짜 -->
+      <!-- <v-menu
         v-model="date_menu"
         :close-on-content-click="false"
         :nudge-right="40"
@@ -51,7 +52,26 @@
           locale="ko"
           no-title
         ></v-date-picker>
-      </v-menu>
+      </v-menu> -->
+
+      <!-- 시간 -->
+      <!-- <v-row>
+        <v-col class="col-12 col-sm-4">
+          <v-select :items="['오전', '오후']"  label="회의 시작" />
+        </v-col>
+        <v-col class="col-12 col-sm-4">
+          <v-select :items="['오전', '오후']" />
+        </v-col>
+        <v-col class="col-12 col-sm-4">
+          <v-select :items="['오전', '오후']" />
+        </v-col>
+      </v-row> -->
+
+      <!--  -->
+      <v-text-field type="datetime-local" :value="date_time" v-model="date_time" :min="date_time_now" step="300" required>
+
+      </v-text-field>
+
 
       <v-text-field
         v-model="tags"
@@ -118,15 +138,13 @@ export default {
     titleRules: [
       v => !!v || '회의 제목은 비울 수 없습니다.',
       v => (v && v.length < 30) || '회의 제목이 너무 깁니다.',
-      // v => (v && v.length <= 10) || 'Name must be less than 10 characters',
     ],
-    // email: '',
-    // emailRules: [
-    //   v => !!v || 'E-mail is required',
-    //   v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
-    // ],
+    
     max_members: null,
     max_member_items: _.range(2, 31),
+
+    date_time: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 14) + "00",
+    date_time_now: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 14) + "00",
 
     date_menu: false,
     date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
@@ -148,6 +166,7 @@ export default {
       this.$refs.form.validate()
     },
     reset () {
+      console.log(this.title, this.date_time)
       this.$refs.form.reset()
     },
     resetValidation () {
