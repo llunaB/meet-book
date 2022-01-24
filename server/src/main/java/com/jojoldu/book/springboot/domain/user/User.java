@@ -1,49 +1,70 @@
 package com.jojoldu.book.springboot.domain.user;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
-@Getter
+@Data //equals, hashcode method override / toString / Getter, Setter
 @NoArgsConstructor
+@RequiredArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
+    @NonNull
     @Column
     private String name;
 
-    @Column(nullable = false)
+    @NonNull
+    @Column
+    private String password;
+
+    @NonNull
+    @Column
+    private String confirm_password;
+
+    @NonNull
+    @Column
+    private String nickname;
+
+    @NonNull
+    @Column
     private String email;
 
     @Column
-    private String picture;
+    private int gender;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
+    @Column
+    private int age;
 
-    @Builder
-    public User(String name, String email, String picture, Role role){
-        this.email = email;
-        this.name = name;
+    @Column
+    private int host_point;
 
-        this.picture = picture;
-        this.role = role;
-    }
+    @Column
+    private int guest_point;
 
-    public User update(String name, String picture){
-        this.name = name;
-        this.picture = picture;
+    @Column
+    private String profile_image;
 
-        return this;
-    }
-    public String getRoleKey(){
-        return this.role.getKey();
-    }
+    @Column
+    private String profile_description;
+
+    @Column
+    private Timestamp createdAt;
+
+    @Column
+    private Timestamp updatedAt;
+
 }
+
+//    public String getRoleKey(){
+//        return this.role.getKey();
+//    }

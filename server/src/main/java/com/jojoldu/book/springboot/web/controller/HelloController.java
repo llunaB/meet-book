@@ -1,4 +1,4 @@
-package com.jojoldu.book.springboot.web;
+package com.jojoldu.book.springboot.web.controller;
 
 import com.jojoldu.book.springboot.web.dto.HelloResponseDto;
 import org.springframework.stereotype.Controller;

@@ -1,5 +1,7 @@
 package com.ssafy.DTO;
 
+import com.ssafy.domain.user.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,5 +36,9 @@ public class UserDTO {
 		guest_point = 0;
 		profile_image = "url.of.image/user_id";
 		profile_description="description";
+	}
+	
+	public User getEntity() {
+		return new User(id, name, password, nickname, email, gender, age, host_point, guest_point, profile_image, profile_description);
 	}
 }

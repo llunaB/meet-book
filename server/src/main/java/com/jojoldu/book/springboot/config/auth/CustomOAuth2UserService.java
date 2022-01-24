@@ -26,16 +26,24 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService delegate = new DefaultOAuth2UserService();
+        //DefaultOAuth2UserService()는 OAuth2UserService의 구현체. userRequest에 있는 정보를 빼낼 수 있다.
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
                 .getUserInfoEndpoint().getUserNameAttributeName();
+        //userNameAttributeName : Oauth2로그인 진행시 키가 되는 필드값을 이야기한다. Primary Key와 같은 의미이다.
+        //구글의 경우 기본적으로 코드를 지원하지만 네이버 카카오는 지원하지 않습니다. 구글의 기본 코드는"sub"입니다.
+        //이후 네이버 로그인과 구글 로그인을 동시 지원할 때 사용됩니다.
 
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
+        //OAuthAttributes : OAuth2UserService를 통해 가져온 OAuth2User의 attribute를 담을 클래스입니다.
 
         User user = saveOrUpdate(attributes);
         httpSession.setAttribute("user", new SessionUser(user));
+        //SessionUser : 세션에 사용자 정보를 저장하기 위한 DTO클래스
+
+
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey())),
@@ -48,6 +56,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         User user = userRepository.findByEmail(attributes.getEmail())
                 .map(entity -> entity.update(attributes.getName(), attributes.getPicture()))
                 .orElse(attributes.toEntity());
+
 
         return userRepository.save(user);
     }
