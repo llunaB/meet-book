@@ -36,7 +36,7 @@ public class UserController {
 	public ResponseEntity<Map<String, String>> signup(@RequestBody UserDTO user){
 		HashMap<String, String> map = new HashMap<String, String>();
 		
-		if(service.createUser(user.getEntity())) {
+		if(service.createUser(user.toEntity())) {
 			System.out.println("user created");
 			map.put("message", "회원가입 성공");
 

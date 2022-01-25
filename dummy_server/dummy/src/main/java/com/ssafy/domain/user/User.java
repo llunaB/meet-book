@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 public class User {
 	@Id
@@ -59,5 +58,20 @@ public class User {
 		setAge(user.getAge());
 		setProfile_image(user.getProfile_image());
 		setProfile_description(user.getProfile_description());
+	}
+
+	@Builder
+	public User(int id, String name, String password, String nickname, String email, int gender, int age, int host_point, int guest_point, String profile_image, String profile_description) {
+		this.id = id;
+		this.name = name;
+		this.password = password;
+		this.nickname = nickname;
+		this.email = email;
+		this.gender = gender;
+		this.age = age;
+		this.host_point = host_point;
+		this.guest_point = guest_point;
+		this.profile_image = profile_image;
+		this.profile_description = profile_description;
 	}
 }
