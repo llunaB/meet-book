@@ -1,14 +1,16 @@
 package com.ssafy.DTO;
 
-import com.ssafy.domain.user.User;
+import com.ssafy.db.entity.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserDTO {
 	private int id;
 	private String name;
@@ -22,23 +24,4 @@ public class UserDTO {
 	private int guest_point;
 	private String profile_image;
 	private String profile_description;
-	
-	public UserDTO() {
-		id = 1;
-		name = "dummy";
-		password = "1234";
-		confirm_password = "1234";
-		nickname = "ssafy";
-		email = "ssafy@ssafy.com";
-		gender = 0;
-		age = 22;
-		host_point = 0;
-		guest_point = 0;
-		profile_image = "url.of.image/user_id";
-		profile_description="description";
-	}
-	
-	public User getEntity() {
-		return new User(id, name, password, nickname, email, gender, age, host_point, guest_point, profile_image, profile_description);
-	}
 }
