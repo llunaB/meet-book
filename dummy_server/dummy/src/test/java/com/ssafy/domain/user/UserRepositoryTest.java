@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import javax.transaction.TransactionScoped;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +23,11 @@ class UserRepositoryTest {
     private UserRepository userRepository;
 
     @Test
-    void crud() {
+    void insertAndDeleteTest() {
+        new User();
+        new User();
+        new User();
+
 
         // stream
         userRepository.findAll().forEach(System.out::println);
@@ -55,9 +60,9 @@ class UserRepositoryTest {
         System.out.println("--------------------------------------------");
 
         // getOne 에서 Session 유지를 위해 @Transactional 추가
-        User user4 = userRepository.getOne(3);
+//        User user4 = userRepository.getOne(3);
 
-        System.out.println(user4);
+//        System.out.println(user4);
 
         System.out.println("--------------------------------------------");
 
@@ -95,9 +100,8 @@ class UserRepositoryTest {
 
         // delete 방법 2가지
         // userRepository.delete(userRepository.findById(1).orElse(null));
-        userRepository.delete(userRepository.findById(1).orElseThrow(RuntimeException::new));
-
-        userRepository.deleteById(2);
+//        userRepository.delete(userRepository.findById(1).orElseThrow(RuntimeException::new));
+//        userRepository.deleteById(2);
 
         // lambda & stream
         for (User el : userRepository.findAll()) {
@@ -113,16 +117,21 @@ class UserRepositoryTest {
 
         // deleteAll
         /*
-        userRepository.deleteAll(); // select 후 하나하나 Delete한다.
+        userRepository.deleteAll(); // select 후 하나하나 Delete 한다.
         userRepository.deleteInBatch(userRepository.findAllById(Lists.newArrayList(1, 2))); // where 조건절에 or 연산 + select 하지 않아 훨씬 빠르다.
         userRepository.deleteAllInBatch(); // select 자체를 하지 않는다.
         */
 
         userRepository.findAll().forEach(System.out::println);
 
+    }
 
-        System.out.println("--------------------------------------------");
+    @Test
+    void paginationTest() {
 
+        User user1 = new User();
+        User user2 = new User();
+        User user3 = new User();
 
         // Pagination
         // Pageable 은 page 인터페이스의 구현체
@@ -143,12 +152,39 @@ class UserRepositoryTest {
         System.out.println("size : " + allUsers.getSize()); // Returns the number of elements currently on this Slice.
     }
 
-//    @Test
-//    void userRelationTest() {
-//        User user = new User("이름1", "비밀번호", "비밀번호확인", "닉네임", "이메일");
-//
-//        userRepository.save(user);
-//
-//
-//    }
+    @Test
+    void insertAndUpdateTest() {
+        User user = new User();
+        user.setName("euijin");
+        user.setAge(25);
+        user.setEmail("euijin@gmail.com");
+        user.setGender(1);
+        userRepository.save(user);
+
+        userRepository.findAll().forEach(System.out::println);
+        user.setName("new_euijin");
+    }
+
+    @Test
+    void prePersistTest() {
+
+    }
+
+    @Test
+    void preUpdateTest() {
+
+    }
+
+    @Test
+    void userRelationTest() {
+        User user = new User();
+        user.setAge(25);
+        user.setEmail("euijin@gmail.com");
+        user.setGender(1);
+        userRepository.save(user);
+
+        userRepository.findAll().forEach(System.out::println);
+
+
+    }
 }
