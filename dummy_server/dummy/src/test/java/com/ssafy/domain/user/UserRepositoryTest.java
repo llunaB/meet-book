@@ -15,124 +15,61 @@ import java.util.List;
 import java.util.Optional;
 
 
-@Transactional  // could not initialize proxy [org.example.user.User#3] - no Session (getOne)
+@Transactional
 @SpringBootTest
 class UserRepositoryTest {
-
     @Autowired
     private UserRepository userRepository;
 
     @Test
-    void insertAndDeleteTest() {
-        new User();
-        new User();
-        new User();
+    void createTest() {
+        User user = new User();
+        user.setName("euijin");
+        user.setAge(25);
+        user.setEmail("euijin@gmail.com");
+        user.setGender(1);
+        userRepository.save(user);
+    }
 
-
-        // stream
+    @Test
+    void findTest() {
+        // stream 으로 하나씩 출력
         userRepository.findAll().forEach(System.out::println);
-
-        for (User user : userRepository.findAll()) {
-            System.out.println(user);
+        for (User users : userRepository.findAll()) {
+            System.out.println(users);
         }
 
-        // name 의 역순으로 정렬
-        List<User> users = userRepository.findAll(Sort.by(Sort.Direction.DESC, "name"));
-        users.forEach(System.out::println);
         System.out.println("--------------------------------------------");
 
-        // 해당 아이디로 검색 1, 2
-        List<User> ids = userRepository.findAllById(Lists.newArrayList(1, 2));
-        ids.forEach(System.out::println);
-        System.out.println("--------------------------------------------");
-
-        User user1 = new User();
-        User user2 = new User();
-        User user3 = new User();
-
-        userRepository.saveAll(Lists.newArrayList(user1, user2));
-        userRepository.save(user3);
-
+        // 모두 검색
         List<User> users2 = userRepository.findAll();
-
         users2.forEach(System.out::println);
 
         System.out.println("--------------------------------------------");
 
-        // getOne 에서 Session 유지를 위해 @Transactional 추가
-//        User user4 = userRepository.getOne(3);
-
-//        System.out.println(user4);
+        // name 의 역순으로 정렬
+        List<User> users = userRepository.findAll(Sort.by(Sort.Direction.DESC, "name"));
+        users.forEach(System.out::println);
 
         System.out.println("--------------------------------------------");
 
-        // optional mapping -> null 처리해야
+        // 모두 검색 - 해당 아이디로 검색 (1, 2)
+        List<User> ids = userRepository.findAllById(Lists.newArrayList(1, 2));
+        ids.forEach(System.out::println);
+
+        System.out.println("--------------------------------------------");
+
+
+        // 아이디로 검색 (optional mapping -> null 처리 필수)
         Optional<User> user5 = userRepository.findById(3); // optional 반환
         User user6 = userRepository.findById(2).orElse(null); // 객체 반환
 
         System.out.println(user5);
         System.out.println(user6);
-
-        System.out.println("--------------------------------------------");
-
-        // flush는 db 반영 시점을 결정한다.
-        userRepository.save(new User());
-
-        userRepository.flush();
-
-        userRepository.findAll().forEach(System.out::println);
-
-        System.out.println("--------------------------------------------");
-
-        // count
-        Long count = userRepository.count();
-
-        System.out.println(count);
-
-        System.out.println("--------------------------------------------");
-
-        // exists
-        boolean exists = userRepository.existsById(1);
-
-        System.out.println(exists);
-
-        System.out.println("--------------------------------------------");
-
-        // delete 방법 2가지
-        // userRepository.delete(userRepository.findById(1).orElse(null));
-//        userRepository.delete(userRepository.findById(1).orElseThrow(RuntimeException::new));
-//        userRepository.deleteById(2);
-
-        // lambda & stream
-        for (User el : userRepository.findAll()) {
-            System.out.println(el);
-        }
-
-        userRepository.findAll().forEach((x) -> System.out.println(x));
-
-        userRepository.findAll().forEach(System.out::println);
-
-
-        System.out.println("--------------------------------------------");
-
-        // deleteAll
-        /*
-        userRepository.deleteAll(); // select 후 하나하나 Delete 한다.
-        userRepository.deleteInBatch(userRepository.findAllById(Lists.newArrayList(1, 2))); // where 조건절에 or 연산 + select 하지 않아 훨씬 빠르다.
-        userRepository.deleteAllInBatch(); // select 자체를 하지 않는다.
-        */
-
-        userRepository.findAll().forEach(System.out::println);
-
     }
 
     @Test
     void paginationTest() {
-
-        User user1 = new User();
-        User user2 = new User();
-        User user3 = new User();
-
         // Pagination
         // Pageable 은 page 인터페이스의 구현체
         Pageable firstPageWithTwoElements = PageRequest.of(0, 1); // page, size
@@ -153,38 +90,14 @@ class UserRepositoryTest {
     }
 
     @Test
-    void insertAndUpdateTest() {
+    void updateTest() {
         User user = new User();
         user.setName("euijin");
         user.setAge(25);
         user.setEmail("euijin@gmail.com");
         user.setGender(1);
         userRepository.save(user);
-
         userRepository.findAll().forEach(System.out::println);
         user.setName("new_euijin");
-    }
-
-    @Test
-    void prePersistTest() {
-
-    }
-
-    @Test
-    void preUpdateTest() {
-
-    }
-
-    @Test
-    void userRelationTest() {
-        User user = new User();
-        user.setAge(25);
-        user.setEmail("euijin@gmail.com");
-        user.setGender(1);
-        userRepository.save(user);
-
-        userRepository.findAll().forEach(System.out::println);
-
-
     }
 }

@@ -4,10 +4,7 @@ import javax.persistence.*;
 
 import com.ssafy.DTO.UserDTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,7 +15,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-//@Table(name = "user")
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,10 +32,8 @@ public class User {
 	@Column
 	private String email;
 
-//	@Enumerated(value = EnumType.STRING)  // 중요!
 	@Column
 	private int gender;
-//	private String gender;
 
 	@Column
 	private int age;
@@ -55,23 +49,6 @@ public class User {
 	
 	@Column
 	private String profile_description;
-
-/*	@Column(updatable = false)  // 변경되지 않도록
-	private LocalDateTime createdAt;
-
-	@Column
-	private LocalDateTime updatedAt;*/
-
-/*	@PrePersist
-	public void prePersist() {
-		this.createdAt = LocalDateTime.from(LocalDate.now());  // Insert 전에 setCreatedAt 하지 않아도 자동으로 저장된다.
-		this.updatedAt = LocalDateTime.from(LocalDate.now());  // Insert 전에 setCreatedAt 하지 않아도 자동으로 저장된다.
-	}
-
-	@PreUpdate
-	public void preUpdate() {
-		this.updatedAt = LocalDateTime.from(LocalDate.now());
-	}*/
 
 	public void update(User user) {
 		setName(user.getName());
