@@ -3,3 +3,6 @@
 .gradle
 .idea
 application-oauth.properties
+
+### Mac OS ###
+.DS_Store
