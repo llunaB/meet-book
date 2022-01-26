@@ -1,6 +1,5 @@
-추가된 기능들
+변경점
 <hr>
-1. Package 구조 변경<br>
-2. 모든 Entity 추가됨<br>
-3. 모든 Repository 추가됨<br>
-4. 모든 Service 추가됨<br>
+1. OpenApiHelper 클래스 추가: 도서 정보 파싱<br>
+2. BookService에 LoadBookData() 메서드 추가 : 파싱한 책 정보를 DB에 저장<br>
+3. DB를 로컬 DB에서 클라우드 DB로 변경

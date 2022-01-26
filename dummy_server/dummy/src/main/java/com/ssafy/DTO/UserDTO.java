@@ -1,5 +1,7 @@
 package com.ssafy.DTO;
 
+import com.ssafy.db.entity.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
