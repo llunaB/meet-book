@@ -5,10 +5,9 @@
       Meetbook
       </router-link>
     </v-toolbar-title>
-    <v-btn text plain to="/conference">
+    <v-btn text plain to="/conference" class="hidden-sm-and-down">
       <span class="mr-2">모임</span>
     </v-btn>
-
     <v-spacer></v-spacer>
 
     <!-- 검색 -->
@@ -25,38 +24,42 @@
 
     <v-spacer></v-spacer>
 
-    <div v-if="loggedIn" class="navbar-menu-loggedin">
-      <v-btn
-          to="/conf/create"
-          text
-          plain
-        >
-        <span class="mr-2">모임 개설</span>
-      </v-btn>
-      <v-btn
-          to="/conf/schedule"
-          text
-          plain
-        >
-        <span class="mr-2">나의 일정</span>
-      </v-btn>
+    <div class="hidden-sm-and-down">
+      <div v-if="loggedIn" class="navbar-menu-loggedin">
+        <v-btn
+            to="/conf/create"
+            text
+            plain
+          >
+          <span class="mr-2">모임 개설</span>
+        </v-btn>
+        <v-btn
+            to="/conf/schedule"
+            text
+            plain
+          >
+          <span class="mr-2">나의 일정</span>
+        </v-btn>
 
-    </div>
-    <div v-else class="navbar-menu-not-loggedin">
-      <v-btn
-          :to="{name: 'Login'}"
-          text
-          plain
-        >
-        <span class="mr-2">로그인</span>
-      </v-btn>
-      <v-btn
-          :to="{name: 'Signup'}"
-          text
-          plain
-        >
-        <span class="mr-2">회원가입</span>
-      </v-btn>
+      </div>
+      <div v-else class="navbar-menu-not-loggedin">
+        <v-btn
+            :to="{name: 'Login'}"
+            text
+            plain
+          >
+          <span class="mr-2">로그인</span>
+        </v-btn>
+        <v-btn
+            :to="{name: 'Signup'}"
+            text
+            plain
+          >
+          <span class="mr-2">회원가입</span>
+        </v-btn>
+      </div>
+
+
     </div>
 
     <!-- 계정 아이콘 -->
@@ -88,6 +91,32 @@
       </v-list>
     </v-menu>
 
+    <!-- 작은 화면에서 보일 공간 -->
+    <v-menu offset-y>
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn  class="hidden-md-and-up"
+          icon
+          v-bind="attrs"
+          v-on="on">
+            <v-icon>
+              mdi-dots-vertical
+            </v-icon>
+        </v-btn>
+      </template>
+
+      <v-list>
+        <v-list-item :to="{name: 'ConferenceIndex'}">
+          <v-list-tiem-title>모임</v-list-tiem-title>
+        </v-list-item>
+        <div v-for="(item, index) in shortMenuItems" :key="index">
+          <v-list-item v-if="item.needLogin == loggedIn" :to="{name: item.to}">
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </div>
+      </v-list>
+    </v-menu>
+
+
   </v-app-bar>
 </template>
 
@@ -102,6 +131,12 @@ export default {
       profileMenuItems: [
         { title: '내 프로필', to:'/profile',},
         { title: '계정 설정', to:'/accounts/settings',},
+      ],
+      shortMenuItems: [
+        { title: '모임 개설', to:'#', needLogin: true},
+        { title: '나의 일정', to:'#', needLogin: true},
+        { title: '로그인', to:'Login', needLogin: false},
+        { title: '회원가입', to:'Signup', needLogin: false},
       ],
       keyword: '',
     }
