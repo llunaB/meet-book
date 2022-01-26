@@ -1,9 +1,6 @@
 package com.ssafy.db.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -22,16 +20,37 @@ import java.util.stream.Collectors;
 public class JwtUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @Column(length = 100, nullable = false, unique = true)
     private String email;
 
+    @Column
+    private String name;
+
     @Column(length = 100, nullable = false)
     private String password;
 
-    @Column(length = 100, nullable = false)
-    private String phone;
+    @Column
+    private String nickname;
+
+    @Column
+    private int gender;
+
+    @Column
+    private int age;
+
+    @Column
+    private int host_point;
+
+    @Column
+    private int guest_point;
+
+    @Column
+    private String profile_image;
+
+    @Column
+    private String profile_description;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
@@ -44,6 +63,8 @@ public class JwtUser implements UserDetails {
                 .collect(Collectors.toList());
     }
 
+
+    //getUsername을 통해 spring security에서 사용하는 username을 가져갑니다. 저희가 사용할 username은 email 입니다.
     @Override
     public String getUsername() {
         return email;
