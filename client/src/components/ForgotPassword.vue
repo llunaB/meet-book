@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     handleSubmit() {
-      this.dialog = !this.dialog
+      this.$emit('close')
       axios.post('https://localhost:8080/forgotpassword', this.user)
       .then(res =>{
         console.log(res)

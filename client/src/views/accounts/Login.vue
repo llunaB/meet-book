@@ -29,7 +29,7 @@
                       Forgot your Password?
                     </v-btn>
                   </template>
-                  <ForgotPassword v-if="dialog" />
+                  <ForgotPassword v-if="dialog" @close="dialog = false"/>
                 </v-dialog>
 
 

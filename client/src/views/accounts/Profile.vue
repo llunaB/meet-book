@@ -1,11 +1,11 @@
 <template>
   <v-container style="padding: 3rem">
     <v-row>
-      <v-col class="text-center" cols="3">
-        <v-img v-if="user.profile_image" :src="user.profile_image" />
+      <v-col class="text-center align-self-center justify-center text-center" cols="3">
+        <v-avatar v-if="user.profile_image" :src="user.profile_image" />
         <div v-else class="img-upload">
           <label for="file-input">
-            <v-icon size="7rem">mdi-account-edit</v-icon>
+            <v-avatar size="150" color="primary">{{ user.nickname }}</v-avatar>
           </label>
           <input id="file-input" type="file" />
         </div>
