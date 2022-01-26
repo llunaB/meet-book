@@ -92,15 +92,6 @@
     </v-menu>
 
     <!-- 작은 화면에서 보일 공간 -->
-      <!-- <template v-slot:extension>
-        <v-tabs align-with-title>
-          <v-tab>Tab 1</v-tab>
-          <v-tab>Tab 2</v-tab>
-          <v-tab>Tab 3</v-tab>
-        </v-tabs>
-      </template> -->
-
-
     <v-menu offset-y>
       <template v-slot:activator="{ on, attrs }">
         <v-btn  class="hidden-md-and-up"
@@ -114,6 +105,9 @@
       </template>
 
       <v-list>
+        <v-list-item :to="{name: 'ConferenceIndex'}">
+          <v-list-tiem-title>모임</v-list-tiem-title>
+        </v-list-item>
         <div v-for="(item, index) in shortMenuItems" :key="index">
           <v-list-item v-if="item.needLogin == loggedIn" :to="{name: item.to}">
             <v-list-item-title>{{ item.title }}</v-list-item-title>
