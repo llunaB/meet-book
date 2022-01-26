@@ -42,8 +42,8 @@ public class Book {
 	@Column
 	private String isbn;
 	
-	@Column
-	private String book_pubYear;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date book_pubdate;
 	
 	@ManyToOne
 	@JoinColumn(name = "GENRE_ID")
