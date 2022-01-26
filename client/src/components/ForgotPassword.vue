@@ -6,7 +6,7 @@
         <!-- Email Form -->
         <v-text-field
             type="email" label="Email" hide-details="auto"
-            v-model="user.email" id="useremailInput" required/>
+            v-model="user.useremail" id="useremailInput" required/>
         <br>
         <!-- username Form -->
         <v-text-field
