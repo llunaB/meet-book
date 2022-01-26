@@ -18,7 +18,7 @@ public class BookDTO {
 	private String book_contents;
 	private String book_publisher;
 	private String isbn;
-	private Date book_pubdate;
+	private String book_pubYear;
 	private int loan_count;
 	private int genre_id;
 	private String book_thumbnail_url;

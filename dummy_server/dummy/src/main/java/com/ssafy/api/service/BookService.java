@@ -12,7 +12,7 @@ import com.ssafy.db.repository.BookRepository;
 public class BookService {
 	
 	private BookRepository repo;
-	
+
 	@Autowired
 	public BookService(BookRepository repo) {
 		this.repo = repo;
@@ -78,7 +78,7 @@ public class BookService {
 		target.setBook_author(data.getBook_author());
 		target.setBook_contents(data.getBook_contents());
 		target.setBook_name(data.getBook_name());
-		target.setBook_pubdate(data.getBook_pubdate());
+		target.setBook_pubYear(data.getBook_pubYear());
 		target.setBook_publisher(data.getBook_publisher());
 		target.setBook_thumbnail_url(data.getBook_thumbnail_url());
 		target.setGenre(data.getGenre());
@@ -93,7 +93,7 @@ public class BookService {
 		dto.setBook_author(data.getBook_author());
 		dto.setBook_contents(data.getBook_contents());
 		dto.setBook_name(data.getBook_name());
-		dto.setBook_pubdate(data.getBook_pubdate());
+		dto.setBook_pubYear(data.getBook_pubYear());
 		dto.setBook_publisher(data.getBook_publisher());
 		dto.setBook_thumbnail_url(data.getBook_thumbnail_url());
 		dto.setGenre_id(data.getGenre().getId());
@@ -107,7 +107,7 @@ public class BookService {
 		entity.setBook_author(data.getBook_author());
 		entity.setBook_contents(data.getBook_contents());
 		entity.setBook_name(data.getBook_name());
-		entity.setBook_pubdate(data.getBook_pubdate());
+		entity.setBook_pubYear(data.getBook_pubYear());
 		entity.setBook_publisher(data.getBook_publisher());
 		entity.setBook_thumbnail_url(data.getBook_thumbnail_url());
 		entity.setGenre(genre);

@@ -1,5 +1,7 @@
 package com.ssafy.domain.user;
 
+import com.ssafy.db.entity.User;
+import com.ssafy.db.repository.UserRepository;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
