@@ -21,7 +21,7 @@
         <v-icon v-if="locked === false">mdi-lock-open-outline</v-icon>
         <v-icon v-else>mdi-lock</v-icon>
       </v-btn>
-      <v-btn class="mx-5 mb-2 enter" v-if="conference.isActive">
+      <v-btn class="mx-5 mb-2 enter" @click="goToMeeting(conference.id)" v-if="conference.isActive">
         참여하기        
       </v-btn>
       <v-btn class="mx-5 mb-2 enter" v-else @click="bookmarking">
@@ -49,6 +49,9 @@ export default {
     },
     bookmarking: function() {      
       this.bookmarked = !this.bookmarked
+    },
+    goToMeeting: function(conferenceId){
+      this.$router.push({ name: 'ConferenceMeeting', params: {conferenceId: conferenceId}})
     }
   }  
 }
