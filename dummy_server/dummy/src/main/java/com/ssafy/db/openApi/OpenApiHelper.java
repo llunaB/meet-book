@@ -34,7 +34,7 @@ public class OpenApiHelper {
             JSONObject docInfo = (JSONObject) doc.get("doc");
             Book book = new Book();
             book.setBook_author(docInfo.get("authors").toString());
-            book.setBook_name(docInfo.get("bookname").toString());
+            book.setBookname(docInfo.get("bookname").toString());
             book.setBook_contents("");
             book.setBook_pubdate(new Date());
             book.setBook_publisher("");

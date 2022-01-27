@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,10 +23,12 @@ import com.ssafy.api.service.BookService;
 import com.ssafy.api.service.ConferenceService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.db.entity.Book;
+import com.ssafy.db.entity.Conference;
 import com.ssafy.db.entity.User;
 
 @RestController
 @RequestMapping("/conference")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ConferenceController {
 	
 	private ConferenceService service;
@@ -55,7 +58,11 @@ public class ConferenceController {
 	@GetMapping("/list/{pageno}")
 	public ResponseEntity<List<ConferenceDTO>> list(@PathVariable("pageno") String pageno){
 		ArrayList<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
-		list.add(new ConferenceDTO());
+		List<Conference> data = service.getAllConf();
+		for(Conference c : data) {
+			list.add(service.Entity2Dto(c));
+		}
+		
 		
 		return new ResponseEntity<List<ConferenceDTO>>(list, HttpStatus.OK);
 	}
@@ -63,13 +70,17 @@ public class ConferenceController {
 	@GetMapping("/{id}")
 	public ResponseEntity<ConferenceDTO> info(@PathVariable("id") String id){
 		System.out.println("conference id : "+id);
-		return new ResponseEntity<ConferenceDTO>(new ConferenceDTO(), HttpStatus.OK);
+		return new ResponseEntity<ConferenceDTO>(service.Entity2Dto(service.getConferenceById(Integer.parseInt(id))), HttpStatus.OK);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Map<String,String>> updateConf(@PathVariable("id") String id){
+	public ResponseEntity<Map<String,String>> updateConf(@PathVariable("id") String id, @RequestBody ConferenceDTO dto){
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("message", "회의 수정 성공");
+		User user = uService.getUserById(dto.getUser_id());
+		Book book = bService.getBookById(dto.getBook_id());
+		service.updateConference(service.Dto2Entity(dto, user, book));
+		
 		return new ResponseEntity<Map<String,String>>(map, HttpStatus.CREATED);
 	}
 	
@@ -77,13 +88,16 @@ public class ConferenceController {
 	public ResponseEntity<Map<String,String>> deleteConf(@PathVariable("id") String id){
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("message", "회의 삭제 성공");
+		
+		service.deleteConference(Integer.parseInt(id));
+		
 		return new ResponseEntity<Map<String,String>>(map, HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/{id}/detail")
 	public ResponseEntity<ConferenceDTO> detailInfo(@PathVariable("id") String id){
 		System.out.println("conference id : "+id);
-		return new ResponseEntity<ConferenceDTO>(new ConferenceDTO(), HttpStatus.OK);
+		return new ResponseEntity<ConferenceDTO>(service.Entity2Dto(service.getConferenceById(Integer.parseInt(id))), HttpStatus.OK);
 	}
 	
 }

@@ -1,6 +1,6 @@
 package com.ssafy.config;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
@@ -14,8 +14,6 @@ import springfox.documentation.service.SecurityReference;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger.web.UiConfiguration;
-import springfox.documentation.swagger.web.UiConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
@@ -31,35 +29,29 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
-                .build();
+                .build()
+		        .securityContexts(Arrays.asList(securityContext()))
+		        .securitySchemes(Arrays.asList(apiKey()));
     }
 
-//    private ApiKey apiKey() {
-//        return new ApiKey(SECURITY_SCHEMA_NAME, "Authorization", "header");
-//    }
-//
-//    private SecurityContext securityContext() {
-//        return SecurityContext.builder()
-//                .securityReferences(defaultAuth())
-//                .build();
-//    }
-//
-//    public static final String SECURITY_SCHEMA_NAME = "JWT";
-//    public static final String AUTHORIZATION_SCOPE_GLOBAL = "global";
-//    public static final String AUTHORIZATION_SCOPE_GLOBAL_DESC = "accessEverything";
-//
-//    private List<SecurityReference> defaultAuth() {
-//        AuthorizationScope authorizationScope = new AuthorizationScope(AUTHORIZATION_SCOPE_GLOBAL, AUTHORIZATION_SCOPE_GLOBAL_DESC);
-//        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-//        authorizationScopes[0] = authorizationScope;
-//        return new ArrayList(new SecurityReference(SECURITY_SCHEMA_NAME, authorizationScopes));
-//    }
-//
-//    @Bean
-//    UiConfiguration uiConfig() {
-//        return UiConfigurationBuilder.builder()
-////                .supportedSubmitMethods(newArrayList("get").toArray(new String[0])) // try it 기능 활성화 범위
-////                .operationsSorter(METHOD)
-//                .build();
-//    }
+    private ApiKey apiKey() {
+        return new ApiKey("JWT", "X-AUTH-TOKEN", "header");
+    }
+
+    private SecurityContext securityContext() {
+        return springfox
+                .documentation
+                .spi.service
+                .contexts
+                .SecurityContext
+                .builder()
+                .securityReferences(defaultAuth()).forPaths(PathSelectors.any()).build();
+    }
+
+    List<SecurityReference> defaultAuth() {
+        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+        authorizationScopes[0] = authorizationScope;
+        return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
+    }
 }

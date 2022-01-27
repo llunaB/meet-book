@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,12 +18,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.DTO.LoginReqDTO;
 import com.ssafy.DTO.UserDTO;
+import com.ssafy.api.request.LoginReqDTO;
 import com.ssafy.api.response.BookmarkResDTO;
 import com.ssafy.api.service.BookmarkService;
 import com.ssafy.api.service.ConferenceService;
 import com.ssafy.api.service.UserService;
+import com.ssafy.config.JwtTokenProvider;
 import com.ssafy.db.entity.Bookmark;
 import com.ssafy.db.entity.Conference;
 import com.ssafy.db.entity.User;
@@ -30,15 +32,17 @@ import com.ssafy.db.entity.User;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+	private JwtTokenProvider jwtTokenProvider;
 	private UserService service;
 	private BookmarkService bookmarkService;
 	private ConferenceService confService;
 	
 	@Autowired
-	public UserController(UserService service, BookmarkService bookmarkService, ConferenceService confService) {
+	public UserController(UserService service, BookmarkService bookmarkService, ConferenceService confService, JwtTokenProvider jwtTokenProvider) {
 		this.service = service;
 		this.bookmarkService = bookmarkService;
 		this.confService = confService;
+		this.jwtTokenProvider = jwtTokenProvider;
 	}
 	
 	@PostMapping("/signup")
@@ -63,26 +67,33 @@ public class UserController {
 	public ResponseEntity<Map<String, String>> login(@RequestBody LoginReqDTO dto){
 		HashMap<String, String> map = new HashMap<String, String>();
 		
-		User user = service.getUserByeEmail(dto.getEmail());
-		
-		if(user.getPassword().equals(dto.getPassword())) {
-			map.put("message", "로그인 성공");
-			return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
+		try {
+			User user = service.getUserByEmail(dto.getEmail());
+			System.out.println(user.getPassword());
+			if(service.matchPassword(dto.getPassword(),user.getPassword())) {
+				map.put("message", "로그인 성공");
+	            map.put("token",jwtTokenProvider.createToken(user.getUsername(),user.getRoles()));
+				return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
+			}
+			map.put("message", "로그인 실패");
+		}catch(Exception e){
+			e.printStackTrace();
+			map.put("message", "로그인 실패");
+			return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
 		}
-		
 		map.put("message", "로그인 실패");
 		return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
 	}
 	
 	@GetMapping("/{email}")
 	public ResponseEntity<UserDTO> getInfo(@PathVariable("email") String email){
-		User user = service.getUserByeEmail(email);
+		User user = service.getUserByEmail(email);
 		return new ResponseEntity<UserDTO>(service.Entity2Dto(user), HttpStatus.OK);
 	}
 	
 	@GetMapping("/{email}/detail")
 	public ResponseEntity<UserDTO> getDetailInfo(@PathVariable("email") String email){
-		User user = service.getUserByeEmail(email);
+		User user = service.getUserByEmail(email);
 		return new ResponseEntity<UserDTO>(service.Entity2Dto(user), HttpStatus.OK);
 	}
 	
@@ -92,23 +103,31 @@ public class UserController {
 		HashMap<String, String> map = new HashMap<String, String>();
 		service.updateUser(service.Dto2Entity(u));
 		
-		map.put("message", "수정 성공");
-		return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
+		 if(service.updateUser(service.Dto2Entity(u))){
+            User user = service.getUserByEmail(u.getEmail());
+            map.put("message", "회원정보 수정 성공");
+            map.put("token",jwtTokenProvider.createToken(user.getUsername(),user.getRoles()));
+            return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
+        }
+        map.put("message", "회원정보 수정 실패");
+        return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
 	}
 	
 	@DeleteMapping("/{email}")
 	public ResponseEntity<Map<String,String>> deleteUser(@RequestBody String password, @PathVariable("email") String email){
 		HashMap<String, String> map = new HashMap<String, String>();
-		User user = service.getUserByeEmail(email);
-		if(password.equals(user.getPassword())) {
-			map.put("message", "삭제 성공");
-			service.deleteUser(user.getId());
-			return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
-		}else {
+		try {
+			if(service.deleteUser(service.getUserByEmail(email), password)) {
+				map.put("message", "삭제 성공");
+				return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
+			}
+		}catch(UsernameNotFoundException e) {
+			e.printStackTrace();
 			map.put("message", "삭제 실패");
-			return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
+			return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
 		}
-		
+		map.put("message", "잘못된 password");
+		return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
 		
 	}
 	
