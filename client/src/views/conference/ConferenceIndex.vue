@@ -95,5 +95,7 @@ export default {
 }
 </script>
 <style scoped>
-
+.row {
+  justify-content: center;
+}
 </style>

@@ -11,6 +11,14 @@
       <v-btn @click="leaveSession" color="error">
         방에서 나가기
       </v-btn>
+      <v-btn @click="videoMute">
+        <v-icon v-if="videoMuted === true">mdi-video-check-outline</v-icon>
+        <v-icon v-else>mdi-video-check</v-icon>
+      </v-btn>
+      <v-btn v-if="subscribers.length >= 1" @click="audioMute">
+        <v-icon v-if="audioMuted === true">mdi-volume-off</v-icon>
+        <v-icon v-else>mdi-volume-high</v-icon>
+      </v-btn>
     </div>
     <v-row>
       <v-col cols="6">
@@ -41,7 +49,8 @@ export default {
 			mainStreamManager: undefined,
 			publisher: undefined,
 			subscribers: [],
-
+      videoMuted: false,
+      audioMuted: false,
       mySessionId: null,
       myUserName: 'chan'
     }
@@ -170,6 +179,24 @@ export default {
 					.catch(error => reject(error.response));
 			});
 		},
+    videoMute() {      
+      if (this.videoMuted) {
+        this.publisher.publishVideo(true)
+        this.videoMuted = false
+      } else {
+        this.publisher.publishVideo(false)
+        this.videoMuted = true
+      }
+    },
+    audioMute() {
+      if (this.audioMuted) {
+        this.publisher.publishAudio(true)
+        this.audioMuted = false
+      } else {
+        this.publisher.publishAudio(false)
+        this.audioMuted = true
+      }
+    }
   }
 }
 </script>
