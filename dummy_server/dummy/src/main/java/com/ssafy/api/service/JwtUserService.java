@@ -2,6 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.DTO.UserDTO;
 import com.ssafy.DTO.request.SingUpUserDto;
+import com.ssafy.DTO.request.UpdateUserDto;
 import com.ssafy.db.entity.JwtUser;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.JwtUserRepository;
@@ -9,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Map;
@@ -38,6 +40,7 @@ public class JwtUserService {
         return entity;
     }
 
+    @Transactional
     public boolean createUser(JwtUser dto2Entity) {
         try{
             jwtUserRepository.save(dto2Entity);
@@ -76,5 +79,37 @@ public class JwtUserService {
         dto.setGuest_point(data.getGuest_point());
         return dto;
 
+    }
+
+    @Transactional
+    public boolean updateUser(String email, UpdateUserDto dto) {
+        try {
+            JwtUser user = jwtUserRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
+            user.setEmail(dto.getEmail());
+            user.setNickname(dto.getNickname());
+            user.setProfile_image(dto.getProfile_image());
+            user.setProfile_description(dto.getProfile_description());
+            jwtUserRepository.save(user);
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    @Transactional
+    public boolean deleteUser(String email, String password) {
+        try {
+            JwtUser user = jwtUserRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
+            user.getPassword();
+            if(!passwordEncoder.matches(password,user.getPassword())){
+                throw new Exception("아이디, 비밀번호 불일치");
+            }
+            jwtUserRepository.delete(user);
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }

@@ -4,6 +4,7 @@ package com.ssafy.api.controller;
 import com.ssafy.DTO.UserDTO;
 import com.ssafy.DTO.request.LoginReqDTO;
 import com.ssafy.DTO.request.SingUpUserDto;
+import com.ssafy.DTO.request.UpdateUserDto;
 import com.ssafy.api.service.JwtUserService;
 import com.ssafy.config.JwtTokenProvider;
 import com.ssafy.db.entity.JwtUser;
@@ -11,16 +12,14 @@ import com.ssafy.db.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/userss")
 public class JwtUserController {
 
 //    private final PasswordEncoder passwordEncoder;
@@ -30,7 +29,7 @@ public class JwtUserController {
 
 
     // 회원가입
-    @PostMapping("/user/join")
+    @PostMapping("/join")
     public ResponseEntity<Map<String, String>> join(@RequestBody SingUpUserDto user) {
         System.out.println(user);
         HashMap<String, String> map = new HashMap<String, String>();
@@ -53,7 +52,7 @@ public class JwtUserController {
     }
 
 
-    @PostMapping("/user/login")
+    @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody LoginReqDTO dto){
         HashMap<String, String> map = new HashMap<String, String>();
 
@@ -78,13 +77,44 @@ public class JwtUserController {
 //        }
 //        return jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
 //    }
-//
-    @PostMapping("/api/v1/userinfo")
+
+    //회원정보 조회
+    @GetMapping("/userinfo")
     public ResponseEntity<UserDTO> userinfo(@RequestBody Map<String, String> id) {
         JwtUser user = jwtService.getUserByeEmail(id.get("email"));
         return new ResponseEntity<UserDTO>(jwtService.Entity2Dto(user), HttpStatus.OK);
     }
 
+
+    //회원 수정
+    @PutMapping("/userinfo/{email}")
+    public ResponseEntity<Map<String, String>> userupdate(@PathVariable("email") String email, @RequestBody UpdateUserDto dto){
+        Map map = new HashMap<>();
+        if(jwtService.updateUser(email,dto)){
+            JwtUser jwtUser = jwtService.getUserByeEmail(dto.getEmail());
+            map.put("message", "회원정보 수정 성공");
+            map.put("token",jwtTokenProvider.createToken(jwtUser.getUsername(),jwtUser.getRoles()));
+            return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
+        }
+        map.put("message", "회원정보 수정 실패");
+        return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
+    }
+
+
+    //회원 삭제
+    @DeleteMapping("/{email}")
+    public ResponseEntity<Map<String, String>> userdelete(@RequestBody Map<String, String> password,@PathVariable("email") String email){
+        Map map = new HashMap<>();
+        System.out.println(password);
+
+        if(jwtService.deleteUser(email, password.get("password"))) {
+            map.put("message", "삭제 성공");
+            return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
+        }else {
+            map.put("message", "삭제 실패");
+            return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
+        }
+    }
 
 
     @RequestMapping("/test")
