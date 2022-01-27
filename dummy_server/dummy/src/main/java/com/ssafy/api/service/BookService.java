@@ -68,6 +68,16 @@ public class BookService {
 		return result;
 	}
 	
+	public List<Book> getBookByName(String bookname) {
+		try {
+			return repo.findByBooknameContaining(bookname);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
 	public boolean updateBook(Book b) {
 		try {
 			Book output = getBookById(b.getId());
@@ -95,7 +105,7 @@ public class BookService {
 	public Book UpdateEntity(Book target, Book data) {
 		target.setBook_author(data.getBook_author());
 		target.setBook_contents(data.getBook_contents());
-		target.setBook_name(data.getBook_name());
+		target.setBookname(data.getBookname());
 		target.setBook_pubdate(data.getBook_pubdate());
 		target.setBook_publisher(data.getBook_publisher());
 		target.setBook_thumbnail_url(data.getBook_thumbnail_url());
@@ -110,7 +120,7 @@ public class BookService {
 		dto.setId(data.getId());
 		dto.setBook_author(data.getBook_author());
 		dto.setBook_contents(data.getBook_contents());
-		dto.setBook_name(data.getBook_name());
+		dto.setBookname(data.getBookname());
 		dto.setBook_pubdate(data.getBook_pubdate());
 		dto.setBook_publisher(data.getBook_publisher());
 		dto.setBook_thumbnail_url(data.getBook_thumbnail_url());
@@ -124,7 +134,7 @@ public class BookService {
 		Book entity = new Book();
 		entity.setBook_author(data.getBook_author());
 		entity.setBook_contents(data.getBook_contents());
-		entity.setBook_name(data.getBook_name());
+		entity.setBookname(data.getBookname());
 		entity.setBook_pubdate(data.getBook_pubdate());
 		entity.setBook_publisher(data.getBook_publisher());
 		entity.setBook_thumbnail_url(data.getBook_thumbnail_url());

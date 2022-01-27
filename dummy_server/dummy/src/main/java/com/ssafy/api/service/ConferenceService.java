@@ -1,5 +1,7 @@
 package com.ssafy.api.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,10 @@ public class ConferenceService {
 	@Autowired
 	public ConferenceService(ConferenceRepository repo) {
 		this.repo = repo;
+	}
+	
+	public List<Conference> getAllConf(){
+		return repo.findAll();
 	}
 	
 	public boolean createConference(Conference Conference) {
@@ -38,6 +44,46 @@ public class ConferenceService {
 		}
 		
 		return result;
+	}
+	
+	public List<Conference> findByTitle(String title){
+		try {
+			return repo.findByTitleContaining(title);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public List<Conference> findByBook(Book book){
+		try {
+			return repo.findByBook(book);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public List<Conference> findByUser(User user){
+		try {
+			return repo.findByUser(user);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public List<Conference> findByTags(String tags){
+		try {
+			return repo.findByTagsContaining(tags);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 	public boolean updateConference(Conference c) {
