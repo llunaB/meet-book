@@ -11,6 +11,7 @@
 
 <script>
 import Navbar from '@/components/TheNavbar'
+
 export default {
   name: 'App',
   components: {

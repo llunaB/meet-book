@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BookDTO {
 	private int id;
-	private String book_name;
+	private String bookname;
 	private String book_author;
 	private String book_contents;
 	private String book_publisher;

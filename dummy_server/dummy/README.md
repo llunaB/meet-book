@@ -1,6 +1,3 @@
-추가된 기능들
+변경점
 <hr>
-1. Package 구조 변경<br>
-2. 모든 Entity 추가됨<br>
-3. 모든 Repository 추가됨<br>
-4. 모든 Service 추가됨<br>
+1. jwt 로그인 및 이메일 인증 통합<br>

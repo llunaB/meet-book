@@ -4,6 +4,7 @@ import Home from '@/views/Home'
 import Login from '@/views/accounts/Login'
 import Signup from '@/views/accounts/Signup'
 import ConferenceIndex from '@/views/conference/ConferenceIndex'
+import Profile from '@/views/accounts/Profile'
 
 Vue.use(VueRouter)
 
@@ -22,20 +23,20 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue')
   },
   {
-    path: '/login',
-    name: 'Login',
-    component: Login
+    path: '/login', name: 'Login', component: Login
   },
   {
-    path: '/signup',
-    name: 'Signup',
-    component: Signup
+    path: '/signup', name: 'Signup', component: Signup
   },
   {
     path: '/conference',
     name: 'ConferenceIndex',
     component: ConferenceIndex
-
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile
   }
 ]
 
