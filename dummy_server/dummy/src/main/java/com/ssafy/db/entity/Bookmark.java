@@ -21,10 +21,11 @@ import lombok.Setter;
 public class Bookmark {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "Key")
 	private int id;
 
 	@ManyToOne
-	@JoinColumn(name = "CONFE_ID")
+	@JoinColumn(name = "CONFERENCE_ID")
 	private Conference conference;
 	
 	@ManyToOne

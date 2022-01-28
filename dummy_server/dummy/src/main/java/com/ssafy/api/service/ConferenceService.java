@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +11,18 @@ import com.ssafy.db.entity.Book;
 import com.ssafy.db.entity.Conference;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.ConferenceRepository;
+import com.ssafy.db.repository.UserRepository;
 
 @Service
 public class ConferenceService {
 	
 	private ConferenceRepository repo;
+	private UserRepository uRepo;
 	
 	@Autowired
-	public ConferenceService(ConferenceRepository repo) {
+	public ConferenceService(ConferenceRepository repo, UserRepository uRepo) {
 		this.repo = repo;
+		this.uRepo = uRepo;
 	}
 	
 	public List<Conference> getAllConf(){
@@ -66,14 +70,21 @@ public class ConferenceService {
 		return null;
 	}
 	
-	public List<Conference> findByUser(User user){
+	public List<Conference> findByUser(String nickname){
+		List<Conference> list = new ArrayList<>();
 		try {
-			return repo.findByUser(user);
+			List<User> userlist = uRepo.findByNicknameContaining(nickname);
+			
+			for(User user : userlist) {
+				list.addAll(repo.findByUser(user));
+			}
+			
+			return list;
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		
-		return null;
+		return list;
 	}
 	
 	public List<Conference> findByTags(String tags){
