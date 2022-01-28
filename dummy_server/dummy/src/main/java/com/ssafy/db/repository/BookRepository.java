@@ -12,5 +12,4 @@ import com.ssafy.db.entity.Book;
 public interface BookRepository extends JpaRepository<Book, Integer> {
 	Optional<Book> findByIsbn(String isbn);
 	List<Book> findByBooknameContaining(String bookname);
-	
 }

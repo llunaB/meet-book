@@ -31,7 +31,7 @@ public class OpenApiService {
                     .book_contents("")
                     .book_publisher((String)bookInfo.get("publisher"))
                     .isbn((String)bookInfo.get("isbn13"))
-                    .book_pubdate(null)
+                    .book_pub_year(Integer.parseInt((String) bookInfo.get("publication_year")))
                     .loan_count(Integer.parseInt((String) bookInfo.get("loan_count")))
                     .genre(null)
                     .book_thumbnail_url((String) bookInfo.get("bookImageURL"))
@@ -43,6 +43,7 @@ public class OpenApiService {
     }
 
     private static List<Map<String, Map<String, Object>>> uriToJsonObjectToList(String uriString) {
+
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> forEntity = restTemplate.getForEntity(uriString, String.class);
 
@@ -56,6 +57,7 @@ public class OpenApiService {
     }
 
     private static String constructUriStringWithQueryParameter() {
+
         String key = "b85da2e2bb1b06d1ad67b0f945bf6dcf87e99dd3eb09f70ebe777db8b58d01bd";
         String startDate = "2021-01-01";
         String endDate = "2021-01-10";

@@ -1,12 +1,6 @@
 package com.ssafy.db.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,12 +17,12 @@ public class User_conference {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@ManyToOne
-	@JoinColumn(name = "CONFE_ID")
+	@ManyToOne(targetEntity = Conference.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "conference_id")
 	private Conference conference;
 	
-	@ManyToOne
-	@JoinColumn(name = "USER_ID")
+	@ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
 	private User user;
 	
 	@Column

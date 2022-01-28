@@ -27,12 +27,12 @@ public class OpenApiServiceTest {
             Map<String, Object> bookInfo = doc.get("doc");
 
             Book book = Book.builder()
-                            .bookname((String)bookInfo.get("bookname"))
+                            .book_name((String)bookInfo.get("bookname"))
                                     .book_author((String)bookInfo.get("authors"))
                                             .book_contents("")
                                                 .book_publisher((String)bookInfo.get("publisher"))
                                                         .isbn((String)bookInfo.get("isbn13"))
-                                                                .book_pubdate(null)
+                                                                .book_pub_year(Integer.parseInt((String) bookInfo.get("publication_year")))
                                                                         .loan_count(Integer.parseInt((String) bookInfo.get("loan_count")))
                                                                                 .genre(null)
                                                                                      .book_thumbnail_url((String) bookInfo.get("bookImageURL"))

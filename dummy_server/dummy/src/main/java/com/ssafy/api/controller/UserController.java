@@ -58,7 +58,6 @@ public class UserController {
 			map.put("message", "회원가입 실패");
 		}
 		
-		
 		return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
 	}
 	
