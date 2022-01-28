@@ -1,13 +1,13 @@
 <template>
-  <div class="row mt-5">
-    <div class="col-12 col-md-10 offset-md-1">
+  <div class="row mt-5 pa-1">
+    <div class="col-12 col-lg-6">
       <!-- 도서 정보 탑재 부분 -->
       <div class="row">
-        <div class="col-2">
-          <v-img v-if="book.thumbnail_url" :src="book.thumbnail_url" max-width="420px"></v-img>
+        <div class="d-flex col-12 col-sm-4 col-lg-12 text-center justify-center">
+          <v-img v-if="book.thumbnail_url" :src="book.thumbnail_url" max-width="240px"></v-img>
           <span v-else>썸네일 이미지가 없습니다.</span>
         </div>
-        <div class="col-10">
+        <div class="col-12 col-sm-8 col-lg-12">
           <h1>{{ book.title }}</h1>
           <h3>{{ book.author }}</h3>
           <h5 class="text-right">{{ book.publisher }} | {{ book.pubdate }}</h5>
@@ -16,37 +16,37 @@
           <p>{{ book.contents }}</p>
         </div>
       </div>
-      <!-- 도서 관련 회의 탑재 부분 -->
-      <div class="row mt-5">
-        <div class="col-12">
-          <h3>{{ book.title }}을 읽은/읽을 모임</h3> <br>
+      
+    </div>
+    <!-- 도서 관련 회의 탑재 부분 -->
+    <div class="col-12 col-lg-6">
+      <h3>{{ book.title }}을 읽은/읽을 모임</h3> <br>
 
-          <div v-if="conferences.length == 0">
-            <div class="text-center">
-              <p>아직 이 책에 관한 모임이 없어요!</p>
-              <router-link to="#">지금 이 책 모임 만들기</router-link>
-            </div>
+      <div v-if="conferences.length == 0">
+        <div class="text-center">
+          <p>아직 이 책에 관한 모임이 없어요!</p>
+          <router-link to="#">지금 이 책 모임 만들기</router-link>
+        </div>
+      </div>
+
+      <ConferenceSlide v-else :conferences="conferences" />
+
+    </div>
+      
+    <div class="col-12">
+      <h3>{{ book.title }}을 읽은 사람들</h3> <br>
+        <div v-if="people.length == 0">
+          <div class="text-center">
+            <p>아직 이 책에 대해 이야기 나눈 사람이 없어요!</p>
           </div>
-
-          <ConferenceSlide v-else :conferences="conferences" />
-
         </div>
-      </div>
-      <div class="row mt-5">
-        <div class="col-12">
-          <h3>{{ book.title }}을 읽은 사람들</h3> <br>
-            <div v-if="people.length == 0">
-              <div class="text-center">
-                <p>아직 이 책에 대해 이야기 나눈 사람이 없어요!</p>
-              </div>
-            </div>
-            <div v-else>
-              <ProfileSmallcard v-for="(person, idx) in people" :key="idx" :person="person" />
-            </div>
+        <div v-else>
+          <ProfileSmallcard v-for="(person, idx) in people" :key="idx" :person="person" />
         </div>
-      </div>
     </div>
   </div>
+    
+  
 </template>
 
 <script>
@@ -62,14 +62,14 @@ export default {
   data: function () {
     return {
       book: {
-        id: this.$route.params.id,
+        id: 1,
         title: '책 제목',
         author: '작가',
         contents: '여기는 책의 설명이 들어가는 부분입니다. 적당히 길 수도 있습니다.',
         publisher: '출판사',
         isbn: '9791190893442',
         pubdate: '2000',
-        thumbnail_url: 'https://image.aladin.co.kr/product/25975/45/cover/k682737225_1.jpg',
+        thumbnail_url: 'https://image.aladin.co.kr/product/25241/8/cover/k872633007_1.jpg',
       },
       // conferences: [{"id":1, "title":"오이디푸스", "thumbnail":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"Welcome","isActive":true},
       //   {"id":2, "title":"정의란 무엇인가", "thumbnail":"https://image.yes24.com/goods/15156691/XL", "description":"welcome2","isActive":true},
@@ -113,11 +113,13 @@ export default {
     getConfByBook: function (bookId) {
       axios({
         method: 'GET',
+
         // 정확히 책의 ID를 알고 있을 때 회의 정보를 불러올 수 있는 API 서버 응답이 필요함 -- 백엔드 분들 도와줘요!
         // 이런 느낌의 URL이 되지 않을까?
         url: `${BASE_URL}/conference?bookId=${bookId}`
       })
       .then(response => {
+        this.book = response.data.book
         console.log(response)
         // this.conferences = response.data.---
       })
