@@ -15,10 +15,14 @@ import lombok.Setter;
 public class Bookmark {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "Key")
 	private int id;
 
 	@ManyToOne(targetEntity = Conference.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "conference_id")
+
+	@ManyToOne
+	@JoinColumn(name = "CONFERENCE_ID")
 	private Conference conference;
 	
 	@ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)

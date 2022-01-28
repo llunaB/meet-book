@@ -27,7 +27,7 @@ public class OpenApiServiceTest {
             Map<String, Object> bookInfo = doc.get("doc");
 
             Book book = Book.builder()
-                            .book_name((String)bookInfo.get("bookname"))
+                            .bookname((String)bookInfo.get("bookname"))
                                     .book_author((String)bookInfo.get("authors"))
                                             .book_contents("")
                                                 .book_publisher((String)bookInfo.get("publisher"))

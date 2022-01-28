@@ -12,7 +12,7 @@ import com.ssafy.db.repository.BookRepository;
 
 @Service
 public class BookService {
-	
+
 	private final BookRepository repo;
 
 	@Autowired
@@ -108,8 +108,14 @@ public class BookService {
 		dto.setBook_pub_year(data.getBook_pub_year());
 		dto.setBook_publisher(data.getBook_publisher());
 		dto.setBook_thumbnail_url(data.getBook_thumbnail_url());
-		dto.setGenre_id(data.getGenre().getId());
+		
 		dto.setLoan_count(data.getLoan_count());
+		
+		if(data.getGenre() == null) {
+			dto.setGenre_id(0);
+		}else {
+			dto.setGenre_id(data.getGenre().getId());
+		}
 		
 		return dto;
 	}
