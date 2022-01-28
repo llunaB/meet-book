@@ -37,19 +37,15 @@ public class SearchController {
 
 	@GetMapping("/users")
 	public ResponseEntity<List<UserDTO>> userSearch(@RequestParam("nickname") String nickname){
-		ArrayList<UserDTO> list = new ArrayList<UserDTO>();
-		List<User> entities = uService.getUserByNickname(nickname);
-		for(User u : entities) {
-			list.add(uService.Entity2Dto(u));
-		}
+		List<UserDTO> list = uService.getUserByNickname(nickname);
 		
 		return new ResponseEntity<List<UserDTO>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("/book")
-	public ResponseEntity<List<BookDTO>> bookSearch(@RequestParam("book_name") String book_name){
+	public ResponseEntity<List<BookDTO>> bookSearch(@RequestParam("book_name") String bookname){
 		ArrayList<BookDTO> list = new ArrayList<>();
-		List<Book> entities = bService.getBookByName(book_name);
+		List<Book> entities = bService.getBookByName(bookname);
 		for(Book b : entities) {
 			list.add(bService.Entity2Dto(b));
 		}
@@ -85,11 +81,9 @@ public class SearchController {
 	@GetMapping("/conference/user")
 	public ResponseEntity<List<ConferenceDTO>> conferenceUserSearch(@RequestParam("user") String nickname){
 		ArrayList<ConferenceDTO> list = new ArrayList<>();
-		for(User user : uService.getUserByNickname(nickname)) {
-			List<Conference> entities = cService.findByUser(user);
-			for(Conference c : entities) {
-				list.add(cService.Entity2Dto(c));
-			}
+		List<Conference> entities = cService.findByUser(nickname);
+		for(Conference c : entities) {
+			list.add(cService.Entity2Dto(c));
 		}
 		
 		return new ResponseEntity<List<ConferenceDTO>>(list, HttpStatus.OK);

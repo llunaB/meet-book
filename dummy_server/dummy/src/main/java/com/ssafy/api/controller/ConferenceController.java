@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.DTO.ConferenceDTO;
+import com.ssafy.DTO.UserDTO;
 import com.ssafy.api.service.BookService;
 import com.ssafy.api.service.ConferenceService;
 import com.ssafy.api.service.UserService;
@@ -46,10 +47,10 @@ public class ConferenceController {
 	public ResponseEntity<Map<String, String>> makeConf(@RequestBody ConferenceDTO conf){
 		
 		HashMap<String, String> map = new HashMap<String, String>();
-		User user = uService.getUserById(conf.getUser_id());
+		UserDTO user = uService.getUserById(conf.getUser_id());
 		Book book = bService.getBookById(conf.getBook_id());
 		
-		service.createConference(service.Dto2Entity(conf, user, book));
+		service.createConference(service.Dto2Entity(conf, uService.Dto2Entity(user), book));
 		
 		map.put("message", "회의 생성 성공");
 		return new ResponseEntity<Map<String,String>>(map, HttpStatus.CREATED);
@@ -77,9 +78,9 @@ public class ConferenceController {
 	public ResponseEntity<Map<String,String>> updateConf(@PathVariable("id") String id, @RequestBody ConferenceDTO dto){
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("message", "회의 수정 성공");
-		User user = uService.getUserById(dto.getUser_id());
+		UserDTO user = uService.getUserById(dto.getUser_id());
 		Book book = bService.getBookById(dto.getBook_id());
-		service.updateConference(service.Dto2Entity(dto, user, book));
+		service.updateConference(service.Dto2Entity(dto, uService.Dto2Entity(user), book));
 		
 		return new ResponseEntity<Map<String,String>>(map, HttpStatus.CREATED);
 	}

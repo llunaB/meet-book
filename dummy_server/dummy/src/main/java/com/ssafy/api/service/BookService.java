@@ -8,27 +8,27 @@ import org.springframework.stereotype.Service;
 import com.ssafy.DTO.BookDTO;
 import com.ssafy.db.entity.Book;
 import com.ssafy.db.entity.Genre;
+import com.ssafy.db.openApi.OpenApiHelper;
 import com.ssafy.db.repository.BookRepository;
 
 @Service
 public class BookService {
 	
-	private final BookRepository repo;
-	private final OpenApiService openApiService;
-
+	private BookRepository repo;
+	private OpenApiHelper helper;
+	
 	@Autowired
-	public BookService(BookRepository repo, OpenApiService openApiService) {
+	public BookService(BookRepository repo, OpenApiHelper helper) {
 		this.repo = repo;
-		this.openApiService = openApiService;
+		this.helper = helper;
 	}
-
-	// BookController 에서 실행
+	
 	public boolean loadBookData() {
 		try {
-			List<Book> list = openApiService.loadBookData();
+			List<Book> list = helper.LoadBookData();
+			
 			repo.saveAll(list);
 			return true;
-
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -124,8 +124,14 @@ public class BookService {
 		dto.setBook_pubdate(data.getBook_pubdate());
 		dto.setBook_publisher(data.getBook_publisher());
 		dto.setBook_thumbnail_url(data.getBook_thumbnail_url());
-		dto.setGenre_id(data.getGenre().getId());
+		
 		dto.setLoan_count(data.getLoan_count());
+		
+		if(data.getGenre() == null) {
+			dto.setGenre_id(0);
+		}else {
+			dto.setGenre_id(data.getGenre().getId());
+		}
 		
 		return dto;
 	}

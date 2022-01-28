@@ -1,5 +1,9 @@
 package com.ssafy.DTO;
 
+import java.util.Date;
+
+import com.ssafy.api.request.SignUpUserRequestDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,15 +15,25 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserDTO {
 	private int id;
-	private String name;
 	private String password;
-	private String confirm_password;
 	private String nickname;
 	private String email;
 	private int gender;
-	private int age;
-	private int host_point;
-	private int guest_point;
-	private String profile_image;
-	private String profile_description;
+	private Date age;
+	private int hostPoint;
+	private int guestPoint;
+	private String profileImage;
+	private String profileDescription;
+	
+	public UserDTO(SignUpUserRequestDTO data) {
+		setPassword(data.getPassword());
+		setNickname(data.getNickname());
+		setEmail(data.getEmail());
+		setGender(data.getGender());
+		setAge(data.getAge());
+		setHostPoint(0);
+		setGuestPoint(0);
+		setProfileImage(data.getProfile_image());
+		setProfileDescription(data.getProfile_description());
+	}
 }
