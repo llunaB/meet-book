@@ -12,16 +12,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 public class Book {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,11 +40,11 @@ public class Book {
 	@Column
 	private String isbn;
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date book_pubdate;
+	@Column
+	private int book_pub_year;
 	
 	@ManyToOne
-	@JoinColumn(name = "GENRE_ID")
+	@JoinColumn(name = "genre_id")
 	private Genre genre;
 	
 	@Column

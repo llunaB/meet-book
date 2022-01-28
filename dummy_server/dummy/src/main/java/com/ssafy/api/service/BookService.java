@@ -8,39 +8,23 @@ import org.springframework.stereotype.Service;
 import com.ssafy.DTO.BookDTO;
 import com.ssafy.db.entity.Book;
 import com.ssafy.db.entity.Genre;
-import com.ssafy.db.openApi.OpenApiHelper;
 import com.ssafy.db.repository.BookRepository;
 
 @Service
 public class BookService {
-	
-	private BookRepository repo;
-	private OpenApiHelper helper;
-	
+
+	private final BookRepository repo;
+
 	@Autowired
-	public BookService(BookRepository repo, OpenApiHelper helper) {
+	public BookService(BookRepository repo) {
 		this.repo = repo;
-		this.helper = helper;
 	}
-	
-	public boolean loadBookData() {
+
+	public boolean loadBookData(List<Book> books) {
 		try {
-			List<Book> list = helper.LoadBookData();
-			
-			repo.saveAll(list);
+			repo.saveAll(books);
 			return true;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
-	}
-	
-	public boolean createBook(Book Book) {
-		try {
-			repo.save(Book);
-			return true;
-		}catch(Exception e){
 			e.printStackTrace();
 			return false;
 		}
@@ -106,7 +90,7 @@ public class BookService {
 		target.setBook_author(data.getBook_author());
 		target.setBook_contents(data.getBook_contents());
 		target.setBookname(data.getBookname());
-		target.setBook_pubdate(data.getBook_pubdate());
+		target.setBook_pub_year(data.getBook_pub_year());
 		target.setBook_publisher(data.getBook_publisher());
 		target.setBook_thumbnail_url(data.getBook_thumbnail_url());
 		target.setGenre(data.getGenre());
@@ -121,7 +105,7 @@ public class BookService {
 		dto.setBook_author(data.getBook_author());
 		dto.setBook_contents(data.getBook_contents());
 		dto.setBookname(data.getBookname());
-		dto.setBook_pubdate(data.getBook_pubdate());
+		dto.setBook_pub_year(data.getBook_pub_year());
 		dto.setBook_publisher(data.getBook_publisher());
 		dto.setBook_thumbnail_url(data.getBook_thumbnail_url());
 		
@@ -141,7 +125,7 @@ public class BookService {
 		entity.setBook_author(data.getBook_author());
 		entity.setBook_contents(data.getBook_contents());
 		entity.setBookname(data.getBookname());
-		entity.setBook_pubdate(data.getBook_pubdate());
+		entity.setBook_pub_year(data.getBook_pub_year());
 		entity.setBook_publisher(data.getBook_publisher());
 		entity.setBook_thumbnail_url(data.getBook_thumbnail_url());
 		entity.setGenre(genre);

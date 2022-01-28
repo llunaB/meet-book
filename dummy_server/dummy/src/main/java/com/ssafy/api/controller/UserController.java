@@ -57,7 +57,9 @@ public class UserController {
 			map.setMessage("회원가입 실패");
 
 		}
+
 		return new ResponseEntity<MessageDTO>(map, HttpStatus.OK);
+
 	}
 	
 	@PostMapping("/login")
