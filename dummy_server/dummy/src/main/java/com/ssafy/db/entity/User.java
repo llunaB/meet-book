@@ -2,6 +2,7 @@ package com.ssafy.db.entity;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,8 +18,6 @@ import javax.persistence.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import com.ssafy.DTO.UserDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,9 +39,6 @@ public class User implements UserDetails {
 	private int id;
 	
 	@Column
-	private String name;
-	
-	@Column
 	private String password;
 	
 	@Column
@@ -55,19 +51,19 @@ public class User implements UserDetails {
 	private int gender;
 	
 	@Column
-	private int age;
+	private Date age;
 	
-	@Column
-	private int host_point;
+	@Column(name = "host_point")
+	private int hostPoint;
 	
-	@Column
-	private int guest_point;
+	@Column(name = "guest_point")
+	private int guestPoint;
 	
-	@Column
-	private String profile_image;
+	@Column(name = "profile_image")
+	private String profileImage;
 	
-	@Column
-	private String profile_description;
+	@Column(name = "profile_description")
+	private String profileDescription;
 
 	@ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default

@@ -1,27 +1,45 @@
 package com.ssafy.api.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.api.response.BookmarkResDTO;
 import com.ssafy.db.entity.Bookmark;
+import com.ssafy.db.entity.Conference;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.BookmarkRepository;
+import com.ssafy.db.repository.ConferenceRepository;
+import com.ssafy.db.repository.UserRepository;
 
 @Service
 public class BookmarkService {
 	
 	private BookmarkRepository repo;
+	private UserRepository uRepo;
+	private ConferenceRepository cRepo;
 	
 	@Autowired
-	public BookmarkService(BookmarkRepository repo) {
+	public BookmarkService(BookmarkRepository repo, UserRepository uRepo, ConferenceRepository cRepo) {
 		this.repo = repo;
+		this.uRepo = uRepo;
+		this.cRepo = cRepo;
 	}
 	
-	public boolean createBookmark(Bookmark Bookmark) {
+	public boolean createBookmark(int userId, int conferenceId) {
 		try {
-			repo.save(Bookmark);
+			
+			Bookmark bookmark = new Bookmark();
+			User user = uRepo.getById(userId);
+			Conference conf = cRepo.getById(conferenceId);
+			
+			bookmark.setAlarm(1);
+			bookmark.setConference(conf);
+			bookmark.setUser(user);
+			
+			repo.save(bookmark);
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -40,10 +58,14 @@ public class BookmarkService {
 		return result;
 	}
 	
-	public List<Bookmark> getBookmarks(User user) {
-		List<Bookmark> result = null;
+	public List<BookmarkResDTO> getBookmarks(int userId) {
+		List<BookmarkResDTO> result = null;
+		User user = uRepo.getById(userId);
 		try {
-			result = repo.findByUser(user);
+			result = repo.findByUser(user).stream().map(objA -> {
+				BookmarkResDTO objB = new BookmarkResDTO(objA);
+			    return objB;
+			}).collect(Collectors.toList());;
 		}catch(Exception e){
 			e.printStackTrace();
 		}
