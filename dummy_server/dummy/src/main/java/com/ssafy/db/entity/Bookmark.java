@@ -18,15 +18,12 @@ public class Bookmark {
 	@Column(name = "Key")
 	private int id;
 
-	@ManyToOne(targetEntity = Conference.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "conference_id")
-
 	@ManyToOne
 	@JoinColumn(name = "CONFERENCE_ID")
 	private Conference conference;
 	
 	@ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "USER_ID")
 	private User user;
 	
 	@Column
