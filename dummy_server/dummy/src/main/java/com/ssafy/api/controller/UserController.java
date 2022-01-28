@@ -56,7 +56,6 @@ public class UserController {
 		}else {
 			System.out.println("fail user created");
 			map.put("message", "회원가입 실패");
-
 		}
 		
 		

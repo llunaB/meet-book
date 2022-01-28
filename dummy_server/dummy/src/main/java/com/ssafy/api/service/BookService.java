@@ -8,27 +8,27 @@ import org.springframework.stereotype.Service;
 import com.ssafy.DTO.BookDTO;
 import com.ssafy.db.entity.Book;
 import com.ssafy.db.entity.Genre;
-import com.ssafy.db.openApi.OpenApiHelper;
 import com.ssafy.db.repository.BookRepository;
 
 @Service
 public class BookService {
 	
-	private BookRepository repo;
-	private OpenApiHelper helper;
-	
+	private final BookRepository repo;
+	private final OpenApiService openApiService;
+
 	@Autowired
-	public BookService(BookRepository repo, OpenApiHelper helper) {
+	public BookService(BookRepository repo, OpenApiService openApiService) {
 		this.repo = repo;
-		this.helper = helper;
+		this.openApiService = openApiService;
 	}
-	
+
+	// BookController 에서 실행
 	public boolean loadBookData() {
 		try {
-			List<Book> list = helper.LoadBookData();
-			
+			List<Book> list = openApiService.loadBookData();
 			repo.saveAll(list);
 			return true;
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
