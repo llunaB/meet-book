@@ -2,7 +2,15 @@ package com.ssafy.db.entity;
 
 import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,18 +24,19 @@ import lombok.Setter;
 @Entity
 public class Conference {
 	@Id
-	@Column(name="confernece_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@Column(name = "call_start_time")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date call_start_time;	
+	private Date callStartTime;	
 	
+	@Column(name = "call_end_time")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date call_end_time;
+	private Date callEndTime;
 
-	@Column
-	private String thumbnail_url;
+	@Column(name = "thumbnail_url")
+	private String thumbnailUrl;
 
 	@Column
 	private String title;
@@ -35,12 +44,12 @@ public class Conference {
 	@Column
 	private String description;
 
-	@ManyToOne(targetEntity = Book.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "book_id")
+	@ManyToOne
+	@JoinColumn(name = "BOOK_ID")
 	private Book book;
 	
-	@ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
+	@ManyToOne
+	@JoinColumn(name = "USER_ID")
 	private User user;
 
 	@Column
@@ -49,8 +58,8 @@ public class Conference {
 	@Column
 	private String password;
 
-	@Column
-	private int max_members;
+	@Column(name = "max_members")
+	private int maxMembers;
 
 	@Column
 	private String tags;

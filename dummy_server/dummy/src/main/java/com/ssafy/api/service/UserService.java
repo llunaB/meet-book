@@ -4,17 +4,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.DTO.UserDTO;
-import com.ssafy.api.request.DeleteUserRequestDTO;
-import com.ssafy.api.request.LoginUserRequestDTO;
-import com.ssafy.api.request.UpdateProfileRequestDTO;
-import com.ssafy.api.request.UpdateUserRequestDTO;
+import com.ssafy.api.requestDto.DeleteUserReq;
+import com.ssafy.api.requestDto.LoginReq;
+import com.ssafy.api.requestDto.UpdateUserByProfileReq;
+import com.ssafy.api.requestDto.UpdateUserByDetailReq;
 import com.ssafy.config.JwtTokenProvider;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.UserRepository;
@@ -22,21 +24,23 @@ import com.ssafy.db.repository.UserRepository;
 @Service
 public class UserService {
 	
-	private UserRepository repo;
+	private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
 	private JwtTokenProvider jwtTokenProvider;
+	private ModelMapper modelMapper;
 	
 	@Autowired
-	public UserService(UserRepository repo, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
-		this.repo = repo;
+	public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
+		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.jwtTokenProvider = jwtTokenProvider;
+		this.modelMapper = new ModelMapper();
 	}
 	
-	public boolean createUser(UserDTO user) {
+	public boolean createUser(UserDTO userDto) {
 		try {
-			User entity = Dto2Entity(user);
-			repo.save(entity);
+			User entity = modelMapper.map(userDto, User.class);
+			userRepository.save(entity);
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -44,9 +48,10 @@ public class UserService {
 		}
 	}
 	
-	public String login(LoginUserRequestDTO data) {
-		User user = repo.findByEmail(data.getEmail()).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다.") );
-		if(matchPassword(data.getPassword(), user.getPassword())) {
+	//Login 데이터를 받고, JWT를 반환하는 메소드
+	public String login(LoginReq data) {
+		User user = userRepository.findByEmail(data.getEmail()).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다.") );
+		if(comparePassword(data.getPassword(), user.getPassword())) {
 			return jwtTokenProvider.createToken(user.getUsername(),user.getRoles());
 		}
 		
@@ -54,32 +59,40 @@ public class UserService {
 	}
 	
 	public UserDTO getUserById(int id) {
-		User data = null;
 		try {
-			data = repo.findById(id).get();
+			User source = userRepository.findById(id).get();
+			return modelMapper.map(source, UserDTO.class);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		
-		return Entity2Dto(data);
+		return null;
 	}
 	
 	public UserDTO getUserByEmail(String email) throws UsernameNotFoundException {
-		User data = repo.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-		return Entity2Dto(data);
+		try {
+			User source = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+			return modelMapper.map(source, UserDTO.class);
+		}catch(UsernameNotFoundException e){
+			e.printStackTrace();
+			throw e;
+		}
 	}
 	
-	private boolean matchPassword(String password, String password1) {
-        return passwordEncoder.matches(password,password1);
+	//구 matchPassword
+	//생 비밀번호와, 암호화된 비밀번호를 입력받고, 두 비밀번호의 동일 여부를 반환
+	private boolean comparePassword(String rawPassword, String encryptPassword) {
+        return passwordEncoder.matches(rawPassword,encryptPassword);
     }
 	
-	public List<UserDTO> getUserByNickname(String nickname) {
+	public List<UserDTO> getUsersByNickname(String nickname) {
 		List<UserDTO> list = new ArrayList<UserDTO>();
 		try {
-			List<User> dataList = repo.findByNicknameContaining(nickname);
-			for(User data : dataList) {
-				list.add(Entity2Dto(data));
-			}
+			List<User> dataList = userRepository.findByNicknameContaining(nickname);
+			list = dataList.stream().map(source -> {
+				UserDTO res = modelMapper.map(source, UserDTO.class);
+				return res;
+			}).collect(Collectors.toList());
 			return list;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -88,12 +101,12 @@ public class UserService {
 		return list;
 	}
 	
-	public boolean updateProfile(UpdateProfileRequestDTO data, int id) {
+	public boolean updateUserByProfile(UpdateUserByProfileReq data, int id) {
 		try {
-			User entity = repo.getById(id);
+			User entity = userRepository.getById(id);
 			if(entity == null) return false;
-			entity = UpdateProfile(entity, data);
-			repo.save(entity);
+			entity = updateEntityByProfile(entity, data);
+			userRepository.save(entity);
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -101,12 +114,12 @@ public class UserService {
 		}
 	}
 	
-	public boolean updateUser(UpdateUserRequestDTO data, int id) {
+	public boolean updateUserByDetail(UpdateUserByDetailReq data, int id) {
 		try {
-			User entity = repo.getById(id);
+			User entity = userRepository.getById(id);
 			if(entity == null) return false;
-			entity = UpdateUser(entity, data);
-			repo.save(entity);
+			entity = updateEntityByUserInfo(entity, data);
+			userRepository.save(entity);
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -114,14 +127,14 @@ public class UserService {
 		}
 	}
 	
-	public boolean deleteUser(DeleteUserRequestDTO data, int id) {
+	public boolean deleteUser(DeleteUserReq data, int id) {
 		
-		User entity = repo.getById(id) ;
+		User entity = userRepository.getById(id) ;
 		
-		if(!matchPassword(data.getPassword(), entity.getPassword())) return false;
+		if(!comparePassword(data.getPassword(), entity.getPassword())) return false;
 		
 		try {
-			repo.delete(entity);
+			userRepository.delete(entity);
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -129,41 +142,7 @@ public class UserService {
 		}
 	}
 	
-	public User Dto2Entity(UserDTO data) {
-		User entity = new User();
-		
-		entity.setPassword(passwordEncoder.encode(data.getPassword()));
-		entity.setNickname(data.getNickname());
-		entity.setEmail(data.getEmail());
-		entity.setGender(data.getGender());
-		entity.setAge(data.getAge());
-		entity.setProfileImage(data.getProfileImage());
-		entity.setProfileDescription(data.getProfileDescription());
-		entity.setHostPoint(data.getHostPoint());
-		entity.setGuestPoint(data.getGuestPoint());
-        entity.setRoles(Collections.singletonList("ROLE_USER"));
-		
-		return entity;
-	}
-	
-	public UserDTO Entity2Dto(User data) {
-		UserDTO dto = new UserDTO();
-		
-		dto.setId(data.getId());
-		dto.setPassword(data.getPassword());
-		dto.setNickname(data.getNickname());
-		dto.setEmail(data.getEmail());
-		dto.setGender(data.getGender());
-		dto.setAge(data.getAge());
-		dto.setProfileImage(data.getProfileImage());
-		dto.setProfileDescription(data.getProfileDescription());
-		dto.setHostPoint(data.getHostPoint());
-		dto.setGuestPoint(data.getGuestPoint());
-		
-		return dto;
-	}
-	
-	private User UpdateProfile(User entity, UpdateProfileRequestDTO data) {
+	private User updateEntityByProfile(User entity, UpdateUserByProfileReq data) {
 		
 		entity.setNickname(data.getNickname());
 		entity.setProfileDescription(data.getProfileDescription());
@@ -172,12 +151,12 @@ public class UserService {
 		return entity;
 	}
 	
-	private User UpdateUser(User entity, UpdateUserRequestDTO data) {
+	private User updateEntityByUserInfo(User entity, UpdateUserByDetailReq data) {
 		entity.setPassword(data.getNewPassword());
 		return entity;
 	}
 	
-	private User UpdateEntity(User entity, User data) {
+	private User updateUserEntity(User entity, User data) {
 		
 		entity.setPassword(data.getPassword());
 		entity.setNickname(data.getNickname());
