@@ -22,45 +22,24 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Conference {
+public class ConferenceHistory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	@Column(name = "call_start_time")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date callStartTime;	
-	
-	@Column(name = "call_end_time")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date callEndTime;
-
-	@Column(name = "thumbnail_url")
-	private String thumbnailUrl;
-
-	@Column
-	private String title;
-
-	@Column
-	private String description;
 
 	@ManyToOne
-	@JoinColumn(name = "BOOK_ID")
-	private Book book;
+	@JoinColumn(name = "CONFE_ID")
+	private Conference conference;
 	
 	@ManyToOne
 	@JoinColumn(name = "USER_ID")
 	private User user;
-
+	
 	@Column
-	private String question;
-
-	@Column
-	private String password;
-
-	@Column(name = "max_members")
-	private int maxMembers;
-
-	@Column
-	private String tags;
+	private int action;
+	
+	@Column(name = "inserted_time")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date insertedTime;
+	
 }

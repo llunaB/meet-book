@@ -2,7 +2,9 @@ package com.ssafy.api.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,76 +12,34 @@ import com.ssafy.DTO.ConferenceDTO;
 import com.ssafy.db.entity.Book;
 import com.ssafy.db.entity.Conference;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.repository.BookRepository;
 import com.ssafy.db.repository.ConferenceRepository;
 import com.ssafy.db.repository.UserRepository;
 
 @Service
 public class ConferenceService {
 	
-	private ConferenceRepository repo;
-	private UserRepository uRepo;
+	private ConferenceRepository conferenceRepository;
+	private UserRepository userRepository;
+	private BookRepository bookRepository;
+	private ModelMapper modelMapper;
 	
 	@Autowired
-	public ConferenceService(ConferenceRepository repo, UserRepository uRepo) {
-		this.repo = repo;
-		this.uRepo = uRepo;
+	public ConferenceService(ConferenceRepository conferenceRepository, UserRepository userRepository, BookRepository bookRepository) {
+		this.conferenceRepository = conferenceRepository;
+		this.userRepository = userRepository;
+		this.bookRepository = bookRepository;
+		this.modelMapper = new ModelMapper();
 	}
 	
-	public List<Conference> getAllConf(){
-		return repo.findAll();
-	}
-	
-	public boolean createConference(Conference Conference) {
-		try {
-			repo.save(Conference);
-			return true;
-		}catch(Exception e){
-			e.printStackTrace();
-			return false;
-		}
-	}
-	
-	public Conference getConferenceById(int id) {
-		Conference result = null;
-		try {
-			result = repo.findById(id).get();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
+	public List<ConferenceDTO> getConferences(){
+		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
 		
-		return result;
-	}
-	
-	public List<Conference> findByTitle(String title){
 		try {
-			return repo.findByTitleContaining(title);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		return null;
-	}
-	
-	public List<Conference> findByBook(Book book){
-		try {
-			return repo.findByBook(book);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		return null;
-	}
-	
-	public List<Conference> findByUser(String nickname){
-		List<Conference> list = new ArrayList<>();
-		try {
-			List<User> userlist = uRepo.findByNicknameContaining(nickname);
-			
-			for(User user : userlist) {
-				list.addAll(repo.findByUser(user));
-			}
-			
-			return list;
+			list = conferenceRepository.findAll().stream().map(source -> {
+				ConferenceDTO res = modelMapper.map(source, ConferenceDTO.class);
+			    return res;
+			}).collect(Collectors.toList());
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -87,9 +47,20 @@ public class ConferenceService {
 		return list;
 	}
 	
-	public List<Conference> findByTags(String tags){
+	public boolean createConference(ConferenceDTO source) {
 		try {
-			return repo.findByTagsContaining(tags);
+			conferenceRepository.save(modelMapper.map(source, Conference.class));
+			return true;
+		}catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public ConferenceDTO getConferenceById(int id) {
+		try {
+			Conference source = conferenceRepository.findById(id).get();
+			return modelMapper.map(source, ConferenceDTO.class); 
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -97,12 +68,72 @@ public class ConferenceService {
 		return null;
 	}
 	
-	public boolean updateConference(Conference c) {
+	public List<ConferenceDTO> getConferencesByTitle(String title){
+		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
 		try {
-			Conference output = getConferenceById(c.getId());
+			list = conferenceRepository.findByTitleContaining(title).stream().map(source -> {
+				ConferenceDTO res = modelMapper.map(source, ConferenceDTO.class);
+				return res;
+			}).collect(Collectors.toList());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	public List<ConferenceDTO> getConferencesByBook(String bookname){
+		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
+		try {
+			List<Book> bookList = bookRepository.findByBookNameContaining(bookname);
+			list.addAll(conferenceRepository.findConferencesByBook(bookList).stream().map(source -> {
+				ConferenceDTO res = modelMapper.map(source, ConferenceDTO.class);
+				return res;
+			}).collect(Collectors.toList()));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	public List<ConferenceDTO> getConferencesByNickname(String nickname){
+		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
+		try {
+			List<User> userList = userRepository.findByNicknameContaining(nickname);
+			list.addAll(conferenceRepository.findConferencesByUser(userList).stream().map(source -> {
+				ConferenceDTO res = modelMapper.map(source, ConferenceDTO.class);
+				return res;
+			}).collect(Collectors.toList()));
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	public List<ConferenceDTO> getConferencesByTags(String tags){
+		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
+		try {
+			list = conferenceRepository.findByTagsContaining(tags).stream().map(source -> {
+				ConferenceDTO res = modelMapper.map(source, ConferenceDTO.class);
+				return res;
+			}).collect(Collectors.toList());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	public boolean updateConference(ConferenceDTO conferenceDTO) {
+		try {
+			Conference output = conferenceRepository.getById(conferenceDTO.getId());
 			if(output == null) return false;
-			output = UpdateEntity(output, c);
-			repo.save(output);
+			Conference data = modelMapper.map(conferenceDTO, Conference.class);
+			output = updateConferenceEntity(output, data);
+			conferenceRepository.save(output);
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -112,8 +143,8 @@ public class ConferenceService {
 	
 	public boolean deleteConference(int id) {
 		try {
-			Conference Conference = getConferenceById(id);
-			repo.delete(Conference);
+			Conference Conference = conferenceRepository.getById(id);
+			conferenceRepository.delete(Conference);
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -121,50 +152,14 @@ public class ConferenceService {
 		}
 	}
 	
-	public Conference Dto2Entity(ConferenceDTO data, User user, Book book) {
-		Conference entity = new Conference();
-		entity.setBook(book);
-		entity.setUser(user);
-		entity.setCall_end_time(data.getCall_end_time());
-		entity.setCall_start_time(data.getCall_end_time());
-		entity.setThumbnail_url(data.getThumbnail_url());
-		entity.setDescription(data.getDescription());
-		entity.setMax_members(data.getMax_members());
-		entity.setPassword(data.getPassword());
-		entity.setQuestion(data.getQuestion());
-		entity.setTags(data.getTags());
-		entity.setTitle(data.getTitle());
-		
-		return entity;
-	}
-	
-	public ConferenceDTO Entity2Dto(Conference data) {
-		ConferenceDTO dto = new ConferenceDTO();
-		
-		dto.setId(data.getId());
-		dto.setBook_id(data.getBook().getId());
-		dto.setUser_id(data.getUser().getId());
-		dto.setCall_end_time(data.getCall_end_time());
-		dto.setCall_start_time(data.getCall_end_time());
-		dto.setThumbnail_url(data.getThumbnail_url());
-		dto.setDescription(data.getDescription());
-		dto.setMax_members(data.getMax_members());
-		dto.setPassword(data.getPassword());
-		dto.setQuestion(data.getQuestion());
-		dto.setTags(data.getTags());
-		dto.setTitle(data.getTitle());
-		
-		return dto;
-	}
-	
-	public Conference UpdateEntity(Conference target, Conference data) {
+	public Conference updateConferenceEntity(Conference target, Conference data) {
 		target.setBook(data.getBook());
 		target.setUser(data.getUser());
-		target.setCall_end_time(data.getCall_end_time());
-		target.setCall_start_time(data.getCall_end_time());
-		target.setThumbnail_url(data.getThumbnail_url());
+		target.setCallEndTime(data.getCallEndTime());
+		target.setCallStartTime(data.getCallEndTime());
+		target.setThumbnailUrl(data.getThumbnailUrl());
 		target.setDescription(data.getDescription());
-		target.setMax_members(data.getMax_members());
+		target.setMaxMembers(data.getMaxMembers());
 		target.setPassword(data.getPassword());
 		target.setQuestion(data.getQuestion());
 		target.setTags(data.getTags());

@@ -1,4 +1,4 @@
-package com.ssafy.api.response;
+package com.ssafy.api.responseDto;
 
 import java.util.Date;
 
@@ -15,16 +15,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BookmarkResDTO {
+public class GetBookmarksRes {
 	private int id;
 	private String title;
 	private Date date;
 	private boolean alarm;
-	
-	public BookmarkResDTO(Bookmark data) {
-		setId(data.getId());
-		setTitle(data.getConference().getTitle());
-		setDate(data.getConference().getCall_start_time());
-		setAlarm(data.getAlarm() == 1);
-	}
 }

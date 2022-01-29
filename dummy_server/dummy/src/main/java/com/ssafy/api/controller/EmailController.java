@@ -18,11 +18,11 @@ import java.util.Random;
 public class EmailController {
 
     @Autowired
-    MailSender sender;
+    MailSender mailSender;
 
     @RequestMapping("/CheckMail") // AJAX와 URL을 매핑시켜줌
     @ResponseBody  //AJAX후 값을 리턴하기위해 작성
-    public Map<String,String> SendMail(@RequestParam String mail) {
+    public Map<String,String> createMail(@RequestParam String mail) {
         Random random=new Random();  //난수 생성을 위한 랜덤 클래스
         String key="";  //인증번호
         Map<String,String> check = new HashMap<>();
@@ -38,7 +38,7 @@ public class EmailController {
         key+=numIndex;
         message.setSubject("인증번호 입력을 위한 메일 전송");
         message.setText("인증 번호 : "+key);
-        sender.send(message);
+        mailSender.send(message);
         System.out.println("인증");
         check.put("key",key);
         return check;

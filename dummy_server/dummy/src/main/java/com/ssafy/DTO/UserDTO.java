@@ -2,7 +2,7 @@ package com.ssafy.DTO;
 
 import java.util.Date;
 
-import com.ssafy.api.request.SignUpUserRequestDTO;
+import com.ssafy.api.requestDto.SignUpReq;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +25,7 @@ public class UserDTO {
 	private String profileImage;
 	private String profileDescription;
 	
-	public UserDTO(SignUpUserRequestDTO data) {
+	public UserDTO(SignUpReq data) {
 		setPassword(data.getPassword());
 		setNickname(data.getNickname());
 		setEmail(data.getEmail());
@@ -33,7 +33,7 @@ public class UserDTO {
 		setAge(data.getAge());
 		setHostPoint(0);
 		setGuestPoint(0);
-		setProfileImage(data.getProfile_image());
-		setProfileDescription(data.getProfile_description());
+		setProfileImage(data.getProfileImage());
+		setProfileDescription(data.getProfileDescription());
 	}
 }

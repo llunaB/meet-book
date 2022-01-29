@@ -1,4 +1,4 @@
-package com.ssafy.api.request;
+package com.ssafy.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateProfileRequestDTO {
-	private String nickname;
-	private String profileImage;
-	private String profileDescription;
+public class BookmarkDTO {
+	private int id;
+	private int conferenceId;
+	private int userId;
+	private int alarm;
 }

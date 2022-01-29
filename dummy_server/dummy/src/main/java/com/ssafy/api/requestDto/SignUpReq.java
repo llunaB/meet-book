@@ -1,4 +1,4 @@
-package com.ssafy.api.request;
+package com.ssafy.api.requestDto;
 
 import java.util.Date;
 
@@ -11,19 +11,19 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignUpUserRequestDTO {
+public class SignUpReq {
     private String password;
     private String nickname;
     private String email;
     private int gender;
     private Date age;
-    private String profile_image;
-    private String profile_description;
+    private String profileImage;
+    private String profileDescription;
 	@Override
 	public String toString() {
 		return "SignUpUserDto [password=" + password + ", nickname=" + nickname + ", email=" + email + ", gender="
-				+ gender + ", age=" + age + ", profile_image=" + profile_image + ", profile_description="
-				+ profile_description + "]";
+				+ gender + ", age=" + age + ", profile_image=" + profileImage + ", profile_description="
+				+ profileDescription + "]";
 	}
     
     

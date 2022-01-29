@@ -16,15 +16,15 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ConferenceDTO {
 	private int id; 
-	private int user_id;
-	private int book_id;
-	private Date call_start_time;
-	private Date call_end_time;
+	private int userId;
+	private int bookId;
+	private Date callStartTime;
+	private Date callEndTime;
 	private String question;
 	private String password;
-	private String thumbnail_url;
+	private String thumbnailUrl;
 	private String title;
 	private String description;
-	private int max_members;
+	private int maxMembers;
 	private String tags;
 }

@@ -12,44 +12,46 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Builder
 public class Book {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
 	@Column(name = "book_name")
-	private String bookname;
+	private String bookName;
 	
-	@Column
-	private String book_author;
+	@Column(name = "book_author")
+	private String bookAuthor;
 	
-	@Column
-	private String book_contents;
+	@Column(name = "book_contents")
+	private String bookContents;
 	
-	@Column
-	private String book_publisher;
+	@Column(name = "book_publisher")
+	private String bookPublisher;
 	
 	@Column
 	private String isbn;
 	
-	@Column
-	private int book_pub_year;
+	@Column(name = "book_pub_year")
+	private int bookPubYear;
 	
 	@ManyToOne
-	@JoinColumn(name = "genre_id")
+	@JoinColumn(name = "GENRE_ID")
 	private Genre genre;
 	
-	@Column
-	private String book_thumbnail_url;
+	@Column(name = "book_thumbnail_url")
+	private String bookThumbnailUrl;
 	
-	@Column
-	private int loan_count;
+	@Column(name = "loan_count")
+	private int loanCount;
 }

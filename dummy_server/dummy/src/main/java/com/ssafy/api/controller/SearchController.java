@@ -24,79 +24,89 @@ import com.ssafy.db.entity.User;
 @RestController
 @RequestMapping("/search")
 public class SearchController {
-	private UserService uService;
-	private BookService bService;
-	private ConferenceService cService;
+	private UserService userService;
+	private BookService bookService;
+	private ConferenceService conferenceService;
 	
 	@Autowired
-	public SearchController(UserService uService, BookService bService, ConferenceService cService) {
-		this.uService = uService;
-		this.bService = bService;
-		this.cService = cService;
+	public SearchController(UserService userService, BookService bookService, ConferenceService conferenceService) {
+		this.userService = userService;
+		this.bookService = bookService;
+		this.conferenceService = conferenceService;
 	}
 
 	@GetMapping("/users")
-	public ResponseEntity<List<UserDTO>> userSearch(@RequestParam("nickname") String nickname){
-		List<UserDTO> list = uService.getUserByNickname(nickname);
+	public ResponseEntity<List<UserDTO>> getUser(@RequestParam("nickname") String nickname){
+		List<UserDTO> list = new ArrayList<UserDTO>();
+		
+		try {
+			list = userService.getUsersByNickname(nickname);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 		
 		return new ResponseEntity<List<UserDTO>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("/book")
-	public ResponseEntity<List<BookDTO>> bookSearch(@RequestParam("book_name") String bookname){
-		ArrayList<BookDTO> list = new ArrayList<>();
-		List<Book> entities = bService.getBookByName(bookname);
-		for(Book b : entities) {
-			list.add(bService.Entity2Dto(b));
+	public ResponseEntity<List<BookDTO>> getBook(@RequestParam("book_name") String bookname){
+		List<BookDTO> list = new ArrayList<BookDTO>();
+		
+		try {
+			list = bookService.getBooksByName(bookname);
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 		
 		return new ResponseEntity<List<BookDTO>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("/conference")
-	public ResponseEntity<List<ConferenceDTO>> conferenceSearch(@RequestParam("title") String title){
-		ArrayList<ConferenceDTO> list = new ArrayList<>();
-		List<Conference> entities = cService.findByTitle(title);
-		for(Conference c : entities) {
-			list.add(cService.Entity2Dto(c));
+	public ResponseEntity<List<ConferenceDTO>> getConferneceByTitle(@RequestParam("title") String title){
+		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
+
+		try {
+			list = conferenceService.getConferencesByTitle(title);
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
-		
 		return new ResponseEntity<List<ConferenceDTO>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("/conference/book")
-	public ResponseEntity<List<ConferenceDTO>> conferenceBookSearch(@RequestParam("book") String bookname){
-		ArrayList<ConferenceDTO> list = new ArrayList<>();
-		for(Book book : bService.getBookByName(bookname)) {
-			List<Conference> entities = cService.findByBook(book);
-			for(Conference c : entities) {
-				list.add(cService.Entity2Dto(c));
-			}
+	public ResponseEntity<List<ConferenceDTO>> getConferenceByBook(@RequestParam("book") String bookname){
+		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
+
+		try {
+			list = conferenceService.getConferencesByBook(bookname);
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
-		
 		
 		return new ResponseEntity<List<ConferenceDTO>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("/conference/user")
-	public ResponseEntity<List<ConferenceDTO>> conferenceUserSearch(@RequestParam("user") String nickname){
-		ArrayList<ConferenceDTO> list = new ArrayList<>();
-		List<Conference> entities = cService.findByUser(nickname);
-		for(Conference c : entities) {
-			list.add(cService.Entity2Dto(c));
+	public ResponseEntity<List<ConferenceDTO>> getConferenceByUser(@RequestParam("user") String nickname){
+		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
+
+		try {
+			list = conferenceService.getConferencesByNickname(nickname);
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
-		
 		return new ResponseEntity<List<ConferenceDTO>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("/conference/tag")
-	public ResponseEntity<List<ConferenceDTO>> conferenceTagSearch(@RequestParam("tag") String tag){
-		ArrayList<ConferenceDTO> list = new ArrayList<>();
-		List<Conference> entities = cService.findByTags(tag);
-		for(Conference c : entities) {
-			list.add(cService.Entity2Dto(c));
-		}
+	public ResponseEntity<List<ConferenceDTO>> getConferenceByTags(@RequestParam("tag") String tag){
+		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
 		
+		try {
+			list = conferenceService.getConferencesByTags(tag);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 		return new ResponseEntity<List<ConferenceDTO>>(list, HttpStatus.OK);
 	}
 }

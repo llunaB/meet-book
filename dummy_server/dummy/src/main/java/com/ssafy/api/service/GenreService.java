@@ -1,24 +1,28 @@
 package com.ssafy.api.service;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.DTO.GenreDTO;
 import com.ssafy.db.entity.Genre;
 import com.ssafy.db.repository.GenreRepository;
 
 @Service
 public class GenreService {
 	
-	private GenreRepository repo;
+	private GenreRepository genreRepository;
+	private ModelMapper modelMapper;
 	
 	@Autowired
-	public GenreService(GenreRepository repo) {
-		this.repo = repo;
+	public GenreService(GenreRepository genreRepository) {
+		this.genreRepository = genreRepository;
+		this.modelMapper = new ModelMapper();
 	}
 	
-	public boolean createUser(Genre genre) {
+	public boolean createGenre(Genre genre) {
 		try {
-			repo.save(genre);
+			genreRepository.save(genre);
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -26,23 +30,22 @@ public class GenreService {
 		}
 	}
 	
-	public Genre getUserById(int id) {
-		Genre result = null;
+	public GenreDTO getGenreById(int id) {
 		try {
-			result = repo.findById(id).get();
+			return modelMapper.map( genreRepository.findById(id).get(), GenreDTO.class );
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		
-		return result;
+		return null;
 	}
 	
-	public boolean updateUser(int id, String genre) {
+	public boolean updateGenre(int id, String genre) {
 		try {
-			Genre output = getUserById(id);
+			Genre output = genreRepository.getById(id);
 			if(output == null) return false;
 			output.setGenre(genre);;
-			repo.save(output);
+			genreRepository.save(output);
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -50,10 +53,10 @@ public class GenreService {
 		}
 	}
 	
-	public boolean deleteUser(int id) {
+	public boolean deleteGenre(int id) {
 		try {
-			Genre user = getUserById(id);
-			repo.delete(user);
+			Genre user = genreRepository.getById(id);
+			genreRepository.delete(user);
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();

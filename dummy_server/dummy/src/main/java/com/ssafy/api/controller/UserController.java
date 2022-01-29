@@ -1,6 +1,5 @@
 package com.ssafy.api.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,36 +18,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.DTO.UserDTO;
-import com.ssafy.api.request.DeleteUserRequestDTO;
-import com.ssafy.api.request.LoginUserRequestDTO;
-import com.ssafy.api.request.SignUpUserRequestDTO;
-import com.ssafy.api.request.UpdateProfileRequestDTO;
-import com.ssafy.api.request.UpdateUserRequestDTO;
-import com.ssafy.api.response.BookmarkResDTO;
-import com.ssafy.api.response.MessageDTO;
-import com.ssafy.api.response.UserDetailInfoResponseDTO;
-import com.ssafy.api.response.UserInfoResponseDTO;
+import com.ssafy.api.requestDto.DeleteUserReq;
+import com.ssafy.api.requestDto.LoginReq;
+import com.ssafy.api.requestDto.SignUpReq;
+import com.ssafy.api.requestDto.UpdateUserByProfileReq;
+import com.ssafy.api.requestDto.UpdateUserByDetailReq;
+import com.ssafy.api.responseDto.GetBookmarksRes;
+import com.ssafy.api.responseDto.MessageRes;
+import com.ssafy.api.responseDto.GetUserByDetailRes;
+import com.ssafy.api.responseDto.GetUserByProfileRes;
 import com.ssafy.api.service.BookmarkService;
-import com.ssafy.api.service.ConferenceService;
 import com.ssafy.api.service.UserService;
-import com.ssafy.db.entity.Bookmark;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
-	private UserService service;
+	private UserService userService;
 	private BookmarkService bookmarkService;
 	
 	@Autowired
-	public UserController(UserService service, BookmarkService bookmarkService) {
-		this.service = service;
+	public UserController(UserService userService, BookmarkService bookmarkService) {
+		this.userService = userService;
 		this.bookmarkService = bookmarkService;
 	}
 	
+	//유저 정보를 입력받고, User를 생성 및 DB에 저장
 	@PostMapping("/signup")
-	public ResponseEntity<MessageDTO> signup(@RequestBody SignUpUserRequestDTO user){
-		MessageDTO map = new MessageDTO();
-		if(service.createUser(new UserDTO(user))) {
+	public ResponseEntity<MessageRes> signUp(@RequestBody SignUpReq signUpReq
+			){
+		MessageRes map = new MessageRes();
+		if(userService.createUser(new UserDTO(signUpReq))) {
 			System.out.println("user created");
 			map.setMessage("회원가입 성공");
 
@@ -57,17 +56,16 @@ public class UserController {
 			map.setMessage("회원가입 실패");
 
 		}
-
-		return new ResponseEntity<MessageDTO>(map, HttpStatus.OK);
-
+		return new ResponseEntity<MessageRes>(map, HttpStatus.OK);
 	}
 	
+	//아이디와 비밀번호를 입력받고, JWT 토큰 및 유저 정보를 반환
 	@PostMapping("/login")
-	public ResponseEntity<Map<String, String>> login(@RequestBody LoginUserRequestDTO dto){
+	public ResponseEntity<Map<String, String>> login(@RequestBody LoginReq loginReq){
 		HashMap<String, String> map = new HashMap<String, String>();
 		
 		try {
-			String token = service.login(dto);
+			String token = userService.login(loginReq);
 			if(!token.equals("")) {
 				map.put("message", "로그인 성공");
 	            map.put("token",token);
@@ -84,27 +82,27 @@ public class UserController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<UserInfoResponseDTO> getInfo(@PathVariable("id") String id){
-		UserDTO user = service.getUserById(Integer.parseInt(id));
-		return new ResponseEntity<UserInfoResponseDTO>(new UserInfoResponseDTO(user), HttpStatus.OK);
+	public ResponseEntity<GetUserByProfileRes> getUser(@PathVariable("id") String id){
+		UserDTO user = userService.getUserById(Integer.parseInt(id));
+		return new ResponseEntity<GetUserByProfileRes>(new GetUserByProfileRes(user), HttpStatus.OK);
 	}
 	
 	@GetMapping("/{id}/detail")
-	public ResponseEntity<UserDetailInfoResponseDTO> getDetailInfo(@PathVariable("id") String id){
-		UserDTO user = service.getUserById(Integer.parseInt(id));
-		return new ResponseEntity<UserDetailInfoResponseDTO>(new UserDetailInfoResponseDTO(user), HttpStatus.OK);
+	public ResponseEntity<GetUserByDetailRes> getUserDetail(@PathVariable("id") String id){
+		UserDTO user = userService.getUserById(Integer.parseInt(id));
+		return new ResponseEntity<GetUserByDetailRes>(new GetUserByDetailRes(user), HttpStatus.OK);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Map<String,String>> updateProfile(@PathVariable("id") String id, @RequestBody UpdateProfileRequestDTO dto){
+	public ResponseEntity<Map<String,String>> updateUserByProfile(@PathVariable("id") String id, @RequestBody UpdateUserByProfileReq updateProfileRequestDto){
 		
 		HashMap<String, String> map = new HashMap<String, String>();
 		
 		
-		 if(service.updateProfile(dto, Integer.parseInt(id))){
-            UserDTO user = service.getUserById(Integer.parseInt(id));
+		 if(userService.updateUserByProfile(updateProfileRequestDto, Integer.parseInt(id))){
+            UserDTO user = userService.getUserById(Integer.parseInt(id));
             map.put("message", "회원정보 수정 성공");
-            map.put("token",service.login(new LoginUserRequestDTO(user.getEmail(), user.getPassword())));
+            map.put("token",userService.login(new LoginReq(user.getEmail(), user.getPassword())));
             return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
         }
         map.put("message", "회원정보 수정 실패");
@@ -112,14 +110,14 @@ public class UserController {
 	}
 	
 	@PutMapping("/{id}/detail")
-	public ResponseEntity<Map<String,String>> updateInfo(@PathVariable("id") String id,@RequestBody UpdateUserRequestDTO dto){
+	public ResponseEntity<Map<String,String>> updateUserByDetail(@PathVariable("id") String id,@RequestBody UpdateUserByDetailReq updateUserByDetailReq){
 		
 		HashMap<String, String> map = new HashMap<String, String>();
 		
-		if(service.updateUser(dto, Integer.parseInt(id))){
-			 UserDTO user = service.getUserById(Integer.parseInt(id));
+		if(userService.updateUserByDetail(updateUserByDetailReq, Integer.parseInt(id))){
+			 UserDTO user = userService.getUserById(Integer.parseInt(id));
 	            map.put("message", "회원정보 수정 성공");
-	            map.put("token",service.login(new LoginUserRequestDTO(user.getEmail(), user.getPassword())));
+	            map.put("token",userService.login(new LoginReq(user.getEmail(), user.getPassword())));
 			return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
 		}
 		map.put("message", "회원정보 수정 실패");
@@ -127,10 +125,10 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Map<String,String>> deleteUser(@RequestBody DeleteUserRequestDTO dto, @PathVariable("id") String id){
+	public ResponseEntity<Map<String,String>> deleteUser(@RequestBody DeleteUserReq deleteUserReq, @PathVariable("id") String id){
 		HashMap<String, String> map = new HashMap<String, String>();
 		try {
-			if(service.deleteUser(dto, Integer.parseInt(id))) {
+			if(userService.deleteUser(deleteUserReq, Integer.parseInt(id))) {
 				map.put("message", "삭제 성공");
 				return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
 			}
@@ -144,12 +142,12 @@ public class UserController {
 		
 	}
 	
-	@PostMapping("/{user}/bookmark/{conf}")
-	public ResponseEntity<Map<String,String>> addBookmark(@PathVariable("user") String userid, @PathVariable("conf") String confid){
+	@PostMapping("/{user}/bookmark/{conference}")
+	public ResponseEntity<Map<String,String>> createBookmark(@PathVariable("user") String userId, @PathVariable("conference") String conferenceId){
 		
 		HashMap<String, String> map = new HashMap<String, String>();
 		
-		if(bookmarkService.createBookmark(Integer.parseInt(userid), Integer.parseInt(confid))) {
+		if(bookmarkService.createBookmark(Integer.parseInt(userId), Integer.parseInt(conferenceId))) {
 			map.put("message", "북마크 추가 성공");
 		}else {
 			map.put("message", "북마크 추가 실패");
@@ -160,11 +158,11 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/{user}/bookmark/{bookmark}")
-	public ResponseEntity<Map<String,String>> deleteBookmark(@PathVariable("user") String userid, @PathVariable("bookmark") String bk_id){
+	public ResponseEntity<Map<String,String>> deleteBookmark(@PathVariable("user") String userId, @PathVariable("bookmark") String bookmarkId){
 		
 		HashMap<String, String> map = new HashMap<String, String>();
 		
-		if(bookmarkService.deleteBookmark(Integer.parseInt(bk_id))) {
+		if(bookmarkService.deleteBookmark(Integer.parseInt(bookmarkId))) {
 			map.put("message", "북마크 삭제 성공");
 		}else {
 			map.put("message", "북마크 삭제 실패");
@@ -173,11 +171,11 @@ public class UserController {
 	}
 	
 	@GetMapping("/{user}/bookmark")
-	public ResponseEntity<List<BookmarkResDTO>> getBookmarkList(@PathVariable("user") String userid){
+	public ResponseEntity<List<GetBookmarksRes>> getBookmarks(@PathVariable("user") String userId){
 		
-		List<BookmarkResDTO> list = bookmarkService.getBookmarks(Integer.parseInt(userid));
+		List<GetBookmarksRes> list = bookmarkService.getBookmarks(Integer.parseInt(userId));
 		
-		return new ResponseEntity<List<BookmarkResDTO>>(list, HttpStatus.OK);
+		return new ResponseEntity<List<GetBookmarksRes>>(list, HttpStatus.OK);
 	}
 	
 }

@@ -1,4 +1,4 @@
-package com.ssafy.api.request;
+package com.ssafy.api.requestDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateUserRequestDTO {
-    private String oldPassword;
-    private String newPassword;
+public class DeleteUserReq {
+	private String password;
 }

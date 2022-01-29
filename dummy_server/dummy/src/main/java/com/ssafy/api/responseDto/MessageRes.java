@@ -1,14 +1,14 @@
-package com.ssafy.api.request;
+package com.ssafy.api.responseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
-@NoArgsConstructor
+@Getter
 @AllArgsConstructor
-public class DeleteUserRequestDTO {
-	private String password;
+@NoArgsConstructor
+public class MessageRes {
+	private String message;
 }

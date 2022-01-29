@@ -5,9 +5,9 @@ import org.springframework.data.jpa.repository.support.JpaRepositoryImplementati
 import org.springframework.stereotype.Repository;
 
 import com.ssafy.db.entity.User;
-import com.ssafy.db.entity.User_conference;
+import com.ssafy.db.entity.UserConference;
 
 @Repository
-public interface User_conferenceRepository extends JpaRepository<User_conference, Integer> {
+public interface UserConferenceRepository extends JpaRepository<UserConference, Integer> {
 
 }

@@ -1,4 +1,4 @@
-package com.ssafy.api.response;
+package com.ssafy.api.responseDto;
 
 import com.ssafy.DTO.UserDTO;
 
@@ -11,13 +11,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDetailInfoResponseDTO {
+public class GetUserByDetailRes {
 	private String email;
 	private String nickname;
 	private String profileImage;
 	private String profileDescription;
 	
-	public UserDetailInfoResponseDTO(UserDTO data) {
+	public GetUserByDetailRes(UserDTO data) {
 		setEmail(data.getEmail());
 		setNickname(data.getNickname());
 		setProfileImage(data.getProfileImage());

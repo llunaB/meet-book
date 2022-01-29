@@ -1,4 +1,4 @@
-package com.ssafy.api.response;
+package com.ssafy.api.responseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LoginResponseDTO {
+public class LoginRes {
 	private String nickaname;
 	private String email;
 	private int id;

@@ -1,4 +1,4 @@
-package com.ssafy.api.request;
+package com.ssafy.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginUserRequestDTO {
-	private String email;
-	private String password;
+public class UserConferenceDTO {
+	private int id;
+	private int conferenceId;
+	private int userId;
+	private int authority;
 }
