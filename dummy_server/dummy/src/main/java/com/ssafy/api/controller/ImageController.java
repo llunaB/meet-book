@@ -53,7 +53,7 @@ public class ImageController {
 		try {
 			file.transferTo(f);
 			map.put("message", "이미지 업로드 성공");
-			map.put("url", "/image/"+filename);
+			map.put("url", "/thumbail/"+filename);
 		}catch(Exception e) {
 			e.printStackTrace();
 			map.put("message", "이미지 업로드 실패");
