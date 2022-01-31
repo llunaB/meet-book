@@ -10,9 +10,9 @@
 - Ctrl + C로 서버 종료
 <br>
 이미지 서버를 이용하기 위해서
-1. SSAFY.zip을 다운 받아주세요.
-2. SSAFY.zip을 C:폴더에 압축해제 해주세요.
-3. 결과적으로 C:/SSAFY/resources/upload/image/ 이렇게 폴더가 생성되어야 합니다.
+- SSAFY.zip을 다운 받아주세요.
+- SSAFY.zip을 C:폴더에 압축해제 해주세요.
+- 결과적으로 C:/SSAFY/resources/upload/image/ 이렇게 폴더가 생성되어야 합니다.
 
 
 
