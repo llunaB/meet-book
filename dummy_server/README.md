@@ -9,6 +9,8 @@
 - java -jar dummy.jar 입력
 - Ctrl + C로 서버 종료
 <br>
+
+
 이미지 서버를 이용하기 위해서
 - SSAFY.zip을 다운 받아주세요.
 - SSAFY.zip을 C:폴더에 압축해제 해주세요.
