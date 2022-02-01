@@ -3,6 +3,8 @@ package com.ssafy.api.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ssafy.db.entity.Genre;
+import com.ssafy.db.repository.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,7 @@ public class SearchController {
 	private UserService userService;
 	private BookService bookService;
 	private ConferenceService conferenceService;
-	
+
 	@Autowired
 	public SearchController(UserService userService, BookService bookService, ConferenceService conferenceService) {
 		this.userService = userService;
@@ -62,7 +64,7 @@ public class SearchController {
 	}
 	
 	@GetMapping("/conference")
-	public ResponseEntity<List<ConferenceDTO>> getConferneceByTitle(@RequestParam("title") String title){
+	public ResponseEntity<List<ConferenceDTO>> getConferenceByTitle(@RequestParam("title") String title){
 		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
 
 		try {
