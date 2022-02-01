@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.DTO.BookDTO;
 import com.ssafy.db.entity.Book;
-import com.ssafy.db.entity.Genre;
 import com.ssafy.db.openApi.OpenApiHelper;
 import com.ssafy.db.repository.BookRepository;
 
@@ -30,12 +29,10 @@ public class BookService {
 	
 	public boolean getBookData() {
 		try {
-			List<Book> list = openApiHelper.LoadBookData();
-			
+			List<Book> list = openApiHelper.loadBookData();
 			bookRepository.saveAll(list);
 			return true;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}

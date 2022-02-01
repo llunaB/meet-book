@@ -2,107 +2,103 @@ package com.ssafy.db.openApi;
 
 import java.io.BufferedInputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
+import com.ssafy.db.entity.Genre;
+import com.ssafy.db.repository.GenreRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.json.BasicJsonParser;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.ssafy.db.entity.Book;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
 public class OpenApiHelper {
 
-    private static String key = "b85da2e2bb1b06d1ad67b0f945bf6dcf87e99dd3eb09f70ebe777db8b58d01bd";
-    private static String startDate = "2021-01-01";
-    private static String endDate = "2021-01-10";
-    private int fromAge = 20;
-    private int toAge = 40;
+    private GenreRepository genreRepository;
 
-    public List<Book> LoadBookData() throws Exception{
-    	JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObject = (JSONObject) jsonParser.parse(readUrl());
-        JSONObject response = (JSONObject)jsonObject.get("response");
-        JSONArray docs = (JSONArray) response.get("docs");
-        ArrayList<Book> list = new ArrayList<Book>();
-        
-        for (int i = 0; i < docs.size(); i++) {
-            JSONObject doc = (JSONObject) docs.get(i);
-            JSONObject docInfo = (JSONObject) doc.get("doc");
-            Book book = new Book();
-            book.setBookAuthor(docInfo.get("authors").toString());
-            book.setBookName(docInfo.get("bookname").toString());
-            book.setBookContents("");
-            book.setBookPublisher("");
-            book.setBookPubYear(2022);
-            book.setBookThumbnailUrl(docInfo.get("bookImageURL").toString());
-            book.setIsbn(docInfo.get("isbn13").toString());
-            book.setLoanCount(Integer.parseInt(docInfo.get("loan_count").toString()));
-            
-            list.add(book);
-        }
-
-        
-        return list;
-    } 
-    
-    public String ApiToJSONObject() throws Exception {
-        JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObject = (JSONObject) jsonParser.parse(readUrl());
-        JSONObject response = (JSONObject)jsonObject.get("response");
-        JSONArray docs = (JSONArray) response.get("docs");
-
-        String message;
-        JSONArray myBooks = new JSONArray();
-        JSONObject myBook = new JSONObject();
-
-        for (int i = 0; i < docs.size(); i++) {
-            JSONObject doc = (JSONObject) docs.get(i);
-            JSONObject docInfo = (JSONObject) doc.get("doc");
-
-            myBook.put("book_name", docInfo.get("bookname"));
-            myBook.put("book_author", docInfo.get("authors"));
-            myBook.put("book_contents", "");
-            myBook.put("isbn ", docInfo.get("isbn13"));
-            myBook.put("book_pubYear", docInfo.get("isbn13"));
-            myBook.put("class_no", docInfo.get("class_no"));
-            myBook.put("book_thumbnail_url", docInfo.get("bookImageURL"));
-            myBook.put("loan_count", docInfo.get("loan_count"));
-
-            myBooks.add(myBook);
-        }
-
-        message = myBooks.toJSONString();
-        return message;
-
+    @Autowired
+    public OpenApiHelper(GenreRepository genreRepository) {
+        this.genreRepository = genreRepository;
     }
 
-    private String readUrl() throws Exception {
-        BufferedInputStream reader = null;
+    public List<Book> loadBookData() {
 
-        try {
-            URL url = new URL("http://data4library.kr/api/loanItemSrch" + "?authKey=" + key +  "&startDt=" +
-                    startDate + "&endDt=" + endDate + "&from_age=" + fromAge + "&to_age=" + toAge + "&format=json" + "&pageSize=5");
+        String uriString = constructUriStringWithQueryParameter();
+        List<Map<String, Map<String, Object>>> list = uriToJsonObjectToList(uriString);
 
-            reader = new BufferedInputStream(url.openStream());
-            StringBuffer buffer = new StringBuffer();
+        ArrayList<Book> books = new ArrayList<>();
 
-            int i = 0;
-            byte[] b = new byte[4096];
+        for (Map<String, Map<String, Object>> doc : list) {
+            Map<String, Object> bookInfo = doc.get("doc");
 
-            while ((i = reader.read(b)) != -1) {
-                buffer.append(new String(b, 0, i));
-            }
+            int genreId = (int)Math.floor(Double.parseDouble((String) bookInfo.get("class_no")) / 100.0);
+            Genre genre = genreRepository.findById(genreId).orElseThrow(NullPointerException::new);
 
-            return buffer.toString();
+            // publication_year=
+            // 출판년도가 (공백)인 데이터가 존재해서 따로 처리 필요 (100p 이상 불러오는 경우)
+            Book book = Book.builder()
+                    .bookName((String) bookInfo.getOrDefault("bookname", ""))
+                    .bookAuthor((String) (bookInfo.getOrDefault("authors", "")))
+                    .bookContents("")
+                    .bookPublisher((String) bookInfo.getOrDefault("publisher", ""))
+                    .isbn((String) bookInfo.getOrDefault("isbn13", ""))
+                    .bookPubYear(Integer.parseInt((String) bookInfo.getOrDefault("publication_year", "0")))
+                    .loanCount(Integer.parseInt((String) bookInfo.getOrDefault("loan_count", "0")))
+                    .genre(genre)
+                    .bookThumbnailUrl((String) bookInfo.getOrDefault("bookImageURL", ""))
+                    .build();
 
-        } finally {
-            if (reader != null) reader.close();
+            books.add(book);
         }
+        return books;
     }
 
+    private static List<Map<String, Map<String, Object>>> uriToJsonObjectToList(String uriString) {
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> forEntity = restTemplate.getForEntity(uriString, String.class);
+
+        BasicJsonParser basicJsonParser = new BasicJsonParser();
+        Map<String, Object> stringObjectMap = basicJsonParser.parseMap(forEntity.getBody());
+
+        Map<String, Object> response = (Map<String, Object>) stringObjectMap.get("response");
+
+        List<Map<String, Map<String, Object>>> docs = (List<Map<String, Map<String, Object>>>) response.get("docs");
+
+        return docs;
+    }
+
+    private static String constructUriStringWithQueryParameter() {
+
+        String key = "b85da2e2bb1b06d1ad67b0f945bf6dcf87e99dd3eb09f70ebe777db8b58d01bd";
+        String startDate = "2021-01-01";
+        String endDate = "2021-01-10";
+        int fromAge = 20;
+        int toAge = 40;
+        int pageSize = 10;
+        String format = "json";
+
+        UriComponents uriComponents = UriComponentsBuilder.newInstance()
+                .scheme("http")
+                .host("data4library.kr")
+                .path("/api/loanItemSrch")
+                .queryParam("authKey", key)
+                .queryParam("startDt", startDate)
+                .queryParam("endDt", endDate)
+                .queryParam("from_age", fromAge)
+                .queryParam("to_age", toAge)
+                .queryParam("pageSize", pageSize)
+                .queryParam("format", format)
+                .build();
+
+        return uriComponents.toString();
+    }
 }
-
