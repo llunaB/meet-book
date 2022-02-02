@@ -1,7 +1,5 @@
 package com.ssafy.db.entity;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,49 +7,45 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 public class Book {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
 	@Column(name = "book_name")
-	private String bookname;
+	private String bookName;
 	
-	@Column
-	private String book_author;
+	@Column(name = "book_author")
+	private String bookAuthor;
 	
-	@Column
-	private String book_contents;
+	@Column(name = "book_contents")
+	private String bookContents;
 	
-	@Column
-	private String book_publisher;
+	@Column(name = "book_publisher")
+	private String bookPublisher;
 	
 	@Column
 	private String isbn;
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date book_pubdate;
+	@Column(name = "book_pub_year")
+	private int bookPubYear;
 	
 	@ManyToOne
 	@JoinColumn(name = "GENRE_ID")
 	private Genre genre;
 	
-	@Column
-	private String book_thumbnail_url;
+	@Column(name = "book_thumbnail_url")
+	private String bookThumbnailUrl;
 	
-	@Column
-	private int loan_count;
+	@Column(name = "loan_count")
+	private int loanCount;
 }

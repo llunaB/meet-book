@@ -1,78 +1,71 @@
 package com.ssafy.api.controller;
 
-import java.util.ArrayList;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mysql.cj.protocol.Message;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.DTO.UserDTO;
-import com.ssafy.api.request.LoginReqDTO;
-import com.ssafy.api.response.BookmarkResDTO;
+import com.ssafy.api.requestDto.DeleteUserReq;
+import com.ssafy.api.requestDto.LoginReq;
+import com.ssafy.api.requestDto.SignUpReq;
+import com.ssafy.api.requestDto.UpdateUserByProfileReq;
+import com.ssafy.api.requestDto.UpdateUserByDetailReq;
+import com.ssafy.api.responseDto.GetBookmarksRes;
+import com.ssafy.api.responseDto.MessageRes;
+import com.ssafy.api.responseDto.GetUserByDetailRes;
+import com.ssafy.api.responseDto.GetUserByProfileRes;
 import com.ssafy.api.service.BookmarkService;
-import com.ssafy.api.service.ConferenceService;
 import com.ssafy.api.service.UserService;
-import com.ssafy.config.JwtTokenProvider;
-import com.ssafy.db.entity.Bookmark;
-import com.ssafy.db.entity.Conference;
-import com.ssafy.db.entity.User;
 
+import javax.validation.Valid;
+
+@Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
-	private JwtTokenProvider jwtTokenProvider;
-	private UserService service;
+	private UserService userService;
 	private BookmarkService bookmarkService;
-	private ConferenceService confService;
-	
+
 	@Autowired
-	public UserController(UserService service, BookmarkService bookmarkService, ConferenceService confService, JwtTokenProvider jwtTokenProvider) {
-		this.service = service;
+	public UserController(UserService userService, BookmarkService bookmarkService) {
+		this.userService = userService;
 		this.bookmarkService = bookmarkService;
-		this.confService = confService;
-		this.jwtTokenProvider = jwtTokenProvider;
 	}
-	
+
 	@PostMapping("/signup")
-	public ResponseEntity<Map<String, String>> signup(@RequestBody UserDTO user){
-		HashMap<String, String> map = new HashMap<String, String>();
-		
-		if(service.createUser(service.Dto2Entity(user))) {
-			System.out.println("user created");
-			map.put("message", "회원가입 성공");
-
-		}else {
-			System.out.println("fail user created");
-			map.put("message", "회원가입 실패");
-
+	public ResponseEntity<MessageRes> signUp(@Valid @RequestBody SignUpReq signUpReq){
+		MessageRes messageRes = new MessageRes();
+		UserDTO userDto = new UserDTO(signUpReq);
+		if (userService.createUser(userDto)) {
+			messageRes.setMessage("유저생성 성공");
+			messageRes.setData("user email : " + userDto.getEmail());
+			return new ResponseEntity<MessageRes>(messageRes, HttpStatus.CREATED);
 		}
-		
-		
-		return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
+		messageRes.setMessage("유저생성 실패");
+		return new ResponseEntity<MessageRes>(messageRes, HttpStatus.BAD_REQUEST);
 	}
-	
+
+	//아이디와 비밀번호를 입력받고, JWT 토큰 및 유저 정보를 반환
 	@PostMapping("/login")
-	public ResponseEntity<Map<String, String>> login(@RequestBody LoginReqDTO dto){
+	public ResponseEntity<Map<String, String>> login(@RequestBody LoginReq loginReq){
 		HashMap<String, String> map = new HashMap<String, String>();
 		
 		try {
-			User user = service.getUserByEmail(dto.getEmail());
-			System.out.println(user.getPassword());
-			if(service.matchPassword(dto.getPassword(),user.getPassword())) {
+			String token = userService.login(loginReq);
+			if(!token.equals("")) {
 				map.put("message", "로그인 성공");
-	            map.put("token",jwtTokenProvider.createToken(user.getUsername(),user.getRoles()));
+	            map.put("token",token);
 				return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
 			}
 			map.put("message", "로그인 실패");
@@ -85,39 +78,54 @@ public class UserController {
 		return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
 	}
 	
-	@GetMapping("/{email}")
-	public ResponseEntity<UserDTO> getInfo(@PathVariable("email") String email){
-		User user = service.getUserByEmail(email);
-		return new ResponseEntity<UserDTO>(service.Entity2Dto(user), HttpStatus.OK);
+	@GetMapping("/{id}")
+	public ResponseEntity<GetUserByProfileRes> getUser(@PathVariable("id") String id){
+		UserDTO user = userService.getUserById(Integer.parseInt(id));
+		return new ResponseEntity<GetUserByProfileRes>(new GetUserByProfileRes(user), HttpStatus.OK);
 	}
 	
-	@GetMapping("/{email}/detail")
-	public ResponseEntity<UserDTO> getDetailInfo(@PathVariable("email") String email){
-		User user = service.getUserByEmail(email);
-		return new ResponseEntity<UserDTO>(service.Entity2Dto(user), HttpStatus.OK);
+	@GetMapping("/{id}/detail")
+	public ResponseEntity<GetUserByDetailRes> getUserDetail(@PathVariable("id") String id){
+		UserDTO user = userService.getUserById(Integer.parseInt(id));
+		return new ResponseEntity<GetUserByDetailRes>(new GetUserByDetailRes(user), HttpStatus.OK);
 	}
 	
-	@PutMapping("/{email}")
-	public ResponseEntity<Map<String,String>> getDetailInfo(@RequestBody UserDTO u){
+	@PutMapping("/{id}")
+	public ResponseEntity<Map<String,String>> updateUserByProfile(@PathVariable("id") String id, @RequestBody UpdateUserByProfileReq updateProfileRequestDto){
 		
 		HashMap<String, String> map = new HashMap<String, String>();
-		service.updateUser(service.Dto2Entity(u));
 		
-		 if(service.updateUser(service.Dto2Entity(u))){
-            User user = service.getUserByEmail(u.getEmail());
+		
+		 if(userService.updateUserByProfile(updateProfileRequestDto, Integer.parseInt(id))){
+            UserDTO user = userService.getUserById(Integer.parseInt(id));
             map.put("message", "회원정보 수정 성공");
-            map.put("token",jwtTokenProvider.createToken(user.getUsername(),user.getRoles()));
+            map.put("token",userService.login(new LoginReq(user.getEmail(), user.getPassword())));
             return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
         }
         map.put("message", "회원정보 수정 실패");
         return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
 	}
 	
-	@DeleteMapping("/{email}")
-	public ResponseEntity<Map<String,String>> deleteUser(@RequestBody String password, @PathVariable("email") String email){
+	@PutMapping("/{id}/detail")
+	public ResponseEntity<Map<String,String>> updateUserByDetail(@PathVariable("id") String id,@RequestBody UpdateUserByDetailReq updateUserByDetailReq){
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		if(userService.updateUserByDetail(updateUserByDetailReq, Integer.parseInt(id))){
+			 UserDTO user = userService.getUserById(Integer.parseInt(id));
+	            map.put("message", "회원정보 수정 성공");
+	            map.put("token",userService.login(new LoginReq(user.getEmail(), user.getPassword())));
+			return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
+		}
+		map.put("message", "회원정보 수정 실패");
+		return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Map<String,String>> deleteUser(@RequestBody DeleteUserReq deleteUserReq, @PathVariable("id") String id){
 		HashMap<String, String> map = new HashMap<String, String>();
 		try {
-			if(service.deleteUser(service.getUserByEmail(email), password)) {
+			if(userService.deleteUser(deleteUserReq, Integer.parseInt(id))) {
 				map.put("message", "삭제 성공");
 				return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
 			}
@@ -131,53 +139,40 @@ public class UserController {
 		
 	}
 	
-	@PostMapping("/{user}/bookmark/{conf}")
-	public ResponseEntity<Map<String,String>> addBookmark(@PathVariable("user") String userid, @PathVariable("conf") String confid){
+	@PostMapping("/{user}/bookmark/{conference}")
+	public ResponseEntity<Map<String,String>> createBookmark(@PathVariable("user") String userId, @PathVariable("conference") String conferenceId){
 		
 		HashMap<String, String> map = new HashMap<String, String>();
 		
-		Bookmark bk = new Bookmark();
-		User user = service.getUserById(Integer.parseInt(userid));
-		Conference conf = confService.getConferenceById(Integer.parseInt(confid));
+		if(bookmarkService.createBookmark(Integer.parseInt(userId), Integer.parseInt(conferenceId))) {
+			map.put("message", "북마크 추가 성공");
+		}else {
+			map.put("message", "북마크 추가 실패");
+		}
 		
-		bk.setAlarm(1);
-		bk.setConference(conf);
-		bk.setUser(user);
 		
-		bookmarkService.createBookmark(bk);
-		
-		map.put("message", "북마크 추가 성공");
 		return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{user}/bookmark/{bookmark}")
-	public ResponseEntity<Map<String,String>> deleteBookmark(@PathVariable("user") String userid, @PathVariable("bookmark") String bk_id){
+	public ResponseEntity<Map<String,String>> deleteBookmark(@PathVariable("user") String userId, @PathVariable("bookmark") String bookmarkId){
 		
 		HashMap<String, String> map = new HashMap<String, String>();
 		
-		bookmarkService.deleteBookmark(Integer.parseInt(bk_id));
-		
-		map.put("message", "북마크 삭제 성공");
+		if(bookmarkService.deleteBookmark(Integer.parseInt(bookmarkId))) {
+			map.put("message", "북마크 삭제 성공");
+		}else {
+			map.put("message", "북마크 삭제 실패");
+		}
 		return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
 	}
 	
 	@GetMapping("/{user}/bookmark")
-	public ResponseEntity<List<BookmarkResDTO>> getBookmarkList(@PathVariable("user") String userid){
+	public ResponseEntity<List<GetBookmarksRes>> getBookmarks(@PathVariable("user") String userId){
 		
-		List<BookmarkResDTO> list = new ArrayList<BookmarkResDTO>();
-		User user = service.getUserById(Integer.parseInt(userid));
-		List<Bookmark> bookmarks = bookmarkService.getBookmarks(user);
-		for(Bookmark bk : bookmarks) {
-			BookmarkResDTO dto = new BookmarkResDTO();
-			dto.setId(bk.getId());
-			dto.setTitle(bk.getConference().getTitle());
-			dto.setDate(bk.getConference().getCall_start_time());
-			dto.setAlarm(bk.getAlarm() == 1);
-			list.add(dto);
-		}
+		List<GetBookmarksRes> list = bookmarkService.getBookmarks(Integer.parseInt(userId));
 		
-		
-		return new ResponseEntity<List<BookmarkResDTO>>(list, HttpStatus.OK);
+		return new ResponseEntity<List<GetBookmarksRes>>(list, HttpStatus.OK);
 	}
 	
 }

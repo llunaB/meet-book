@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import com.ssafy.db.entity.Genre;
 
+import java.util.Optional;
+
 @Repository
 public interface GenreRepository extends JpaRepository<Genre, Integer> {
 

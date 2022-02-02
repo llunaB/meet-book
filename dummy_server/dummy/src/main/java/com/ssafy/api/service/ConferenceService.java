@@ -1,7 +1,10 @@
 package com.ssafy.api.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,25 +12,44 @@ import com.ssafy.DTO.ConferenceDTO;
 import com.ssafy.db.entity.Book;
 import com.ssafy.db.entity.Conference;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.repository.BookRepository;
 import com.ssafy.db.repository.ConferenceRepository;
+import com.ssafy.db.repository.UserRepository;
 
 @Service
 public class ConferenceService {
 	
-	private ConferenceRepository repo;
+	private ConferenceRepository conferenceRepository;
+	private UserRepository userRepository;
+	private BookRepository bookRepository;
+	private ModelMapper modelMapper;
 	
 	@Autowired
-	public ConferenceService(ConferenceRepository repo) {
-		this.repo = repo;
+	public ConferenceService(ConferenceRepository conferenceRepository, UserRepository userRepository, BookRepository bookRepository) {
+		this.conferenceRepository = conferenceRepository;
+		this.userRepository = userRepository;
+		this.bookRepository = bookRepository;
+		this.modelMapper = new ModelMapper();
 	}
 	
-	public List<Conference> getAllConf(){
-		return repo.findAll();
-	}
-	
-	public boolean createConference(Conference Conference) {
+	public List<ConferenceDTO> getConferences(){
+		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
+		
 		try {
-			repo.save(Conference);
+			list = conferenceRepository.findAll().stream().map(source -> {
+				ConferenceDTO res = modelMapper.map(source, ConferenceDTO.class);
+			    return res;
+			}).collect(Collectors.toList());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	public boolean createConference(ConferenceDTO source) {
+		try {
+			conferenceRepository.save(modelMapper.map(source, Conference.class));
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -35,20 +57,10 @@ public class ConferenceService {
 		}
 	}
 	
-	public Conference getConferenceById(int id) {
-		Conference result = null;
+	public ConferenceDTO getConferenceById(int id) {
 		try {
-			result = repo.findById(id).get();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		return result;
-	}
-	
-	public List<Conference> findByTitle(String title){
-		try {
-			return repo.findByTitleContaining(title);
+			Conference source = conferenceRepository.findById(id).get();
+			return modelMapper.map(source, ConferenceDTO.class); 
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -56,42 +68,72 @@ public class ConferenceService {
 		return null;
 	}
 	
-	public List<Conference> findByBook(Book book){
+	public List<ConferenceDTO> getConferencesByTitle(String title){
+		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
 		try {
-			return repo.findByBook(book);
+			list = conferenceRepository.findByTitleContaining(title).stream().map(source -> {
+				ConferenceDTO res = modelMapper.map(source, ConferenceDTO.class);
+				return res;
+			}).collect(Collectors.toList());
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		
-		return null;
+		return list;
 	}
 	
-	public List<Conference> findByUser(User user){
+	public List<ConferenceDTO> getConferencesByBook(String bookname){
+		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
 		try {
-			return repo.findByUser(user);
+			List<Book> bookList = bookRepository.findByBookNameContaining(bookname);
+			list.addAll(conferenceRepository.findConferencesByBook(bookList).stream().map(source -> {
+				ConferenceDTO res = modelMapper.map(source, ConferenceDTO.class);
+				return res;
+			}).collect(Collectors.toList()));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		
-		return null;
+		return list;
 	}
 	
-	public List<Conference> findByTags(String tags){
+	public List<ConferenceDTO> getConferencesByNickname(String nickname){
+		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
 		try {
-			return repo.findByTagsContaining(tags);
+			List<User> userList = userRepository.findByNicknameContaining(nickname);
+			list.addAll(conferenceRepository.findConferencesByUser(userList).stream().map(source -> {
+				ConferenceDTO res = modelMapper.map(source, ConferenceDTO.class);
+				return res;
+			}).collect(Collectors.toList()));
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		
-		return null;
+		return list;
 	}
 	
-	public boolean updateConference(Conference c) {
+	public List<ConferenceDTO> getConferencesByTags(String tags){
+		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
 		try {
-			Conference output = getConferenceById(c.getId());
+			list = conferenceRepository.findByTagsContaining(tags).stream().map(source -> {
+				ConferenceDTO res = modelMapper.map(source, ConferenceDTO.class);
+				return res;
+			}).collect(Collectors.toList());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	public boolean updateConference(ConferenceDTO conferenceDTO) {
+		try {
+			Conference output = conferenceRepository.getById(conferenceDTO.getId());
 			if(output == null) return false;
-			output = UpdateEntity(output, c);
-			repo.save(output);
+			Conference data = modelMapper.map(conferenceDTO, Conference.class);
+			output = updateConferenceEntity(output, data);
+			conferenceRepository.save(output);
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -101,8 +143,8 @@ public class ConferenceService {
 	
 	public boolean deleteConference(int id) {
 		try {
-			Conference Conference = getConferenceById(id);
-			repo.delete(Conference);
+			Conference Conference = conferenceRepository.getById(id);
+			conferenceRepository.delete(Conference);
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -110,50 +152,14 @@ public class ConferenceService {
 		}
 	}
 	
-	public Conference Dto2Entity(ConferenceDTO data, User user, Book book) {
-		Conference entity = new Conference();
-		entity.setBook(book);
-		entity.setUser(user);
-		entity.setCall_end_time(data.getCall_end_time());
-		entity.setCall_start_time(data.getCall_end_time());
-		entity.setThumbnail_url(data.getThumbnail_url());
-		entity.setDescription(data.getDescription());
-		entity.setMax_members(data.getMax_members());
-		entity.setPassword(data.getPassword());
-		entity.setQuestion(data.getQuestion());
-		entity.setTags(data.getTags());
-		entity.setTitle(data.getTitle());
-		
-		return entity;
-	}
-	
-	public ConferenceDTO Entity2Dto(Conference data) {
-		ConferenceDTO dto = new ConferenceDTO();
-		
-		dto.setId(data.getId());
-		dto.setBook_id(data.getBook().getId());
-		dto.setUser_id(data.getUser().getId());
-		dto.setCall_end_time(data.getCall_end_time());
-		dto.setCall_start_time(data.getCall_end_time());
-		dto.setThumbnail_url(data.getThumbnail_url());
-		dto.setDescription(data.getDescription());
-		dto.setMax_members(data.getMax_members());
-		dto.setPassword(data.getPassword());
-		dto.setQuestion(data.getQuestion());
-		dto.setTags(data.getTags());
-		dto.setTitle(data.getTitle());
-		
-		return dto;
-	}
-	
-	public Conference UpdateEntity(Conference target, Conference data) {
+	public Conference updateConferenceEntity(Conference target, Conference data) {
 		target.setBook(data.getBook());
 		target.setUser(data.getUser());
-		target.setCall_end_time(data.getCall_end_time());
-		target.setCall_start_time(data.getCall_end_time());
-		target.setThumbnail_url(data.getThumbnail_url());
+		target.setCallEndTime(data.getCallEndTime());
+		target.setCallStartTime(data.getCallEndTime());
+		target.setThumbnailUrl(data.getThumbnailUrl());
 		target.setDescription(data.getDescription());
-		target.setMax_members(data.getMax_members());
+		target.setMaxMembers(data.getMaxMembers());
 		target.setPassword(data.getPassword());
 		target.setQuestion(data.getQuestion());
 		target.setTags(data.getTags());
