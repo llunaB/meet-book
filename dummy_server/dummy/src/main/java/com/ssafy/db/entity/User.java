@@ -41,10 +41,10 @@ public class User implements UserDetails {
 	@Column
 	private String password;
 	
-	@Column
+	@Column(unique = true)
 	private String nickname;
 	
-	@Column
+	@Column(unique = true)
 	private String email;
 	
 	@Column
