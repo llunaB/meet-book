@@ -42,15 +42,13 @@ public class OpenApiHelper {
             int genreId = (int)Math.floor(Double.parseDouble((String) bookInfo.get("class_no")) / 100.0);
             Genre genre = genreRepository.findById(genreId).orElseThrow(NullPointerException::new);
 
-            // publication_year=
-            // 출판년도가 (공백)인 데이터가 존재해서 따로 처리 필요 (100p 이상 불러오는 경우)
             Book book = Book.builder()
                     .bookName((String) bookInfo.getOrDefault("bookname", ""))
                     .bookAuthor((String) (bookInfo.getOrDefault("authors", "")))
                     .bookContents("")
                     .bookPublisher((String) bookInfo.getOrDefault("publisher", ""))
                     .isbn((String) bookInfo.getOrDefault("isbn13", ""))
-                    .bookPubYear(Integer.parseInt((String) bookInfo.getOrDefault("publication_year", "0")))
+                    .bookPubYear(Integer.parseInt(((String) bookInfo.get("publication_year")).isEmpty() ? "0000" : ((String) bookInfo.get("publication_year"))))
                     .loanCount(Integer.parseInt((String) bookInfo.getOrDefault("loan_count", "0")))
                     .genre(genre)
                     .bookThumbnailUrl((String) bookInfo.getOrDefault("bookImageURL", ""))
@@ -83,7 +81,7 @@ public class OpenApiHelper {
         String endDate = "2021-01-10";
         int fromAge = 20;
         int toAge = 40;
-        int pageSize = 10;
+        int pageSize = 100;
         String format = "json";
 
         UriComponents uriComponents = UriComponentsBuilder.newInstance()

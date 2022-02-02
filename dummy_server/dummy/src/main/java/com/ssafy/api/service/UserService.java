@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +22,7 @@ import com.ssafy.config.JwtTokenProvider;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.UserRepository;
 
+@Slf4j
 @Service
 public class UserService {
 	
@@ -42,8 +44,8 @@ public class UserService {
 			User entity = modelMapper.map(userDto, User.class);
 			userRepository.save(entity);
 			return true;
-		}catch(Exception e){
-			e.printStackTrace();
+		} catch(Exception e) {
+			log.info("create user failed");
 			return false;
 		}
 	}

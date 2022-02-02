@@ -1,21 +1,19 @@
 package com.ssafy.api.controller;
 
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mysql.cj.protocol.Message;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.DTO.UserDTO;
 import com.ssafy.api.requestDto.DeleteUserReq;
@@ -30,35 +28,34 @@ import com.ssafy.api.responseDto.GetUserByProfileRes;
 import com.ssafy.api.service.BookmarkService;
 import com.ssafy.api.service.UserService;
 
+import javax.validation.Valid;
+
+@Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
 	private UserService userService;
 	private BookmarkService bookmarkService;
-	
+
 	@Autowired
 	public UserController(UserService userService, BookmarkService bookmarkService) {
 		this.userService = userService;
 		this.bookmarkService = bookmarkService;
 	}
-	
-	//유저 정보를 입력받고, User를 생성 및 DB에 저장
+
 	@PostMapping("/signup")
-	public ResponseEntity<MessageRes> signUp(@RequestBody SignUpReq signUpReq
-			){
-		MessageRes map = new MessageRes();
-		if(userService.createUser(new UserDTO(signUpReq))) {
-			System.out.println("user created");
-			map.setMessage("회원가입 성공");
-
-		}else {
-			System.out.println("fail user created");
-			map.setMessage("회원가입 실패");
-
+	public ResponseEntity<MessageRes> signUp(@Valid @RequestBody SignUpReq signUpReq){
+		MessageRes messageRes = new MessageRes();
+		UserDTO userDto = new UserDTO(signUpReq);
+		if (userService.createUser(userDto)) {
+			messageRes.setMessage("유저생성 성공");
+			messageRes.setData("user email : " + userDto.getEmail());
+			return new ResponseEntity<MessageRes>(messageRes, HttpStatus.CREATED);
 		}
-		return new ResponseEntity<MessageRes>(map, HttpStatus.OK);
+		messageRes.setMessage("유저생성 실패");
+		return new ResponseEntity<MessageRes>(messageRes, HttpStatus.BAD_REQUEST);
 	}
-	
+
 	//아이디와 비밀번호를 입력받고, JWT 토큰 및 유저 정보를 반환
 	@PostMapping("/login")
 	public ResponseEntity<Map<String, String>> login(@RequestBody LoginReq loginReq){

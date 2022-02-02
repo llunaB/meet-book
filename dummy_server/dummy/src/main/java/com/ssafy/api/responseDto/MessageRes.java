@@ -1,14 +1,15 @@
 package com.ssafy.api.responseDto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.http.HttpStatus;
 
-@Setter
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 public class MessageRes {
 	private String message;
+	private Object data;
+
+	public MessageRes() {
+		this.message = null;
+		this.data = null;
+	}
 }
