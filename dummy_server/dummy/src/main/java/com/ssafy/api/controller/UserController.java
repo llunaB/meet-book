@@ -4,8 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+<<<<<<< HEAD
 import javax.validation.Valid;
 
+=======
+import com.mysql.cj.protocol.Message;
+import com.ssafy.error.exception.AlreadyExistEmailException;
+import com.ssafy.error.exception.AlreadyExistNicknameException;
+import lombok.extern.slf4j.Slf4j;
+>>>>>>> 43358940bebf4c828a568548e9ec76b0bb620ad1
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +57,7 @@ public class UserController {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<MessageRes> signUp(@Valid @RequestBody SignUpReq signUpReq){
+	public ResponseEntity<MessageRes> signUp(@Valid @RequestBody SignUpReq signUpReq) throws AlreadyExistEmailException, AlreadyExistNicknameException {
 		MessageRes messageRes = new MessageRes();
 		UserDTO userDto = new UserDTO(signUpReq);
 		if (userService.createUser(userDto)) {

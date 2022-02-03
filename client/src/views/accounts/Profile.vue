@@ -91,8 +91,8 @@ export default {
       user: {"name": 'eonyong', "nickname": "yong", "host_point": 10, "guest_point": 11, "profile_description": "hihihihi"},
       conference: '',
       conferences: [
-        {"id":1, "title":"오이디푸스1", "call_start_time": "2020-12-29", "thumbnail_url":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"WelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcome","isActive":true, "tag": "#하루#종일"},
-        {"id":2, "title":"오이디푸스2", "call_start_time": "2020-12-29", "thumbnail_url":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"WelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcomeWelcome","isActive":true, "tag": "#하루#종일"},
+        {"id":1, "title":"오이디푸스1", "call_start_time": "2020-12-29", "thumbnail_url":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"asdasd","isActive":true, "tag": "#하루#종일"},
+        {"id":2, "title":"오이디푸스2", "call_start_time": "2020-12-29", "thumbnail_url":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"asdasd","isActive":true, "tag": "#하루#종일"},
         {"id":3, "title":"정의란 무엇인가", "call_start_time": "2020-12-29", "thumbnail_url":"https://image.yes24.com/goods/15156691/XL", "description":"welcome2","isActive":true},
         {"id":4, "title":"오이디푸스", "thumbnail_url":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"Welcome","isActive":true},
         {"id":5, "title":"정의란 무엇인가", "thumbnail_url":"https://image.yes24.com/goods/15156691/XL", "description":"welcome2","isActive":false},
