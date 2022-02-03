@@ -92,13 +92,13 @@ public class UserController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<GetUserByProfileRes> getUser (@PathVariable("id") String id) throws Exception {
+	public ResponseEntity<GetUserByProfileRes> getUser (@PathVariable("id") String id) {
 		UserDTO user = userService.getUserById(Integer.parseInt(id));
 		return new ResponseEntity<GetUserByProfileRes>(new GetUserByProfileRes(user), HttpStatus.OK);
 	}
 	
 	@GetMapping("/{id}/detail")
-	public ResponseEntity<GetUserByDetailRes> getUserDetail(@PathVariable("id") String id) throws Exception{
+	public ResponseEntity<GetUserByDetailRes> getUserDetail(@PathVariable("id") String id) {
 		UserDTO user = userService.getUserById(Integer.parseInt(id));
 		return new ResponseEntity<GetUserByDetailRes>(new GetUserByDetailRes(user), HttpStatus.OK);
 	}
@@ -111,7 +111,7 @@ public class UserController {
 		 if(userService.updateUserByProfile(updateProfileRequestDto, Integer.parseInt(id))){
             UserDTO user = userService.getUserById(Integer.parseInt(id));
             map.put("message", "회원정보 수정 성공");
-            map.put("token",userService.login(new LoginReq(user.getEmail(), user.getPassword())));
+            map.put("token", userService.login(new LoginReq(user.getEmail(), user.getPassword())));
             return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
         }
         map.put("message", "회원정보 수정 실패");
