@@ -22,8 +22,6 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler (AlreadyExistNicknameException.class)
     protected ResponseEntity<Object> handleAlreadyExistNickname(AlreadyExistNicknameException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("statusValue", HttpStatus.BAD_REQUEST.value());
-        body.put("status", HttpStatus.BAD_REQUEST);
         body.put("errors", ex.getMessage());
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
@@ -32,8 +30,6 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler (AlreadyExistEmailException.class)
     protected ResponseEntity<Object> handleAlreadyExistEmail(AlreadyExistEmailException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("statusValue", HttpStatus.BAD_REQUEST.value());
-        body.put("status", HttpStatus.BAD_REQUEST);
         body.put("errors", ex.getMessage());
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
@@ -45,8 +41,6 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
                                                                   HttpHeaders headers,
                                                                   HttpStatus status, WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("statusValue", status.value());
-        body.put("status", status);
 
         // Get all errors
         List<String> errors = ex.getBindingResult()
