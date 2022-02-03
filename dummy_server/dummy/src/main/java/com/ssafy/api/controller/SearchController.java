@@ -3,11 +3,10 @@ package com.ssafy.api.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ssafy.db.entity.Genre;
-import com.ssafy.db.repository.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,12 +18,10 @@ import com.ssafy.DTO.UserDTO;
 import com.ssafy.api.service.BookService;
 import com.ssafy.api.service.ConferenceService;
 import com.ssafy.api.service.UserService;
-import com.ssafy.db.entity.Book;
-import com.ssafy.db.entity.Conference;
-import com.ssafy.db.entity.User;
 
 @RestController
 @RequestMapping("/search")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class SearchController {
 	private UserService userService;
 	private BookService bookService;
