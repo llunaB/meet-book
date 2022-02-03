@@ -1,40 +1,46 @@
 package com.ssafy.api.controller;
 
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.mysql.cj.protocol.Message;
-import com.ssafy.error.exception.AlreadyExistEmailException;
-import com.ssafy.error.exception.AlreadyExistNicknameException;
-import lombok.extern.slf4j.Slf4j;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.DTO.UserDTO;
 import com.ssafy.api.requestDto.DeleteUserReq;
 import com.ssafy.api.requestDto.LoginReq;
 import com.ssafy.api.requestDto.SignUpReq;
-import com.ssafy.api.requestDto.UpdateUserByProfileReq;
 import com.ssafy.api.requestDto.UpdateUserByDetailReq;
+import com.ssafy.api.requestDto.UpdateUserByProfileReq;
 import com.ssafy.api.responseDto.GetBookmarksRes;
-import com.ssafy.api.responseDto.MessageRes;
 import com.ssafy.api.responseDto.GetUserByDetailRes;
 import com.ssafy.api.responseDto.GetUserByProfileRes;
+import com.ssafy.api.responseDto.MessageRes;
 import com.ssafy.api.service.BookmarkService;
 import com.ssafy.api.service.UserService;
+import com.ssafy.error.exception.AlreadyExistEmailException;
+import com.ssafy.error.exception.AlreadyExistNicknameException;
 
-import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/users")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
 	private UserService userService;
 	private BookmarkService bookmarkService;
