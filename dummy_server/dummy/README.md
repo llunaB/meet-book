@@ -1,4 +1,7 @@
-변경점: 픽스
+변경점
 <hr>
-1. 비밀번호 암호화가 안되는 것을 수정<br>
-2. 계정 생성시 user role이 부여 안되는 문제를 수정<br>
+1. build.gradle에 Openvidu용 디펜던시를 추가<br>
+2. application-conatiner.properties를 추가<br>
+3. application.properties에 Openvidu용 설정을 추가<br>
+4. application-selfsigned.jks를 추가<br>
+5. MyRestController를 참고용으로 추가<br>
