@@ -13,7 +13,13 @@
       ></v-text-field>
 
       <v-autocomplete
-        v-model="book"
+        v-model="bookInput"
+        :items="bookItems"
+        :loading="bookLoading"
+        :search-input.sync="bookSearch"
+        clearable
+        :item-text="selectedBook"
+        :item-value="selectedBookId"
         label="도서">
       </v-autocomplete>
       <!-- Autocomplete는 작성할 때 DB에서 책 제목을 찾게 되므로 서버 부하를 고려하여 여유 시간을 두고 로드하게 만들 것 -->
@@ -156,7 +162,13 @@ export default {
     conf_question: null,
     conf_answer: null,
     description: '',
-    book: '',
+
+    bookInput: null,
+    bookSearch: null,
+    bookLoading: false,
+    bookItems: [],
+    selectedBook: '',
+    selectedBookId: 0,
     tags: '',
 
   }),
@@ -171,6 +183,25 @@ export default {
     },
     resetValidation () {
       this.$refs.form.resetValidation()
+    },
+
+
+    lookupBooks: function (keyword) {
+      if (keyword) {
+        axios({
+          method: 'GET', url: `http://localhost:8080/`,
+          params: {
+            title: keyword
+          },
+        })
+        .then(response => {
+          console.log(response)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+
+      }
     },
 
     createConference: function () {
@@ -209,6 +240,26 @@ export default {
       .catch(error => {
         console.log(error)
       })
+    }
+  },
+
+  watch: {
+    bookSearch (value) {
+      if (this.items.length > 0) return
+      this.bookLoading = true
+
+      axios({
+        method: 'GET',
+        url: `http://localhost:8080/api/v1/book?keyword=${value}`
+      })
+      .then(response => {
+        console.log(response)
+        this.bookItems = response.data
+      })
+      .catch(error => {
+        console.log(error)
+      })
+      .finally(() => (this.bookLoading = false))
     }
   },
 }
