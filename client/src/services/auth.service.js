@@ -1,11 +1,11 @@
 import axios from "axios"
 
-const API_URL = 'localhost:8080/accounts/'
+const API_URL = 'localhost:8080/users/'
 
 class AuthService {
     login(user) {
         return axios.post(API_URL + 'api-token-auth/', {
-            useremail: user.useremail,
+            email: user.email,
             password: user.password
         })
         .then(res => {
@@ -20,12 +20,10 @@ class AuthService {
     }
 
     register(user) {
-        return axios.post(API_URL + "signup/", {
-            username: user.username,
-            useremail: user.useremail,
+        return axios.post(API_URL + "signup", {
+            email: user.email,
             nickname: user.nickname,
             password: user.password,
-            passwordConfirmation: user.passwordConfirm
         })
       }
 }
