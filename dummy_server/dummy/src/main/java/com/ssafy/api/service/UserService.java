@@ -42,6 +42,7 @@ public class UserService {
 	public boolean createUser(UserDTO userDto) {
 		try {
 			User entity = modelMapper.map(userDto, User.class);
+			entity.setPassword(passwordEncoder.encode(entity.getPassword()));
 			userRepository.save(entity);
 			return true;
 		} catch(Exception e) {
