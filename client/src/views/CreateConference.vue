@@ -102,7 +102,6 @@
       <v-text-field
         v-model="conf_answer"
         label="모임 비밀번호"
-        :rules="[v => !!v && conf_question || '비밀번호 문제를 설정할 시 비밀번호를 반드시 입력해야 합니다.']"
       ></v-text-field>
 
       <v-btn
@@ -133,6 +132,8 @@
 </template>
 
 <script>
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
+
 import _ from 'lodash'
 import axios from 'axios'
 export default {
@@ -161,14 +162,20 @@ export default {
     ],
     conf_question: null,
     conf_answer: null,
+
+    // conf_answerRules: [
+    //   v => !(!!this.conf_question&& !v) || '모임 비밀번호 없이 비밀번호 문제만 설정할 수 없습니다.',
+    // ],
+
+
     description: '',
 
     bookInput: null,
     bookSearch: null,
     bookLoading: false,
     bookItems: [],
-    selectedBook: '',
-    selectedBookId: 0,
+    selectedBook: [],
+    selectedBookId: [],
     tags: '',
 
   }),
@@ -186,23 +193,22 @@ export default {
     },
 
 
-    lookupBooks: function (keyword) {
-      if (keyword) {
-        axios({
-          method: 'GET', url: `http://localhost:8080/`,
-          params: {
-            title: keyword
-          },
-        })
-        .then(response => {
-          console.log(response)
-        })
-        .catch(error => {
-          console.log(error)
-        })
-
-      }
-    },
+    // lookupBooks: function (keyword) {
+    //   if (keyword) {
+    //     axios({
+    //       method: 'GET', baseURL:SERVER_URL, url: `/api/v1/book?keyword=${keyword}`,
+    //       params: {
+    //         title: keyword
+    //       },
+    //     })
+    //     .then(response => {
+    //       console.log(response)
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //     })
+    //   }
+    // },
 
     createConference: function () {
       // 요청값 전처리하기
@@ -245,12 +251,13 @@ export default {
 
   watch: {
     bookSearch (value) {
-      if (this.items.length > 0) return
+      if (this.bookItems.length > 0) return
       this.bookLoading = true
 
       axios({
         method: 'GET',
-        url: `http://localhost:8080/api/v1/book?keyword=${value}`
+        baseURL:SERVER_URL,
+        url: `/search/book?book_name=${value}`,
       })
       .then(response => {
         console.log(response)
