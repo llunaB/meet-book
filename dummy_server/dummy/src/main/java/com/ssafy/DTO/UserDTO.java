@@ -1,6 +1,8 @@
 package com.ssafy.DTO;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.ssafy.api.requestDto.SignUpReq;
 
@@ -24,6 +26,7 @@ public class UserDTO {
 	private int guestPoint;
 	private String profileImage;
 	private String profileDescription;
+	private List<String> roles;
 	
 	public UserDTO(SignUpReq data) {
 		setPassword(data.getPassword());
@@ -35,5 +38,7 @@ public class UserDTO {
 		setGuestPoint(0);
 		setProfileImage(data.getProfileImage());
 		setProfileDescription(data.getProfileDescription());
+		setRoles(new ArrayList<String>());
+		getRoles().add("ROLE_USER");
 	}
 }
