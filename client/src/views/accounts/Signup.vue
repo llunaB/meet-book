@@ -4,38 +4,39 @@
         <div class="col-lg-4 col-md-6 col-sm-8 mx-auto">
           <!-- 회원가입 전체 Form Start-->
           <div class="card flex-grid signup">
-            <main><h2>Sign Up</h2></main>
+            <main><h2> <strong>회원가입</strong></h2></main>
             <form class="form-group my-2" @submit.prevent="handleRegister">
               <!-- username 회원가입 Form -->
               <v-text-field
-                type="text" label="Username" hide-details="auto"
-                v-model="user.username" id="username-signup" required/>
+                type="text" label="이름" hide-details="auto"
+                v-model="user.username" id="username-signup" required />
               <!-- nickname 회원가입 Form -->
               <v-text-field
-                type="text" label="Nickname" hide-details="auto"
-                v-model="user.nickname" id="nickname-signup" required/>
+                type="text" label="별명" hide-details="auto"
+                v-model="user.nickname" id="nickname-signup" required />
               <!-- Email 회원가입 Form -->
               <v-text-field
                 type="email" label="Email" hide-details="auto"
-                v-model="user.useremail" id="useremail-signup" required/>
+                v-model="user.email" id="email-signup" required />
+              <div class="check_email" id="email-check"></div>
               <!-- Password 회원가입 Form -->
               <v-text-field
-                type="password" label="Password" hide-details="auto"
-                v-model="user.password" id="password-signup" required/>
+                type="password" label="비밀번호" hide-details="auto"
+                v-model="user.password" id="password-signup" required />
               <!-- PasswordConfirm 회원가입 Form -->
               <v-text-field
-                type="password" label="passwordConfirm" hide-details="auto"
-                v-model="user.passwordConfirm" id="passwordConfirm-signup" required/>
+                type="password" label="비밀번호 확인" hide-details="auto"
+                v-model="user.passwordConfirm" id="passwordConfirm-signup" required />
               <!-- 회원가입 제출 버튼 -->
               <div class="field" id="submit-signup-form">
-                <v-btn type="submit" class="primary">Submit</v-btn>
+                <v-btn type="submit" class="primary">가입하기</v-btn>
                 <br>
-                <a role="link" :href="'Login'">Already have an account?</a>
+                <a role="link" :href="'Login'">계정이 이미 있으신가요?</a>
               </div>
             </form>
             <!-- 소셜 회원가입 전체 Form Start-->
             <form class="social-form-group">
-              <div class="hr-sect">Sign Up With</div>
+              <div class="hr-sect">SNS로 로그인 하기</div>
             </form>
             <!-- 소셜 회원가입 전체 Form End -->
           </div>
@@ -47,7 +48,6 @@
 
 <script>
 import User from '@/api/users'
-// import axios from "axios"
 
 export default {
  name: 'Signup',
@@ -57,6 +57,8 @@ export default {
      submitted: false,
      successful: false,
      message: "",
+     gender: "",
+     items: ['Male', "Female"],
   }
  },
  computed: {
@@ -74,19 +76,16 @@ export default {
       this.message = ""
       this.submitted = true
       console.log(this.user)
-      // axios.post('http://localhost:8080/register', this.user)
-      //   .then(res => {
-      //     console.log(res)
-      //   })
-      // .catch(e => {console.log(e)})
       this.$store.dispatch("auth/register", this.user).then(
         data => {
           this.message = `${data.nickname}님 가입을 축하드립니다`
           this.successful = true
+          alert(this.message)
           setTimeout(()=>{this.$router.push({name: "Login"})}, 3000)
         }).catch(e => {
           this.message = (e.response && e.response.data) || e.message || e.toString()
           this.successful = false
+          alert(this.message)
           })
     },
   },
