@@ -243,8 +243,10 @@ export default {
       .then(response => {
         // 요청이 이루어지면
         // 1. 회의가 개설되었다는 알림 (Snackbar? Modal?) 띄우기
+        
         console.log(response)
         // 2. 일정 페이지 등으로 리다이렉트하기
+        this.$router.push('Home')
       })
       .catch(error => {
         console.log(error)
