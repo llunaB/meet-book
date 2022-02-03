@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.ssafy.error.exception.AlreadyExistEmailException;
+import com.ssafy.error.exception.AlreadyExistNicknameException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,16 +41,27 @@ public class UserService {
 		this.modelMapper = new ModelMapper();
 	}
 	
-	public boolean createUser(UserDTO userDto) {
-		try {
-			User entity = modelMapper.map(userDto, User.class);
-			entity.setPassword(passwordEncoder.encode(entity.getPassword()));
-			userRepository.save(entity);
-			return true;
-		} catch(Exception e) {
-			log.info("create user failed");
-			return false;
+	public boolean createUser(UserDTO userDto) throws AlreadyExistEmailException, AlreadyExistNicknameException {
+
+		String email = userDto.getEmail();
+		Optional<User> userByEmail = userRepository.findByEmail(email);
+		String nickname = userDto.getNickname();
+		Optional<User> userByNickname = userRepository.findByNickname(nickname);
+
+		if (userByEmail.isPresent()) {
+			log.info("user email already exists");
+			throw new AlreadyExistEmailException();
 		}
+
+		if (userByNickname.isPresent()) {
+			log.info("user nickname already exists");
+			throw new AlreadyExistNicknameException();
+		}
+
+		User entity = modelMapper.map(userDto, User.class);
+		entity.setPassword(passwordEncoder.encode(entity.getPassword()));
+		userRepository.save(entity);
+		return true;
 	}
 	
 	//Login 데이터를 받고, JWT를 반환하는 메소드
