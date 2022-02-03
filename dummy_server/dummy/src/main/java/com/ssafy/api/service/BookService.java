@@ -1,44 +1,46 @@
 package com.ssafy.api.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.DTO.BookDTO;
 import com.ssafy.db.entity.Book;
-import com.ssafy.db.entity.Genre;
 import com.ssafy.db.openApi.OpenApiHelper;
 import com.ssafy.db.repository.BookRepository;
 
 @Service
 public class BookService {
 	
-	private BookRepository repo;
-	private OpenApiHelper helper;
+	private BookRepository bookRepository;
+	private OpenApiHelper openApiHelper;
+	private ModelMapper modelMapper;
 	
 	@Autowired
-	public BookService(BookRepository repo, OpenApiHelper helper) {
-		this.repo = repo;
-		this.helper = helper;
+	public BookService(BookRepository bookRepository, OpenApiHelper openApiHelper) {
+		this.bookRepository = bookRepository;
+		this.openApiHelper = openApiHelper;
+		this.modelMapper = new ModelMapper();
 	}
 	
-	public boolean loadBookData() {
+	public boolean getBookData() {
 		try {
-			List<Book> list = helper.LoadBookData();
-			
-			repo.saveAll(list);
+			List<Book> list = openApiHelper.loadBookData();
+			bookRepository.saveAll(list);
 			return true;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
 	}
 	
-	public boolean createBook(Book Book) {
+	public boolean createBook(Book book) {
 		try {
-			repo.save(Book);
+			bookRepository.save(book);
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -46,34 +48,48 @@ public class BookService {
 		}
 	}
 	
-	public Book getBookById(int id) {
-		Book result = null;
+	public BookDTO getBookById(int id) {
 		try {
-			result = repo.findById(id).get();
+			Book source = bookRepository.findById(id).get();
+			return modelMapper.map(source, BookDTO.class);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		
-		return result;
+		return null;
 	}
 	
-	public Book getBookByeIsbn(String isbn) {
-		Book result = null;
+	public BookDTO getBookByIsbn(String isbn) {
 		try {
-			result = repo.findByIsbn(isbn).get();
+			Book source = bookRepository.findByIsbn(isbn).get();
+			return modelMapper.map(source, BookDTO.class);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		
-		return result;
+		return null;
 	}
 	
-	public boolean updateBook(Book b) {
+	public List<BookDTO> getBooksByName(String bookName) {
+		List<BookDTO> list = new ArrayList<BookDTO>();
 		try {
-			Book output = getBookById(b.getId());
+			list = bookRepository.findByBookNameContaining(bookName).stream().map(source -> {
+				BookDTO res = modelMapper.map(source, BookDTO.class);
+			    return res;
+			}).collect(Collectors.toList());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	public boolean updateBook(BookDTO book) {
+		try {
+			Book output = bookRepository.getById(book.getId());
 			if(output == null) return false;
-			output = UpdateEntity(output, b);
-			repo.save(output);
+			output = updateBookEntity(output, modelMapper.map(book, Book.class));
+			bookRepository.save(output);
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -83,8 +99,8 @@ public class BookService {
 	
 	public boolean deleteBook(int id) {
 		try {
-			Book Book = getBookById(id);
-			repo.delete(Book);
+			Book Book = bookRepository.getById(id);
+			bookRepository.delete(Book);
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -92,45 +108,15 @@ public class BookService {
 		}
 	}
 	
-	public Book UpdateEntity(Book target, Book data) {
-		target.setBook_author(data.getBook_author());
-		target.setBook_contents(data.getBook_contents());
-		target.setBook_name(data.getBook_name());
-		target.setBook_pubdate(data.getBook_pubdate());
-		target.setBook_publisher(data.getBook_publisher());
-		target.setBook_thumbnail_url(data.getBook_thumbnail_url());
+	public Book updateBookEntity(Book target, Book data) {
+		target.setBookAuthor(data.getBookAuthor());
+		target.setBookContents(data.getBookContents());
+		target.setBookName(data.getBookName());
+		target.setBookPubYear(data.getBookPubYear());
+		target.setBookPublisher(data.getBookPublisher());
+		target.setBookThumbnailUrl(data.getBookThumbnailUrl());
 		target.setGenre(data.getGenre());
 		
 		return target;
-	}
-	
-	public BookDTO Entity2Dto(Book data) {
-		BookDTO dto = new BookDTO();
-		
-		dto.setId(data.getId());
-		dto.setBook_author(data.getBook_author());
-		dto.setBook_contents(data.getBook_contents());
-		dto.setBook_name(data.getBook_name());
-		dto.setBook_pubdate(data.getBook_pubdate());
-		dto.setBook_publisher(data.getBook_publisher());
-		dto.setBook_thumbnail_url(data.getBook_thumbnail_url());
-		dto.setGenre_id(data.getGenre().getId());
-		dto.setLoan_count(data.getLoan_count());
-		
-		return dto;
-	}
-	
-	public Book Dto2Entity(BookDTO data, Genre genre) {
-		Book entity = new Book();
-		entity.setBook_author(data.getBook_author());
-		entity.setBook_contents(data.getBook_contents());
-		entity.setBook_name(data.getBook_name());
-		entity.setBook_pubdate(data.getBook_pubdate());
-		entity.setBook_publisher(data.getBook_publisher());
-		entity.setBook_thumbnail_url(data.getBook_thumbnail_url());
-		entity.setGenre(genre);
-		entity.setLoan_count(data.getLoan_count());
-		
-		return entity;
 	}
 }

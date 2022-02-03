@@ -27,14 +27,16 @@ public class Conference {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@Column(name = "call_start_time")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date call_start_time;	
+	private Date callStartTime;	
 	
+	@Column(name = "call_end_time")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date call_end_time;
+	private Date callEndTime;
 
-	@Column
-	private String thumbnail_url;
+	@Column(name = "thumbnail_url")
+	private String thumbnailUrl;
 
 	@Column
 	private String title;
@@ -56,8 +58,8 @@ public class Conference {
 	@Column
 	private String password;
 
-	@Column
-	private int max_members;
+	@Column(name = "max_members")
+	private int maxMembers;
 
 	@Column
 	private String tags;
