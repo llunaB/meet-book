@@ -182,7 +182,10 @@ export default {
 
   methods: {
     validate () {
-      this.$refs.form.validate()
+      const validate = this.$refs.form.validate()
+      if (validate) {
+        this.createConference()
+      }
     },
     reset () {
       console.log(this.title, this.date_time)
@@ -214,16 +217,25 @@ export default {
       // 요청값 전처리하기
 
       const token = localStorage.getItem('jwt')
+
+      // 로그인한 사용자인지 확인
+      if (!this.$store.state.auth.status.loggedIn) {
+        this.$router.push({name: 'Login'})
+        return
+      }
+
       // 회의 개설 요청 보내기
       axios({
         method: 'POST',
-        url: ``,
+        baseURL: SERVER_URL,
+        url: '/conference',
         headers: {
           Authorization: `${token}`,
         },
         data: {
           conference: {
             // 회의 개설 정보
+            user_id: this.$store.state.auth.status.user.id,
             title: this.title,
             book: this.book,
             description: this.description,
