@@ -1,9 +1,6 @@
 package com.ssafy.api.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.ssafy.error.exception.AlreadyExistEmailException;
@@ -11,6 +8,8 @@ import com.ssafy.error.exception.AlreadyExistNicknameException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +22,9 @@ import com.ssafy.api.requestDto.UpdateUserByDetailReq;
 import com.ssafy.config.JwtTokenProvider;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.UserRepository;
+import org.springframework.web.server.ResponseStatusException;
+
+import javax.persistence.EntityNotFoundException;
 
 @Slf4j
 @Service
@@ -63,7 +65,8 @@ public class UserService {
 		userRepository.save(entity);
 		return true;
 	}
-	
+
+
 	//Login 데이터를 받고, JWT를 반환하는 메소드
 	public String login(LoginReq data) {
 		User user = userRepository.findByEmail(data.getEmail()).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다.") );
@@ -73,28 +76,14 @@ public class UserService {
 		
 		return "";
 	}
-	
+
+
 	public UserDTO getUserById(int id) {
-		try {
-			User source = userRepository.findById(id).get();
-			return modelMapper.map(source, UserDTO.class);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		return null;
+		User source = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		return modelMapper.map(source, UserDTO.class);
 	}
-	
-	public UserDTO getUserByEmail(String email) throws UsernameNotFoundException {
-		try {
-			User source = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-			return modelMapper.map(source, UserDTO.class);
-		}catch(UsernameNotFoundException e){
-			e.printStackTrace();
-			throw e;
-		}
-	}
-	
+
+
 	//구 matchPassword
 	//생 비밀번호와, 암호화된 비밀번호를 입력받고, 두 비밀번호의 동일 여부를 반환
 	private boolean comparePassword(String rawPassword, String encryptPassword) {
@@ -120,14 +109,11 @@ public class UserService {
 	public boolean updateUserByProfile(UpdateUserByProfileReq data, int id) {
 		try {
 			User entity = userRepository.getById(id);
-			if(entity == null) return false;
-			entity = updateEntityByProfile(entity, data);
-			userRepository.save(entity);
-			return true;
-		}catch(Exception e){
+			userRepository.save(updateEntityByProfile(entity, data));
+		} catch(Exception e){
 			e.printStackTrace();
-			return false;
 		}
+		return true;
 	}
 	
 	public boolean updateUserByDetail(UpdateUserByDetailReq data, int id) {
@@ -145,17 +131,12 @@ public class UserService {
 	
 	public boolean deleteUser(DeleteUserReq data, int id) {
 		
-		User entity = userRepository.getById(id) ;
+		User entity = userRepository.getById(id);
 		
 		if(!comparePassword(data.getPassword(), entity.getPassword())) return false;
-		
-		try {
-			userRepository.delete(entity);
-			return true;
-		}catch(Exception e){
-			e.printStackTrace();
-			return false;
-		}
+
+		userRepository.delete(entity);
+		return true;
 	}
 	
 	private User updateEntityByProfile(User entity, UpdateUserByProfileReq data) {
