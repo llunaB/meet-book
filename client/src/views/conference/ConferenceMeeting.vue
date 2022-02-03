@@ -4,6 +4,7 @@
     <v-btn color="primary" @click="joinSession()">
       준비 다 되셨나요???
     </v-btn>
+    <input v-model="myUserName" type="text">
   </div>  
   <div v-if="session">
     <div>
@@ -18,8 +19,8 @@
       <v-btn v-if="subscribers.length >= 1" @click="audioMute">
         <v-icon v-if="audioMuted === true">mdi-volume-off</v-icon>
         <v-icon v-else>mdi-volume-high</v-icon>
-      </v-btn>
-    </div>
+      </v-btn>     
+    </div>    
     <v-row>
       <v-col cols="6">
         <user-video :stream-manager="mainStreamManager"/>
@@ -28,7 +29,32 @@
         <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
       </v-col>
     </v-row>
+    <div>      
+      <label>
+        <v-icon>mdi-chat</v-icon>
+      </label>
+      <select v-model="connection">
+        <option v-for="(connection,n) in connections" :key="n" :value="n">
+          {{n!==0 ? JSON.parse(connection.data).clientData : "모두에게"}}
+        </option>
+      </select>
+      <input id="textInput" v-bind:value="inputText" v-on:input="updateInput">
+      <v-btn @click="sendMessage">
+        메세지 보내기
+      </v-btn>
+      <!-- <select v-model="connection">
+        <option v-for="(connection,n) in connections" :key="n" :value="n">
+          {{n!==0 ? JSON.parse(connection.data).clientData : "모두에게"}}
+        </option>
+      </select>      
+      <v-btn @click="kickUser">
+        강퇴
+      </v-btn>       -->
+    </div>
+    <div id="chat">
+    </div>
   </div>
+  
 </v-container>
 </template>
 <script>
@@ -49,10 +75,14 @@ export default {
 			mainStreamManager: undefined,
 			publisher: undefined,
 			subscribers: [],
+      users: [],
+      connection: 0,
+      connections: [],
       videoMuted: false,
       audioMuted: false,
       mySessionId: null,
-      myUserName: 'chan'
+      myUserName: 'chan',
+      inputText: '',
     }
   },
   components:{
@@ -64,11 +94,18 @@ export default {
   methods: {
     joinSession () {
       this.OV = new OpenVidu();
+      this.OV.setAdvancedConfiguration({
+          publisherSpeakingEventsOptions: {
+              interval: 100,   // Frequency of the polling of audio streams in ms (default 100)
+              threshold: -50  // Threshold volume in dB (default -50)
+          }
+      });
       this.session = this.OV.initSession();
 
       this.session.on('streamCreated', ({ stream }) => {
         const subscriber = this.session.subscribe(stream)
         this.subscribers.push(subscriber)
+        this.users.push(subscriber.clientData)        
       })
 
       this.session.on('streamDestroyed', ({ stream }) => {
@@ -82,8 +119,31 @@ export default {
         console.warn(exception)
       })
 
+      this.session.on('signal:my-chat', (event) => {
+        const chat = document.getElementById("chat")
+        const p = document.createElement("p")
+        p.innerText = `${JSON.parse(event.from.data).clientData}: ${event.data}`
+        chat.append(p)
+        
+      })
+
+      this.session.on('connectionCreated', (event) => {
+        this.connections.push(event.connection)        
+        console.log("connections:", this.connections)
+      })
+
+      //수정?
+      this.session.on('publisherStartSpeaking', (event) => {
+          console.log('User ' + event.connection.connectionId + ' start speaking');
+      });
+
+      this.session.on('publisherStopSpeaking', (event) => {
+          console.log('User ' + event.connection.connectionId + ' stop speaking');
+      });
+
       // user token
       this.getToken(this.mySessionId).then(token => {
+        console.log("token:",token)
         this.session.connect(token, { clientData: this.myUserName})
           .then(() => {
             let publisher = this.OV.initPublisher(undefined, {
@@ -99,6 +159,7 @@ export default {
 
             this.mainStreamManager = publisher
             this.publisher = publisher
+            this.users.push(this.pusblisher)
 
             this.session.publish(this.publisher)
           })
@@ -182,11 +243,12 @@ export default {
     videoMute() {      
       if (this.videoMuted) {
         this.publisher.publishVideo(true)
-        this.videoMuted = false
+        this.videoMuted = false        
       } else {
         this.publisher.publishVideo(false)
         this.videoMuted = true
       }
+      console.log("publisher:",this.publisher)
     },
     audioMute() {
       if (this.audioMuted) {
@@ -196,7 +258,49 @@ export default {
         this.publisher.publishAudio(false)
         this.audioMuted = true
       }
+    },
+    updateInput: function(event) {
+      var updatedText = event.target.value
+      this.inputText = updatedText
+    },
+    sendMessage(){
+      if(this.connection === 0) {
+        this.session.signal({
+          data: this.inputText,
+          to: [],
+          type: 'my-chat'
+        })
+        .then(() => {          
+          console.log('Message successfully sent')
+          this.inputText = ''
+        })
+        .catch(error => {
+          console.error(error)
+        })
+      } else {
+        this.session.signal({
+          data: this.inputText,
+          to: [this.connections[0],this.connections[this.connection]],
+          type: 'my-chat'
+        })
+        .then(() => {          
+          console.log('Private Message successfully sent')
+          this.inputText = ''
+        })
+        .catch(error => {
+          console.error(error)
+        })
+      }
+    },
+    kickUser(){
+      console.log("connection:", this.connections[this.connection])
+      this.session.forceDisconnect(this.connections[this.connection])
     }
   }
 }
 </script>
+<style scoped>
+#textInput{
+  background-color: lightgray;
+}
+</style>
