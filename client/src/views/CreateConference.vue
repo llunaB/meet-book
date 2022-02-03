@@ -213,11 +213,14 @@ export default {
     createConference: function () {
       // 요청값 전처리하기
 
-
+      const token = localStorage.getItem('jwt')
       // 회의 개설 요청 보내기
       axios({
         method: 'POST',
         url: ``,
+        headers: {
+          Authorization: `${token}`,
+        },
         data: {
           conference: {
             // 회의 개설 정보
