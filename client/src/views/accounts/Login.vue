@@ -81,10 +81,6 @@ export default {
         if (this.user.email && this.user.password) {
           this.$store.dispatch('auth/login', this.user).then(
               () => {
-                this.$store.state.loggedinUser.email = this.user.email
-                this.$store.state.loggedinUser.nickname = this.user.nickname
-                this.$store.state.loggedinUser.username = this.user.username
-
                 // 여기에 로그인 정보를 전송하는 함수를 추가 해야합니다.
                 this.$router.push({"name": "Home"})
             }).catch(e => {

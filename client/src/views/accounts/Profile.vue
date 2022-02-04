@@ -12,7 +12,7 @@
 
       </v-col>
       <v-col cols="8" style="margin-left: 2rem">
-        <h2>{{ loggedinUser }}님의 개인 프로필</h2>
+        <h2>{{ loggedinUser.nickname }}님의 개인 프로필</h2>
         <br>
         <v-card>
           <strong>한마디</strong>
@@ -26,7 +26,7 @@
       <v-item-group>
         <v-container>
           <v-row>
-            <v-col v-for="item in conferences.slice(0, 5)" :key="item" md="2.2">
+            <v-col v-for="(item, idx) in conferences.slice(0, 5)" :key="idx" md="2.2">
               <v-item>
                 <v-card
                     class="d-flex align-center"
