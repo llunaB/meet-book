@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
+import com.ssafy.db.entity.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,9 +40,9 @@ public class JwtTokenProvider {
     }
 
     //JWT 토큰 생성
-    public String createToken(String userPk, List<String> roles){
+    public String createToken(User user, List<String> roles){
         //JWT .playload 에 저장되는 정보단위
-        Claims claims = Jwts.claims().setSubject(userPk);
+        Claims claims = Jwts.claims().setSubject(String.valueOf(user.getId()));
         //정보는 key/ value쌍으로 저장된다.
         claims.put("roles",roles);
         Date now = new Date();

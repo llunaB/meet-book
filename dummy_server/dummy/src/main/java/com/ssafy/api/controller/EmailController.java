@@ -20,7 +20,7 @@ public class EmailController {
     @Autowired
     MailSender mailSender;
 
-    @RequestMapping("/CheckMail") // AJAX와 URL을 매핑시켜줌
+    @RequestMapping("/email") // AJAX와 URL을 매핑시켜줌
     @ResponseBody  //AJAX후 값을 리턴하기위해 작성
     public Map<String,String> createMail(@RequestParam String mail) {
         Random random=new Random();  //난수 생성을 위한 랜덤 클래스
