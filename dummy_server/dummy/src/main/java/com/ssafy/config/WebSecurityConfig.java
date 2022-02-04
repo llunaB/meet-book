@@ -1,5 +1,7 @@
 package com.ssafy.config;
 
+import com.ssafy.error.exception.securityException.CustomAccessDeniedHandler;
+import com.ssafy.error.exception.securityException.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -49,14 +51,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 역시 사용하지 않습니다.
             .and()
                 .authorizeRequests() // 요청에 대한 사용권한 체크
-                .antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/profile","/email/**","/users/login/**","/users/signup/**","/search/**", "/users/**").permitAll()
+                .antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/profile","/email/**","/users/login/**","/exception/**","/users/signup/**","/search/**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
 //                .antMatchers("/user/**").hasRole("USER")
                 .antMatchers("/h2-console/**").permitAll() // 누구나 h2-console 접속
                 .anyRequest().authenticated()
 //               .anyRequest().permitAll() // 그외 나머지 요청은 누구나 접근 가능
             .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+                .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+            .and()
+                .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
+            .and().addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class);
                 // JwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 전에 넣는다
 
