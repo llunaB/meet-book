@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.DTO.BookmarkDTO;
@@ -16,6 +17,7 @@ import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.BookmarkRepository;
 import com.ssafy.db.repository.ConferenceRepository;
 import com.ssafy.db.repository.UserRepository;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class BookmarkService {
@@ -35,47 +37,38 @@ public class BookmarkService {
 	
 	public boolean createBookmark(int userId, int conferenceId) {
 		try {
-			
 			Bookmark bookmark = new Bookmark();
 			User user = userRepository.getById(userId);
 			Conference conf = conferenceRepository.getById(conferenceId);
-			
+
 			bookmark.setAlarm(1);
 			bookmark.setConference(conf);
 			bookmark.setUser(user);
-			
+
 			bookmarkRepository.save(bookmark);
-			return true;
-		}catch(Exception e){
-			e.printStackTrace();
+		} catch (Exception e) {
 			return false;
 		}
+		return  true;
 	}
 	
 	public GetBookmarksRes getBookmarkById(int id) {
-		try {
-			Bookmark source = bookmarkRepository.findById(id).get();
-			if(source == null) return null;
-			return modelmapper.map(source, GetBookmarksRes.class);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		return null;
+		Bookmark source = bookmarkRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		return modelmapper.map(source, GetBookmarksRes.class);
 	}
 	
 	public List<GetBookmarksRes> getBookmarks(int id) {
 		List<GetBookmarksRes> list = new ArrayList<GetBookmarksRes>();
 		User user = userRepository.getById(id);
+
 		try {
 			list = bookmarkRepository.findByUser(user).stream().map(source -> {
 				GetBookmarksRes res = modelmapper.map(source, GetBookmarksRes.class);
 			    return res;
 			}).collect(Collectors.toList());
-		}catch(Exception e){
+		} catch(Exception e){
 			e.printStackTrace();
 		}
-		
 		return list;
 	}
 	
@@ -100,10 +93,9 @@ public class BookmarkService {
 		try {
 			Bookmark Bookmark = bookmarkRepository.getById(id);
 			bookmarkRepository.delete(Bookmark);
-			return true;
-		}catch(Exception e){
-			e.printStackTrace();
+		} catch (Exception e) {
 			return false;
 		}
+		return true;
 	}
 }

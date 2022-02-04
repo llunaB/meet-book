@@ -1,38 +1,49 @@
 package com.ssafy.api.controller;
 
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.mysql.cj.protocol.Message;
-import lombok.extern.slf4j.Slf4j;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpHeaders;
+
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.DTO.UserDTO;
 import com.ssafy.api.requestDto.DeleteUserReq;
 import com.ssafy.api.requestDto.LoginReq;
 import com.ssafy.api.requestDto.SignUpReq;
-import com.ssafy.api.requestDto.UpdateUserByProfileReq;
 import com.ssafy.api.requestDto.UpdateUserByDetailReq;
+import com.ssafy.api.requestDto.UpdateUserByProfileReq;
 import com.ssafy.api.responseDto.GetBookmarksRes;
-import com.ssafy.api.responseDto.MessageRes;
 import com.ssafy.api.responseDto.GetUserByDetailRes;
 import com.ssafy.api.responseDto.GetUserByProfileRes;
+import com.ssafy.api.responseDto.MessageRes;
 import com.ssafy.api.service.BookmarkService;
 import com.ssafy.api.service.UserService;
+import com.ssafy.error.exception.AlreadyExistEmailException;
+import com.ssafy.error.exception.AlreadyExistNicknameException;
 
-import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/users")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
 	private UserService userService;
 	private BookmarkService bookmarkService;
@@ -44,14 +55,16 @@ public class UserController {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<MessageRes> signUp(@Valid @RequestBody SignUpReq signUpReq){
+	public ResponseEntity<MessageRes> signUp(@Valid @RequestBody SignUpReq signUpReq) throws AlreadyExistEmailException, AlreadyExistNicknameException {
 		MessageRes messageRes = new MessageRes();
 		UserDTO userDto = new UserDTO(signUpReq);
+
 		if (userService.createUser(userDto)) {
 			messageRes.setMessage("유저생성 성공");
 			messageRes.setData("user email : " + userDto.getEmail());
 			return new ResponseEntity<MessageRes>(messageRes, HttpStatus.CREATED);
 		}
+
 		messageRes.setMessage("유저생성 실패");
 		return new ResponseEntity<MessageRes>(messageRes, HttpStatus.BAD_REQUEST);
 	}
@@ -79,13 +92,13 @@ public class UserController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<GetUserByProfileRes> getUser(@PathVariable("id") String id){
+	public ResponseEntity<GetUserByProfileRes> getUser (@PathVariable("id") String id) {
 		UserDTO user = userService.getUserById(Integer.parseInt(id));
 		return new ResponseEntity<GetUserByProfileRes>(new GetUserByProfileRes(user), HttpStatus.OK);
 	}
 	
 	@GetMapping("/{id}/detail")
-	public ResponseEntity<GetUserByDetailRes> getUserDetail(@PathVariable("id") String id){
+	public ResponseEntity<GetUserByDetailRes> getUserDetail(@PathVariable("id") String id) {
 		UserDTO user = userService.getUserById(Integer.parseInt(id));
 		return new ResponseEntity<GetUserByDetailRes>(new GetUserByDetailRes(user), HttpStatus.OK);
 	}
@@ -94,12 +107,11 @@ public class UserController {
 	public ResponseEntity<Map<String,String>> updateUserByProfile(@PathVariable("id") String id, @RequestBody UpdateUserByProfileReq updateProfileRequestDto){
 		
 		HashMap<String, String> map = new HashMap<String, String>();
-		
-		
+
 		 if(userService.updateUserByProfile(updateProfileRequestDto, Integer.parseInt(id))){
             UserDTO user = userService.getUserById(Integer.parseInt(id));
             map.put("message", "회원정보 수정 성공");
-            map.put("token",userService.login(new LoginReq(user.getEmail(), user.getPassword())));
+            map.put("token", userService.login(new LoginReq(user.getEmail(), user.getPassword())));
             return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
         }
         map.put("message", "회원정보 수정 실패");
@@ -124,19 +136,14 @@ public class UserController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Map<String,String>> deleteUser(@RequestBody DeleteUserReq deleteUserReq, @PathVariable("id") String id){
 		HashMap<String, String> map = new HashMap<String, String>();
-		try {
-			if(userService.deleteUser(deleteUserReq, Integer.parseInt(id))) {
-				map.put("message", "삭제 성공");
-				return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
-			}
-		}catch(UsernameNotFoundException e) {
-			e.printStackTrace();
-			map.put("message", "삭제 실패");
-			return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
+
+		if (userService.deleteUser(deleteUserReq, Integer.parseInt(id))) {
+			map.put("message", "삭제 성공");
+			return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
+		} else {
+			map.put("message", "잘못된 password");
+			return new ResponseEntity<Map<String, String>>(map, HttpStatus.BAD_REQUEST);
 		}
-		map.put("message", "잘못된 password");
-		return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
-		
 	}
 	
 	@PostMapping("/{user}/bookmark/{conference}")
@@ -144,14 +151,13 @@ public class UserController {
 		
 		HashMap<String, String> map = new HashMap<String, String>();
 		
-		if(bookmarkService.createBookmark(Integer.parseInt(userId), Integer.parseInt(conferenceId))) {
+		if (bookmarkService.createBookmark(Integer.parseInt(userId), Integer.parseInt(conferenceId))) {
 			map.put("message", "북마크 추가 성공");
-		}else {
+			return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
+		} else {
 			map.put("message", "북마크 추가 실패");
+			return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
 		}
-		
-		
-		return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{user}/bookmark/{bookmark}")
