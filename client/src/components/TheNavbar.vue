@@ -106,7 +106,7 @@
 
       <v-list>
         <v-list-item :to="{name: 'ConferenceIndex'}">
-          <v-list-tiem-title>모임</v-list-tiem-title>
+          <v-list-item-title>모임</v-list-item-title>
         </v-list-item>
         <div v-for="(item, index) in shortMenuItems" :key="index">
           <v-list-item v-if="item.needLogin == loggedIn" :to="{name: item.to}">
