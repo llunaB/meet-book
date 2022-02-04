@@ -80,7 +80,9 @@ public class UserController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<GetUserByProfileRes> getUser(@PathVariable("id") String id){
+		System.out.println(id);
 		UserDTO user = userService.getUserById(Integer.parseInt(id));
+		System.out.println("출력:"+ user.toString());
 		return new ResponseEntity<GetUserByProfileRes>(new GetUserByProfileRes(user), HttpStatus.OK);
 	}
 	

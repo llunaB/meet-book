@@ -36,4 +36,20 @@ public class UserDTO {
 		setProfileImage(data.getProfileImage());
 		setProfileDescription(data.getProfileDescription());
 	}
+
+	@Override
+	public String toString() {
+		return "UserDTO{" +
+				"id=" + id +
+				", password='" + password + '\'' +
+				", nickname='" + nickname + '\'' +
+				", email='" + email + '\'' +
+				", gender=" + gender +
+				", age=" + age +
+				", hostPoint=" + hostPoint +
+				", guestPoint=" + guestPoint +
+				", profileImage='" + profileImage + '\'' +
+				", profileDescription='" + profileDescription + '\'' +
+				'}';
+	}
 }

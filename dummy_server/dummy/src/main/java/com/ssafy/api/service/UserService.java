@@ -42,6 +42,7 @@ public class UserService {
 	public boolean createUser(UserDTO userDto) {
 		try {
 			User entity = modelMapper.map(userDto, User.class);
+			entity.setPassword(passwordEncoder.encode(entity.getPassword()));
 			userRepository.save(entity);
 			return true;
 		} catch(Exception e) {
@@ -54,7 +55,8 @@ public class UserService {
 	public String login(LoginReq data) {
 		User user = userRepository.findByEmail(data.getEmail()).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다.") );
 		if(comparePassword(data.getPassword(), user.getPassword())) {
-			return jwtTokenProvider.createToken(user.getUsername(),user.getRoles());
+			//return jwtTokenProvider.createToken(user.getUsername(),user.getRoles());
+			return jwtTokenProvider.createToken(user,user.getRoles());
 		}
 		
 		return "";

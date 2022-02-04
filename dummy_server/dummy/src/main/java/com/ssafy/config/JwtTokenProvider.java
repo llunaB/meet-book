@@ -7,6 +7,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
+import com.ssafy.db.entity.User;
+import io.jsonwebtoken.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,10 +16,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -39,9 +37,9 @@ public class JwtTokenProvider {
     }
 
     //JWT 토큰 생성
-    public String createToken(String userPk, List<String> roles){
+    public String createToken(User user, List<String> roles){
         //JWT .playload 에 저장되는 정보단위
-        Claims claims = Jwts.claims().setSubject(userPk);
+        Claims claims = Jwts.claims().setSubject(String.valueOf(user.getId()));
         //정보는 key/ value쌍으로 저장된다.
         claims.put("roles",roles);
         Date now = new Date();
@@ -73,8 +71,15 @@ public class JwtTokenProvider {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());
-        } catch (Exception e) {
-            return false;
+        } catch (SecurityException | MalformedJwtException e) {
+            System.out.println("잘못된 jwt 서명입니다.");
+        }catch (ExpiredJwtException e){
+            System.out.println("만료된 jwt 토큰입니다.");
+        }catch (UnsupportedJwtException e){
+            System.out.println("지원되지 않는 jwt 토큰입니다.");
+        }catch (IllegalArgumentException e){
+            System.out.println("jwt 토큰이 잘못되었습니다.");
         }
+        return false;
     }
 }

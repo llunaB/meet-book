@@ -10,6 +10,8 @@ import com.ssafy.db.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
+	//add
+	Optional<User> findById(String id);
 	Optional<User> findByEmail(String email);
 	List<User> findByNicknameContaining(String nickname);
 }
