@@ -1,22 +1,22 @@
 <template>
-  <v-container style="padding: 3rem">
+  <v-container style="padding: 3rem" v-if="loggedinUser.user">
     <v-row>
       <v-col class="text-center align-self-center justify-center text-center" cols="3">
-        <v-avatar v-if="user.profile_image" :src="user.profile_image" />
+        <v-avatar v-if="loggedinUser.profile_image" :src="loggedinUser.profile_image" />
         <div v-else class="img-upload">
           <label for="file-input">
-            <v-avatar size="150" color="primary">{{ user.nickname }}</v-avatar>
+            <v-avatar size="150" color="primary">{{ loggedinUser.nickname }}</v-avatar>
           </label>
           <input id="file-input" type="file" />
         </div>
 
       </v-col>
       <v-col cols="8" style="margin-left: 2rem">
-        <h2>{{ user.nickname }}님의 개인 프로필</h2>
+        <h2>{{ loggedinUser }}님의 개인 프로필</h2>
         <br>
         <v-card>
           <strong>한마디</strong>
-          <p>{{ user.profile_description }}</p>
+          <p>{{ loggedinUser.profile_description }}</p>
         </v-card>
         <p>지난 한달간 {p}권의 책을 읽었어요!</p>
       </v-col>
@@ -88,7 +88,8 @@ export default {
   name: 'Profile',
   data() {
     return {
-      user: {"name": 'eonyong', "nickname": "yong", "host_point": 10, "guest_point": 11, "profile_description": "hihihihi"},
+      user: '',
+      // user: {"name": 'eonyong', "nickname": "yong", "host_point": 10, "guest_point": 11, "profile_description": "hihihihi"},
       conference: '',
       conferences: [
         {"id":1, "title":"오이디푸스1", "call_start_time": "2020-12-29", "thumbnail_url":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"asdasd","isActive":true, "tag": "#하루#종일"},
@@ -100,6 +101,11 @@ export default {
         {"id":7, "title":"정의란 무엇인가", "thumbnail_url":"https://image.yes24.com/goods/15156691/XL", "description":"welcome2", "isActive":false},
         {"id":8, "title":"오이디푸스", "thumbnail_url":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"Welcome", "isActive":false},
         {"id":9, "title":"정의란 무엇인가", "thumbnail_url":"https://image.yes24.com/goods/15156691/XL", "description":"welcome2", "isActive":false},]
+    }
+  },
+  computed: {
+    loggedinUser(){
+      return this.$store.state.auth
     }
   },
   methods: {
@@ -116,7 +122,7 @@ export default {
       else {
         return require('@/assets/host_img/host2.jpeg')
       }
-    }
+    },
   }
 }
 </script>

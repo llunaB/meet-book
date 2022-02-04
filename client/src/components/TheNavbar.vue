@@ -78,7 +78,7 @@
 
       </template>
 
-      <v-list>
+      <v-list v-if="loggedIn">
         <v-list-item
           v-for="(item, index) in profileMenuItems" :key="index" :to="item.to">
           <v-list-item-title>{{ item.title }}</v-list-item-title>
@@ -146,6 +146,7 @@ export default {
     // 로그아웃
     logout: function () {
       this.$store.dispatch('auth/logout')
+      this.$router.push('/')
     },
 
     // 검색

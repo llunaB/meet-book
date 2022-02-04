@@ -7,7 +7,7 @@
             <main>
               <h2>로 그 인</h2>
             </main>
-            <form class="form-group my-3">
+            <form class="form-group my-3" @submit.prevent="handleLogin">
               <!-- Email 로그인 Form -->
               <v-text-field
                 type="email" label="이메일" hide-details="auto"
@@ -19,7 +19,7 @@
                 v-model="user.password" id="passwordLogin" required/>
               <!-- 로그인 제출 버튼 -->
               <div class="field" id="submit-login-form">
-                <v-btn type="submit" class="primary" @click="handleLogin">로그인하기</v-btn>
+                <v-btn type="submit" class="primary">로그인하기</v-btn>
                 <br>
                 <p>계정이 없으신가요? <a role="link" :href="'signup'">회원가입 히기</a></p>
                 <v-dialog v-model="dialog" width="500">
@@ -80,11 +80,15 @@ export default {
 
         if (this.user.email && this.user.password) {
           this.$store.dispatch('auth/login', this.user).then(
-            res => {
-              console.log(res)
-              // 여기에 로그인 정보를 전송하는 함수를 추가 해야합니다.
-              this.$router.push({"name": "Login"})
-            }).catch(() => {
+              () => {
+                this.$store.state.loggedinUser.email = this.user.email
+                this.$store.state.loggedinUser.nickname = this.user.nickname
+                this.$store.state.loggedinUser.username = this.user.username
+
+                // 여기에 로그인 정보를 전송하는 함수를 추가 해야합니다.
+                this.$router.push({"name": "Home"})
+            }).catch(e => {
+              console.log(e)
               this.loading = false;
               alert('Email 혹은 Password를 잘못입력하셨습니다.')
             })
