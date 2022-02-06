@@ -43,6 +43,11 @@ const routes = [
     path: '/conference/:conferenceId',
     name: 'ConferenceMeeting',
     component: ConferenceMeeting
+  },
+  {
+    path: '/accounts/settings',
+    name: 'Settings',
+    component: Profile
   }
 ]
 

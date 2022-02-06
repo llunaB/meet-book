@@ -9,7 +9,7 @@
               <!-- username 회원가입 Form -->
               <v-text-field
                 type="text" label="이름" hide-details="auto"
-                v-model="user.username" id="username-signup" required />
+                v-model="user.name" id="username-signup" required />
               <!-- nickname 회원가입 Form -->
               <v-text-field
                 type="text" label="별명" hide-details="auto"
@@ -53,7 +53,7 @@ export default {
  name: 'Signup',
  data() {
    return{
-     user: new User("", "", "", "", "", ""),
+     user: new User("", "", "", "", ""),
      submitted: false,
      successful: false,
      message: "",
