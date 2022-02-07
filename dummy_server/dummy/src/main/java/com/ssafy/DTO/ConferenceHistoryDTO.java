@@ -18,7 +18,14 @@ public class ConferenceHistoryDTO {
 	private int id;
 	private int conferenceId;
 	private int userId;
-	private int action;
+	private String action;
 	private Date insertedTime;
+	
+	public ConferenceHistoryDTO(int conferenceId, int userId, String action) {
+		this.conferenceId = conferenceId;
+		this.userId = userId;
+		this.action = action;
+		this.insertedTime = new Date();
+	}
 	
 }
