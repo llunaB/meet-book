@@ -44,24 +44,28 @@ public class BookService {
 	}
 
 	public List<BookDTO> getBooks(){
-		List<BookDTO> list = new ArrayList<>();
+		List<BookDTO> bookDTOList = new ArrayList<>();
 
 		try {
-			list = bookRepository.findAll().stream().map(source -> {
-				BookDTO res = modelMapper.map(source,BookDTO.class);
-				return res;
+			List<Book> bookList = bookRepository.findAll();
+			// Book List -> BookDTO List
+			bookDTOList = bookList.stream().map(source -> {
+				BookDTO bookDTO = modelMapper.map(source, BookDTO.class);
+				return bookDTO;
 			}).collect(Collectors.toList());
+
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 
-		return list;
+		return bookDTOList;
 	}
 	
 	public BookDTO getBookById(int id) {
 		try {
 			Book source = bookRepository.findById(id).get();
 			System.out.println(source);
+			// Book -> BookDTO
 			return modelMapper.map(source, BookDTO.class);
 		}catch(Exception e){
 			e.printStackTrace();
