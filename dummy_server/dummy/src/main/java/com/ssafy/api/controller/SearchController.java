@@ -21,7 +21,6 @@ import com.ssafy.api.service.UserService;
 
 @RestController
 @RequestMapping("/search")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class SearchController {
 	private UserService userService;
 	private BookService bookService;

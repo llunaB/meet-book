@@ -23,7 +23,6 @@ import com.ssafy.api.service.ConferenceService;
 
 @RestController
 @RequestMapping("/conference")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ConferenceController {
 	
 	private ConferenceService conferenceService;
