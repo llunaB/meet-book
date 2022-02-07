@@ -1,34 +1,25 @@
 package com.ssafy.api.controller;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import com.ssafy.api.requestDto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpHeaders;
 
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.DTO.UserDTO;
-import com.ssafy.api.requestDto.DeleteUserReq;
-import com.ssafy.api.requestDto.LoginReq;
-import com.ssafy.api.requestDto.SignUpReq;
-import com.ssafy.api.requestDto.UpdateUserByDetailReq;
-import com.ssafy.api.requestDto.UpdateUserByProfileReq;
 import com.ssafy.api.responseDto.GetBookmarksRes;
 import com.ssafy.api.responseDto.GetUserByDetailRes;
 import com.ssafy.api.responseDto.GetUserByProfileRes;
@@ -90,7 +81,64 @@ public class UserController {
 		map.put("message", "로그인 실패");
 		return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
 	}
-	
+
+	//비밀번호찾기, 이메일만
+	@PostMapping("/findpwd")
+	public ResponseEntity<MessageRes> getUser(@RequestBody FindPwdReq findPwdReq){
+		HashMap<String, String> map = new HashMap<String, String>();
+		MessageRes messageRes = new MessageRes();
+		UserDTO user = null;
+		try {
+			user = userService.getUserByEmail(findPwdReq.getEmail());
+			messageRes.setMessage("유저정보가 있습니다");
+			map.put("email",user.getEmail());
+			map.put("id",String.valueOf(user.getId()));
+			messageRes.setData(map);
+			return new ResponseEntity<MessageRes>(messageRes, HttpStatus.OK);
+		}catch(Exception e){
+			e.printStackTrace();
+			messageRes.setMessage("유저정보가 없습니다");
+			messageRes.setData("user email : ");
+			return new ResponseEntity<MessageRes>(messageRes, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	//비밀번호찾기, 이메일만
+	@PostMapping("/findpwd/anotherway")
+	public ResponseEntity<MessageRes> getUserByEmail(@RequestBody FindPwdReq findPwdReq, HttpServletResponse response){
+		HashMap<String, String> map = new HashMap<String, String>();
+		MessageRes messageRes = new MessageRes();
+		UserDTO user = null;
+		try {
+			user = userService.getUserByEmail(findPwdReq.getEmail());
+			response.sendRedirect("/email/pwdcheck/"+user.getId()+"/"+user.getEmail());
+		}catch(Exception e){
+			e.printStackTrace();
+			messageRes.setMessage("유저정보가 없습니다");
+			messageRes.setData("user email : ");
+		}
+		return new ResponseEntity<MessageRes>(messageRes, HttpStatus.BAD_REQUEST);
+	}
+
+	//비밀번호 수정
+	@PostMapping("/findpwd/modify/{id}")
+	public ResponseEntity<Map<String,String>> updateUserByPwd(@PathVariable("id") String id, @RequestBody Map<String,String> object){
+		UpdateUserByDetailReq updateUserByDetailReq = new UpdateUserByDetailReq();
+		HashMap<String, String> map = new HashMap<String, String>();
+		try {
+			updateUserByDetailReq.setNewPassword(object.get("password"));
+			if(userService.updateUserByDetail(updateUserByDetailReq, Integer.parseInt(id))){
+				UserDTO user = userService.getUserById(Integer.parseInt(id));
+				map.put("message", "비밀번호 수정 성공");
+				return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			map.put("message", "회원정보 수정 실패");
+		}
+		return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
+	}
+
 	@GetMapping("/{id}")
 	public ResponseEntity<GetUserByProfileRes> getUser (@PathVariable("id") String id) {
 		UserDTO user = userService.getUserById(Integer.parseInt(id));

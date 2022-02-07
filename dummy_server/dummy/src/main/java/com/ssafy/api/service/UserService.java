@@ -83,6 +83,11 @@ public class UserService {
 		return modelMapper.map(source, UserDTO.class);
 	}
 
+	public UserDTO getUserByEmail(String email) {
+		User source = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		return modelMapper.map(source, UserDTO.class);
+	}
+
 
 	//구 matchPassword
 	//생 비밀번호와, 암호화된 비밀번호를 입력받고, 두 비밀번호의 동일 여부를 반환
@@ -105,6 +110,8 @@ public class UserService {
 		
 		return list;
 	}
+
+
 	
 	public boolean updateUserByProfile(UpdateUserByProfileReq data, int id) {
 		try {
@@ -121,6 +128,7 @@ public class UserService {
 			User entity = userRepository.getById(id);
 			if(entity == null) return false;
 			entity = updateEntityByUserInfo(entity, data);
+			entity.setPassword(passwordEncoder.encode(entity.getPassword()));
 			userRepository.save(entity);
 			return true;
 		}catch(Exception e){
