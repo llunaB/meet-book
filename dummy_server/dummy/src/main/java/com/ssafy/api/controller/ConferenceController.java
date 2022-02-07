@@ -39,7 +39,6 @@ import io.openvidu.java.client.Session;
 
 @RestController
 @RequestMapping("/conference")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ConferenceController {
 	
 	private ConferenceService conferenceService;
