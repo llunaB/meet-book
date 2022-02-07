@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.DTO.BookDTO;
@@ -70,13 +72,11 @@ public class BookService {
 		return null;
 	}
 	
-	public List<BookDTO> getBooksByName(String bookName) {
-		List<BookDTO> list = new ArrayList<BookDTO>();
+	public Page<BookDTO> getBooksByName(String bookName, Pageable pageable) {
+		Page<BookDTO> list = Page.empty();
 		try {
-			list = bookRepository.findByBookNameContaining(bookName).stream().map(source -> {
-				BookDTO res = modelMapper.map(source, BookDTO.class);
-			    return res;
-			}).collect(Collectors.toList());
+			Page<Book> data = bookRepository.findByBookNameContaining(bookName, pageable);
+			list = data.map(source -> modelMapper.map(source, BookDTO.class));
 		}catch(Exception e){
 			e.printStackTrace();
 		}

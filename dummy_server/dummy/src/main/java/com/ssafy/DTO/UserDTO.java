@@ -32,12 +32,12 @@ public class UserDTO {
 		setPassword(data.getPassword());
 		setNickname(data.getNickname());
 		setEmail(data.getEmail());
-		setGender(data.getGender());
-		setAge(data.getAge());
+		setGender(0);
+		setAge(new Date());
 		setHostPoint(0);
 		setGuestPoint(0);
-		setProfileImage(data.getProfileImage());
-		setProfileDescription(data.getProfileDescription());
+		setProfileImage("");
+		setProfileDescription("");
 		setRoles(new ArrayList<String>());
 		getRoles().add("ROLE_USER");
 	}

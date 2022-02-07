@@ -3,6 +3,7 @@ package com.ssafy.db.entity;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.ssafy.db.converter.ActionConverter;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,8 +38,8 @@ public class ConferenceHistory {
 	@JoinColumn(name = "USER_ID")
 	private User user;
 	
-	@Column
-	private int action;
+	@Convert(converter = ActionConverter.class)
+	private String action;
 	
 	@Column(name = "inserted_time")
 	@Temporal(TemporalType.TIMESTAMP)

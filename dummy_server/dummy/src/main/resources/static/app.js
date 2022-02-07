@@ -203,12 +203,12 @@ function getToken(callback) {
 
 	httpRequest(
 		'POST',
-		'api/get-token', {
+		'conference/3/token', {
 			sessionName: sessionName
 		},
 		'Request of TOKEN gone WRONG:',
 		res => {
-			token = res[0]; // Get token from response
+			token = res.token; // Get token from response
 			console.warn('Request of TOKEN gone WELL (TOKEN:' + token + ')');
 			callback(token); // Continue the join operation
 		}
