@@ -5,6 +5,7 @@ import Login from '@/views/accounts/Login'
 import Signup from '@/views/accounts/Signup'
 import ConferenceIndex from '@/views/conference/ConferenceIndex'
 import Profile from '@/views/accounts/Profile'
+import ConferenceMeeting from '@/views/conference/ConferenceMeeting'
 
 Vue.use(VueRouter)
 
@@ -37,6 +38,11 @@ const routes = [
     path: '/profile',
     name: 'Profile',
     component: Profile
+  },
+  {
+    path: '/conference/:conferenceId',
+    name: 'ConferenceMeeting',
+    component: ConferenceMeeting
   },
   {
     path: '/accounts/settings',
