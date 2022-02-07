@@ -36,13 +36,13 @@
       
     <div class="col-12">
       <h3>{{ book.name }}을 읽은 사람들</h3> <br>
-        <div v-if="people.length == 0">
+        <div v-if="users.length == 0">
           <div class="text-center">
             <p>아직 이 책에 대해 이야기 나눈 사람이 없어요!</p>
           </div>
         </div>
         <div v-else>
-          <ProfileSmallcard v-for="(person, idx) in people" :key="idx" :person="person" />
+          <ProfileSmallcard v-for="(person, idx) in users" :key="idx" :person="person" />
         </div>
     </div>
   </div>
@@ -84,7 +84,7 @@ export default {
       conferences: [
 
       ],
-      people: [
+      users: [
         {id: 1,
         nickname: '닉네임',
         email: 'email@mail.com',

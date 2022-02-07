@@ -39,7 +39,7 @@ const routes = [
     component: Profile
   },
   {
-    path: '/book/:id',
+    path: '/books/:id',
     name: 'Bookinfo',
     component: () => import('@/views/Bookinfo')
   }
