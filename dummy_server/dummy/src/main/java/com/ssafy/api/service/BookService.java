@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.ssafy.DTO.ConferenceDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,7 +29,9 @@ public class BookService {
 		this.openApiHelper = openApiHelper;
 		this.modelMapper = new ModelMapper();
 	}
-	
+
+
+	// 도서데이터 생성
 	public boolean getBookData() {
 		try {
 			List<Book> list = openApiHelper.loadBookData();
@@ -39,20 +42,26 @@ public class BookService {
 			return false;
 		}
 	}
-	
-	public boolean createBook(Book book) {
+
+	public List<BookDTO> getBooks(){
+		List<BookDTO> list = new ArrayList<>();
+
 		try {
-			bookRepository.save(book);
-			return true;
+			list = bookRepository.findAll().stream().map(source -> {
+				BookDTO res = modelMapper.map(source,BookDTO.class);
+				return res;
+			}).collect(Collectors.toList());
 		}catch(Exception e){
 			e.printStackTrace();
-			return false;
 		}
+
+		return list;
 	}
 	
 	public BookDTO getBookById(int id) {
 		try {
 			Book source = bookRepository.findById(id).get();
+			System.out.println(source);
 			return modelMapper.map(source, BookDTO.class);
 		}catch(Exception e){
 			e.printStackTrace();
