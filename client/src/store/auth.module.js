@@ -8,18 +8,18 @@ export const auth = {
     namespaced: true,
     state: initialState,
     actions: {
-        login({ commit }, user) {
+        login: function ({commit}, user) {
             const user_info = user
             return AuthService.login(user).then(
-                user => {
-                    // user_info['token'] = user.token
-                    user_info['password'] = ''
-                    user_info["token"] = user.token
-                    commit('loginSuccess', user_info)
-                    return Promise.resolve(user)
-                }).catch(e => {
-                    commit('loginFailure')
-                    return Promise.reject(e.response.data)})
+              user => {
+                  user_info['password'] = ''
+                  user_info["token"] = user.token
+                  commit('loginSuccess', user_info)
+                  return Promise.resolve(user)
+              }).catch(e => {
+                commit('loginFailure')
+                return Promise.reject(e.response.data)
+            })
         },
         logout({ commit }) {
             AuthService.logout()
