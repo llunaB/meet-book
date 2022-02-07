@@ -50,7 +50,7 @@
 </template>
 
 <script>
-const BASE_URL = ''
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
 import axios from 'axios'
 import ConferenceSlide from '@/components/home/ConferenceSlide'
 import ProfileSmallcard from '@/components/ProfileSmallcard'
@@ -100,7 +100,8 @@ export default {
     getBookDetail: function (bookId) {
       axios({
         method: 'GET',
-        url: `${BASE_URL}/api/book/${bookId}`,
+        baseURL: SERVER_URL,
+        url: `book/${bookId}`,
       })
       .then(response => {
         this.book = response.data
@@ -113,10 +114,8 @@ export default {
     getConfByBook: function (bookId) {
       axios({
         method: 'GET',
-
-        // 정확히 책의 ID를 알고 있을 때 회의 정보를 불러올 수 있는 API 서버 응답이 필요함 -- 백엔드 분들 도와줘요!
-        // 이런 느낌의 URL이 되지 않을까?
-        url: `${BASE_URL}/conference?bookId=${bookId}`
+        baseURL: SERVER_URL,
+        url: `conference?bookId=${bookId}`
       })
       .then(response => {
         this.book = response.data.book
