@@ -137,7 +137,7 @@ public class ConferenceController {
 	/*******************/
 	
 	@GetMapping("/{id}/token")
-	public ResponseEntity<JsonObject> getToken(@PathVariable("id") String id, @AuthenticationPrincipal final User user) {
+	public ResponseEntity<String> getToken(@PathVariable("id") String id, @AuthenticationPrincipal final User user) {
 
 		System.out.println("Getting sessionId and token | {sessionName}=" + id);
 
@@ -165,11 +165,12 @@ public class ConferenceController {
 				responseJson.addProperty("token", token);
 
 				// Return the response to the client
-				return new ResponseEntity<>(responseJson, HttpStatus.OK);
+				return new ResponseEntity<>(token, HttpStatus.OK);
 
 			} catch (OpenViduJavaClientException e1) {
 				// If internal error generate an error message and return it to client
-				return getErrorResponse(e1);
+				e1.printStackTrace();
+				return new ResponseEntity<>(e1.toString(), HttpStatus.OK);
 			} catch (OpenViduHttpException e2) {
 				if (404 == e2.getStatus()) {
 					// Invalid sessionId (user left unexpectedly). Session object is not valid
@@ -199,14 +200,14 @@ public class ConferenceController {
 
 
 			// Prepare the response with the sessionId and the token
-			responseJson.addProperty("0", token);
+			responseJson.addProperty("token", token);
 
 			// Return the response to the client
-			return new ResponseEntity<>(responseJson, HttpStatus.OK);
+			return new ResponseEntity<>(token, HttpStatus.OK);
 
 		} catch (Exception e) {
 			// If error generate an error message and return it to client
-			return getErrorResponse(e);
+			return new ResponseEntity<>(e.toString(), HttpStatus.OK);
 		}
 	}
 
