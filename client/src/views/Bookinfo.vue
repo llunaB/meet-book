@@ -4,16 +4,17 @@
       <!-- 도서 정보 탑재 부분 -->
       <div class="row">
         <div class="d-flex col-12 col-sm-4 col-lg-12 text-center justify-center">
-          <v-img v-if="book.thumbnail_url" :src="book.thumbnail_url" max-width="240px"></v-img>
+          <v-img v-if="book.bookThumbnailUrl" :src="book.bookThumbnailUrl" max-width="240px"></v-img>
           <span v-else>썸네일 이미지가 없습니다.</span>
         </div>
         <div class="col-12 col-sm-8 col-lg-12">
-          <h1>{{ book.title }}</h1>
-          <h3>{{ book.author }}</h3>
-          <h5 class="text-right">{{ book.publisher }} | {{ book.pubdate }}</h5>
+          <h1>{{ book.bookName }}</h1>
+          <h3>{{ book.bookAuthor }}</h3>
+          <h5 class="text-right">{{ book.bookPublisher }} | {{ book.bookPubYear }}</h5>
           <v-divider light class="my-5" />
           <p class="caption text--secondary">ISBN {{ book.isbn }}</p>
-          <p>{{ book.contents }}</p>
+          <p>{{ book.bookContents }}</p>
+          <p v-show="!book.bookContents">현재 책 내용이 제공되지 않습니다.</p>
         </div>
       </div>
       
@@ -63,13 +64,13 @@ export default {
     return {
       book: {
         id: 1,
-        title: '책 제목',
-        author: '작가',
-        contents: '여기는 책의 설명이 들어가는 부분입니다. 적당히 길 수도 있습니다.',
-        publisher: '출판사',
+        bookName: '책 제목',
+        bookAuthor: '작가',
+        bookContents: '여기는 책의 설명이 들어가는 부분입니다. 적당히 길 수도 있습니다.',
+        bookPublisher: '출판사',
         isbn: '9791190893442',
-        pubdate: '2000',
-        thumbnail_url: 'https://image.aladin.co.kr/product/25241/8/cover/k872633007_1.jpg',
+        bookPubYear: '2000',
+        bookThumbnailUrl: 'https://image.aladin.co.kr/product/25241/8/cover/k872633007_1.jpg',
       },
       // conferences: [{"id":1, "title":"오이디푸스", "thumbnail":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"Welcome","isActive":true},
       //   {"id":2, "title":"정의란 무엇인가", "thumbnail":"https://image.yes24.com/goods/15156691/XL", "description":"welcome2","isActive":true},
@@ -101,9 +102,10 @@ export default {
       axios({
         method: 'GET',
         baseURL: SERVER_URL,
-        url: `book/${bookId}`,
+        url: `books/${bookId}`,
       })
       .then(response => {
+        console.log(response.data)
         this.book = response.data
       })
       .catch(error => {
@@ -118,7 +120,8 @@ export default {
         url: `conference?bookId=${bookId}`
       })
       .then(response => {
-        this.book = response.data.book
+        // this.book = response.data.book
+        
         console.log(response)
         // this.conferences = response.data.---
       })
@@ -134,7 +137,7 @@ export default {
 
   mounted: function () {
     this.getBookDetail(this.$route.params.id)
-    this.getConfByBook(this.$route.params.id)
+    // this.getConfByBook(this.$route.params.id)
   },
 }
 </script>
