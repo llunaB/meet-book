@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +37,7 @@ public class SearchController {
 	}
 
 	@GetMapping("/users")
-	public ResponseEntity<Page<UserDTO>> getUser(@RequestParam("nickname") String nickname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+	public ResponseEntity<Page<UserDTO>> getUsers(@RequestParam("nickname") String nickname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
 		Page<UserDTO> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 		try {
@@ -49,7 +50,7 @@ public class SearchController {
 	}
 	
 	@GetMapping("/book")
-	public ResponseEntity<Page<BookDTO>> getBook(@RequestParam("book_name") String bookname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+	public ResponseEntity<Page<BookDTO>> getBooks(@RequestParam("book_name") String bookname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
 		Page<BookDTO> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 		
@@ -62,8 +63,21 @@ public class SearchController {
 		return new ResponseEntity<Page<BookDTO>>(list, HttpStatus.OK);
 	}
 	
+	@GetMapping("/book/{id}")
+	public ResponseEntity<BookDTO> getBook(@PathVariable("id") String id){
+		BookDTO list = null;
+		
+		try {
+			list = bookService.getBookById(Integer.parseInt(id));
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<BookDTO>(list, HttpStatus.OK);
+	}
+	
 	@GetMapping("/conference")
-	public ResponseEntity<Page<ConferenceDTO>> getConferenceByTitle(@RequestParam("title") String title, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+	public ResponseEntity<Page<ConferenceDTO>> getConferencesByTitle(@RequestParam("title") String title, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
 		Page<ConferenceDTO> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 
@@ -76,7 +90,7 @@ public class SearchController {
 	}
 	
 	@GetMapping("/conference/book")
-	public ResponseEntity<Page<ConferenceDTO>> getConferenceByBook(@RequestParam("book") String bookname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+	public ResponseEntity<Page<ConferenceDTO>> getConferencesByBook(@RequestParam("book") String bookname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
 		Page<ConferenceDTO> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 
@@ -90,7 +104,7 @@ public class SearchController {
 	}
 	
 	@GetMapping("/conference/user")
-	public ResponseEntity<Page<ConferenceDTO>> getConferenceByUser(@RequestParam("user") String nickname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+	public ResponseEntity<Page<ConferenceDTO>> getConferencesByUser(@RequestParam("user") String nickname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
 		Page<ConferenceDTO> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 
@@ -103,7 +117,7 @@ public class SearchController {
 	}
 	
 	@GetMapping("/conference/tag")
-	public ResponseEntity<Page<ConferenceDTO>> getConferenceByTags(@RequestParam("tag") String tag, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+	public ResponseEntity<Page<ConferenceDTO>> getConferencesByTags(@RequestParam("tag") String tag, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
 		Page<ConferenceDTO> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 
