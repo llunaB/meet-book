@@ -1,7 +1,7 @@
 <template>
   <v-card class="card-flip">
     <div class="card-front" v-bind:class="{frontLocked: locked}">
-      <v-img :src="conference.thumbnail" class="border" max-width="219">
+      <v-img :src="conference.thumbnail" class="border" eager="true" max-width="219">
       <div v-if="conference.isActive">
         <v-btn color="red" dark>
           <v-icon dark left>mdi-broadcast</v-icon>
@@ -13,6 +13,7 @@
     <div class="card-back flex-column" v-bind:class="{backLocked: locked}">
       <v-card-text>
         <p class="text-h5 mt-7">{{conference.title}}</p>
+        <p>{{conference.id}}</p>
         <p>date - time</p>
         <p>참여인원 / 전체인원</p>
         <p>{{conference.description}}</p>        
@@ -21,7 +22,7 @@
         <v-icon v-if="locked === false">mdi-lock-open-outline</v-icon>
         <v-icon v-else>mdi-lock</v-icon>
       </v-btn>
-      <v-btn class="mx-5 mb-2 enter" v-if="conference.isActive">
+      <v-btn class="mx-5 mb-2 enter" @click="goToMeeting(conference.id)" v-if="conference.isActive">
         참여하기        
       </v-btn>
       <v-btn class="mx-5 mb-2 enter" v-else @click="bookmarking">
@@ -49,6 +50,9 @@ export default {
     },
     bookmarking: function() {      
       this.bookmarked = !this.bookmarked
+    },
+    goToMeeting: function(conferenceId){
+      this.$router.push({ name: 'ConferenceMeeting', params: {conferenceId: conferenceId}})
     }
   }  
 }

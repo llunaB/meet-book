@@ -2,7 +2,7 @@
 <div>
   <v-sheet>
     <v-slide-group show-arrows>
-      <v-slide-item v-for="conference in conferences" :key="conference.id" class="col-1 ma-3">
+      <v-slide-item v-for="conference in conferences" :key="conference.id" class="col-1 ma-2">
         <conference-card :conference="conference">
         </conference-card>        
       </v-slide-item>
