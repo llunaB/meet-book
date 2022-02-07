@@ -65,13 +65,14 @@
 <script>
 import User from '@/api/users.js'
 import ForgotPassword from "@/components/ForgotPassword";
+import axios from "axios";
 
 export default {
     "name": 'Login',
   "components": {ForgotPassword},
   "data"() {
       return {
-        "user": new User('', ''),
+        "user": new User(),
         "loading": false,
         "dialog": false,
         "snackbar": false,
@@ -94,9 +95,18 @@ export default {
 
         if (this.user.email && this.user.password) {
           this.$store.dispatch('auth/login', this.user).then(
-              () => {
-                // 여기에 로그인 정보를 전송하는 함수를 추가 해야합니다.
-                this.$router.push({"name": "Home"})
+            res => {
+              const payload = Buffer.from(res['token'].split('.')[1], 'base64')
+              const result = JSON.parse(payload.toString())
+              axios.get('https://localhost:8080/users/' + result['sub'])
+              .then(res => {
+                console.log(res)
+              })
+              .catch(e => {
+                console.log(e)
+              })
+              // 여기에 로그인 정보를 전송하는 함수를 추가 해야합니다.
+              this.$router.push({"name": "Home"})
             }).catch(e => {
               console.log(e)
               this.loading = false;

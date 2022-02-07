@@ -14,6 +14,9 @@ export const auth = {
               user => {
                   user_info['password'] = ''
                   user_info["token"] = user.token
+                  const payload = Buffer.from(user.token.split('.')[1], 'base64')
+                  const result = JSON.parse(payload.toString())
+                  user_info['id'] = result["sub"]
                   commit('loginSuccess', user_info)
                   return Promise.resolve(user)
               }).catch(e => {

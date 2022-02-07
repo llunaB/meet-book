@@ -1,9 +1,10 @@
 <template>
-  <v-container style="padding: 3rem" v-if="loggedinUser.user">
+  <v-container style="padding: 3rem" v-if="userProfile">
     <v-row>
       <v-col class="text-center align-self-center justify-center text-center" cols="3">
         <v-avatar v-if="loggedinUser.profile_image" :src="loggedinUser.profile_image" />
         <div v-else class="img-upload">
+          <v-btn @click="userProfile">{{ loggedinUser.user['id'] }}</v-btn>
           <label for="file-input">
             <v-avatar size="150" color="primary">{{ loggedinUser.nickname }}</v-avatar>
           </label>
@@ -12,7 +13,7 @@
 
       </v-col>
       <v-col cols="8" style="margin-left: 2rem">
-        <h2>{{ loggedinUser.nickname }}님의 개인 프로필</h2>
+        <h2>{{ loggedinUser.user }}님의 개인 프로필</h2>
         <br>
         <v-card>
           <strong>한마디</strong>
@@ -84,9 +85,9 @@
 
 <script>
 
-export default {
-  name: 'Profile',
-  data() {
+import axios from "axios";
+
+export default {name: 'Profile', data() {
     return {
       user: '',
       // user: {"name": 'eonyong', "nickname": "yong", "host_point": 10, "guest_point": 11, "profile_description": "hihihihi"},
@@ -102,13 +103,13 @@ export default {
         {"id":8, "title":"오이디푸스", "thumbnail_url":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"Welcome", "isActive":false},
         {"id":9, "title":"정의란 무엇인가", "thumbnail_url":"https://image.yes24.com/goods/15156691/XL", "description":"welcome2", "isActive":false},]
     }
-  },
-  computed: {
+  }, computed: {
     loggedinUser(){
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      this.user = this.$store.state.auth.user
       return this.$store.state.auth
     }
-  },
-  methods: {
+  }, methods: {
     onclick(item) {
       this.conference = item
     },
@@ -118,12 +119,20 @@ export default {
     getImg(host_point) {
       if (host_point > 10) {
         return require('@/assets/host_img/images.jpeg')
-      }
-      else {
+      } else {
         return require('@/assets/host_img/host2.jpeg')
       }
     },
-  }
+    userProfile() {
+      axios.get('https://localhost:8080/users/' + this.user.id + "/detail")
+      .then(res => {
+        console.log(res)
+      })
+      .catch(e => {
+        console.log(e)
+      })
+    }
+  },
 }
 </script>
 
