@@ -234,10 +234,14 @@ public class UserController {
 	public ResponseEntity<Map<String, String>> getBookmarks(@PathVariable("user") String userId, @PathVariable("conference") String conferenceId){
 		
 		Map<String, String>list = new HashMap<String, String>();
-		list.put("message", bookmarkService.checkUserHaveBookmark(Integer.parseInt(userId), Integer.parseInt(conferenceId) ) ?  "true" : "false");
-
 		
-		return new ResponseEntity<Map<String, String>>(list, HttpStatus.OK);
+		if(bookmarkService.checkUserHaveBookmark(Integer.parseInt(userId), Integer.parseInt(conferenceId) )) {
+			list.put("message", "true");
+			return new ResponseEntity<Map<String, String>>(list, HttpStatus.OK);
+		}
+		list.put("message", "false");
+		return new ResponseEntity<Map<String, String>>(list, HttpStatus.NOT_FOUND);
+		
 	}
 	
 }
