@@ -45,6 +45,11 @@ const routes = [
     component: Profile
   },
   {
+    path: '/conference/new',
+    name: 'CreateConference',
+    component: CreateConference
+  },
+  {
     path: '/conference/:conferenceId',
     name: 'ConferenceMeeting',
     component: ConferenceMeeting
@@ -69,6 +74,8 @@ const routes = [
     name: 'CreateConference',
     component: CreateConference
   },
+
+  
 ]
 
 const router = new VueRouter({

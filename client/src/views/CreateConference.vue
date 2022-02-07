@@ -224,14 +224,13 @@ export default {
         return
       }
 
+      console.log(this.$store.state.auth.status.user)
       // 회의 개설 요청 보내기
       axios({
         method: 'POST',
         baseURL: SERVER_URL,
         url: '/conference',
-        headers: {
-          Authorization: `${token}`,
-        },
+        // headers: this.$store.state. ,
         data: {
           conference: {
             // 회의 개설 정보
