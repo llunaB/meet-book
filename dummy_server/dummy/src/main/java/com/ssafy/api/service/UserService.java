@@ -1,30 +1,32 @@
 package com.ssafy.api.service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.ssafy.error.exception.AlreadyExistEmailException;
-import com.ssafy.error.exception.AlreadyExistNicknameException;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.ssafy.DTO.UserDTO;
 import com.ssafy.api.requestDto.DeleteUserReq;
 import com.ssafy.api.requestDto.LoginReq;
-import com.ssafy.api.requestDto.UpdateUserByProfileReq;
 import com.ssafy.api.requestDto.UpdateUserByDetailReq;
+import com.ssafy.api.requestDto.UpdateUserByProfileReq;
 import com.ssafy.config.JwtTokenProvider;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.UserRepository;
-import org.springframework.web.server.ResponseStatusException;
+import com.ssafy.error.exception.AlreadyExistEmailException;
+import com.ssafy.error.exception.AlreadyExistNicknameException;
 
-import javax.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -95,14 +97,11 @@ public class UserService {
         return passwordEncoder.matches(rawPassword,encryptPassword);
     }
 	
-	public List<UserDTO> getUsersByNickname(String nickname) {
-		List<UserDTO> list = new ArrayList<UserDTO>();
+	public Page<UserDTO> getUsersByNickname(String nickname, Pageable pageable) {
+		Page<UserDTO> list = Page.empty();
 		try {
-			List<User> dataList = userRepository.findByNicknameContaining(nickname);
-			list = dataList.stream().map(source -> {
-				UserDTO res = modelMapper.map(source, UserDTO.class);
-				return res;
-			}).collect(Collectors.toList());
+			Page<User> dataList = userRepository.findByNicknameContaining(nickname, pageable);
+			list = dataList.map(source -> modelMapper.map(source, UserDTO.class));
 			return list;
 		}catch(Exception e){
 			e.printStackTrace();

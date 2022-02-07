@@ -6,14 +6,22 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.DTO.ConferenceDTO;
+import com.ssafy.DTO.ConferenceHistoryDTO;
 import com.ssafy.db.entity.Book;
+import com.ssafy.db.entity.Bookmark;
 import com.ssafy.db.entity.Conference;
+import com.ssafy.db.entity.ConferenceHistory;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.BookRepository;
+import com.ssafy.db.repository.BookmarkRepository;
+import com.ssafy.db.repository.ConferenceHistoryRepository;
 import com.ssafy.db.repository.ConferenceRepository;
+import com.ssafy.db.repository.UserConferenceRepository;
 import com.ssafy.db.repository.UserRepository;
 
 @Service
@@ -22,13 +30,20 @@ public class ConferenceService {
 	private ConferenceRepository conferenceRepository;
 	private UserRepository userRepository;
 	private BookRepository bookRepository;
+	private BookmarkRepository bookmarkRepository;
+	
+	private UserConferenceRepository userConferenceRepository;
+	private ConferenceHistoryRepository conferenceHistoryRepository;
 	private ModelMapper modelMapper;
 	
 	@Autowired
-	public ConferenceService(ConferenceRepository conferenceRepository, UserRepository userRepository, BookRepository bookRepository) {
+	public ConferenceService(ConferenceRepository conferenceRepository, UserRepository userRepository, BookRepository bookRepository, UserConferenceRepository userConferenceRepository, ConferenceHistoryRepository conferenceHistoryRepository, BookmarkRepository bookmarkRepository) {
 		this.conferenceRepository = conferenceRepository;
 		this.userRepository = userRepository;
 		this.bookRepository = bookRepository;
+		this.userConferenceRepository = userConferenceRepository;
+		this.conferenceHistoryRepository = conferenceHistoryRepository;
+		this.bookmarkRepository = bookmarkRepository;
 		this.modelMapper = new ModelMapper();
 	}
 	
@@ -47,9 +62,28 @@ public class ConferenceService {
 		return list;
 	}
 	
+	public Page<ConferenceDTO> getConferences(Pageable pageable){
+		Page<ConferenceDTO> list = Page.empty();
+		
+		try {
+			Page<Conference> data = conferenceRepository.findAll(pageable);
+			list = data.map(source -> modelMapper.map(source, ConferenceDTO.class));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
 	public boolean createConference(ConferenceDTO source) {
 		try {
-			conferenceRepository.save(modelMapper.map(source, Conference.class));
+			Conference conference = conferenceRepository.save(modelMapper.map(source, Conference.class));
+			Bookmark bookmark = new Bookmark();
+			
+			bookmark.setAlarm(1);
+			bookmark.setConference(conference);
+			bookmark.setUser(conference.getUser());
+			bookmarkRepository.save(bookmark);
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -68,13 +102,11 @@ public class ConferenceService {
 		return null;
 	}
 	
-	public List<ConferenceDTO> getConferencesByTitle(String title){
-		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
+	public Page<ConferenceDTO> getConferencesByTitle(String title, Pageable pageable){
+		Page<ConferenceDTO> list = Page.empty();
 		try {
-			list = conferenceRepository.findByTitleContaining(title).stream().map(source -> {
-				ConferenceDTO res = modelMapper.map(source, ConferenceDTO.class);
-				return res;
-			}).collect(Collectors.toList());
+			Page<Conference> data = conferenceRepository.findByTitleContaining(title, pageable);
+			list = data.map(source -> modelMapper.map(source, ConferenceDTO.class));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -82,14 +114,12 @@ public class ConferenceService {
 		return list;
 	}
 	
-	public List<ConferenceDTO> getConferencesByBook(String bookname){
-		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
+	public Page<ConferenceDTO> getConferencesByBook(String bookname, Pageable pageable){
+		Page<ConferenceDTO> list = Page.empty();
 		try {
-			List<Book> bookList = bookRepository.findByBookNameContaining(bookname);
-			list.addAll(conferenceRepository.findConferencesByBook(bookList).stream().map(source -> {
-				ConferenceDTO res = modelMapper.map(source, ConferenceDTO.class);
-				return res;
-			}).collect(Collectors.toList()));
+			Page<Book> data = bookRepository.findByBookNameContaining(bookname, pageable);
+			list = data.map(source -> modelMapper.map(source, ConferenceDTO.class));
+
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -97,15 +127,12 @@ public class ConferenceService {
 		return list;
 	}
 	
-	public List<ConferenceDTO> getConferencesByNickname(String nickname){
-		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
+	public Page<ConferenceDTO> getConferencesByNickname(String nickname, Pageable pageable){
+		Page<ConferenceDTO> list = Page.empty();
 		try {
-			List<User> userList = userRepository.findByNicknameContaining(nickname);
-			list.addAll(conferenceRepository.findConferencesByUser(userList).stream().map(source -> {
-				ConferenceDTO res = modelMapper.map(source, ConferenceDTO.class);
-				return res;
-			}).collect(Collectors.toList()));
-			
+			Page<User> data = userRepository.findByNicknameContaining(nickname, pageable);
+			list = data.map(source -> modelMapper.map(source, ConferenceDTO.class));
+
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -113,13 +140,11 @@ public class ConferenceService {
 		return list;
 	}
 	
-	public List<ConferenceDTO> getConferencesByTags(String tags){
-		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
+	public Page<ConferenceDTO> getConferencesByTags(String tags, Pageable pageable){
+		Page<ConferenceDTO> list = Page.empty();
 		try {
-			list = conferenceRepository.findByTagsContaining(tags).stream().map(source -> {
-				ConferenceDTO res = modelMapper.map(source, ConferenceDTO.class);
-				return res;
-			}).collect(Collectors.toList());
+			Page<Conference> data = conferenceRepository.findByTagsContaining(tags, pageable);
+			list = data.map(source -> modelMapper.map(source, ConferenceDTO.class));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -145,6 +170,16 @@ public class ConferenceService {
 		try {
 			Conference Conference = conferenceRepository.getById(id);
 			conferenceRepository.delete(Conference);
+			return true;
+		}catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean createSessionHistory(ConferenceHistoryDTO dto) {
+		try {
+			conferenceHistoryRepository.save(modelMapper.map(dto, ConferenceHistory.class));
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();

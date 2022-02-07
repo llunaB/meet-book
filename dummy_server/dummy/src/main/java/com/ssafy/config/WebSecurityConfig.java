@@ -60,6 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .authorizeRequests() // 요청에 대한 사용권한 체크
                 .antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/profile","/email/**","/users/login/**","/exception/**","/users/signup/**","/users/**","/search/**","/users/findpwd/**", "/books/**").permitAll()
+
                 .antMatchers("/admin/**").hasRole("ADMIN")
 //                .antMatchers("/user/**").hasRole("USER")
                 .antMatchers("/h2-console/**").permitAll() // 누구나 h2-console 접속

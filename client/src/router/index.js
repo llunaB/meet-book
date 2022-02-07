@@ -48,7 +48,13 @@ const routes = [
     path: '/accounts/settings',
     name: 'Settings',
     component: Profile
-  }
+  },
+  {
+    path: '/books/:id',
+    name: 'Bookinfo',
+    component: () => import('@/views/Bookinfo')
+  },
+
 ]
 
 const router = new VueRouter({

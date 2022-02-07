@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,77 +37,95 @@ public class SearchController {
 	}
 
 	@GetMapping("/users")
-	public ResponseEntity<List<UserDTO>> getUser(@RequestParam("nickname") String nickname){
-		List<UserDTO> list = new ArrayList<UserDTO>();
-		
+	public ResponseEntity<Page<UserDTO>> getUsers(@RequestParam("nickname") String nickname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+		Page<UserDTO> list = Page.empty();
+		PageRequest request = PageRequest.of(page, size);
 		try {
-			list = userService.getUsersByNickname(nickname);
+			list = userService.getUsersByNickname(nickname, request);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		
-		return new ResponseEntity<List<UserDTO>>(list, HttpStatus.OK);
+		return new ResponseEntity<Page<UserDTO>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("/book")
-	public ResponseEntity<List<BookDTO>> getBook(@RequestParam("book_name") String bookname){
-		List<BookDTO> list = new ArrayList<BookDTO>();
+	public ResponseEntity<Page<BookDTO>> getBooks(@RequestParam("book_name") String bookname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+		Page<BookDTO> list = Page.empty();
+		PageRequest request = PageRequest.of(page, size);
 		
 		try {
-			list = bookService.getBooksByName(bookname);
+			list = bookService.getBooksByName(bookname, request);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		
-		return new ResponseEntity<List<BookDTO>>(list, HttpStatus.OK);
+		return new ResponseEntity<Page<BookDTO>>(list, HttpStatus.OK);
+	}
+	
+	@GetMapping("/book/{id}")
+	public ResponseEntity<BookDTO> getBook(@PathVariable("id") String id){
+		BookDTO list = null;
+		
+		try {
+			list = bookService.getBookById(Integer.parseInt(id));
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<BookDTO>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("/conference")
-	public ResponseEntity<List<ConferenceDTO>> getConferenceByTitle(@RequestParam("title") String title){
-		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
+	public ResponseEntity<Page<ConferenceDTO>> getConferencesByTitle(@RequestParam("title") String title, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+		Page<ConferenceDTO> list = Page.empty();
+		PageRequest request = PageRequest.of(page, size);
 
 		try {
-			list = conferenceService.getConferencesByTitle(title);
+			list = conferenceService.getConferencesByTitle(title, request);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		return new ResponseEntity<List<ConferenceDTO>>(list, HttpStatus.OK);
+		return new ResponseEntity<Page<ConferenceDTO>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("/conference/book")
-	public ResponseEntity<List<ConferenceDTO>> getConferenceByBook(@RequestParam("book") String bookname){
-		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
+	public ResponseEntity<Page<ConferenceDTO>> getConferencesByBook(@RequestParam("book") String bookname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+		Page<ConferenceDTO> list = Page.empty();
+		PageRequest request = PageRequest.of(page, size);
 
 		try {
-			list = conferenceService.getConferencesByBook(bookname);
+			list = conferenceService.getConferencesByBook(bookname, request);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		
-		return new ResponseEntity<List<ConferenceDTO>>(list, HttpStatus.OK);
+		return new ResponseEntity<Page<ConferenceDTO>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("/conference/user")
-	public ResponseEntity<List<ConferenceDTO>> getConferenceByUser(@RequestParam("user") String nickname){
-		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
+	public ResponseEntity<Page<ConferenceDTO>> getConferencesByUser(@RequestParam("user") String nickname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+		Page<ConferenceDTO> list = Page.empty();
+		PageRequest request = PageRequest.of(page, size);
 
 		try {
-			list = conferenceService.getConferencesByNickname(nickname);
+			list = conferenceService.getConferencesByNickname(nickname, request);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		return new ResponseEntity<List<ConferenceDTO>>(list, HttpStatus.OK);
+		return new ResponseEntity<Page<ConferenceDTO>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("/conference/tag")
-	public ResponseEntity<List<ConferenceDTO>> getConferenceByTags(@RequestParam("tag") String tag){
-		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
-		
+	public ResponseEntity<Page<ConferenceDTO>> getConferencesByTags(@RequestParam("tag") String tag, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+		Page<ConferenceDTO> list = Page.empty();
+		PageRequest request = PageRequest.of(page, size);
+
 		try {
-			list = conferenceService.getConferencesByTags(tag);
+			list = conferenceService.getConferencesByTags(tag, request);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		return new ResponseEntity<List<ConferenceDTO>>(list, HttpStatus.OK);
+		return new ResponseEntity<Page<ConferenceDTO>>(list, HttpStatus.OK);
 	}
 }
