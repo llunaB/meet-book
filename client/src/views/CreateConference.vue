@@ -136,6 +136,7 @@ const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
 import _ from 'lodash'
 import axios from 'axios'
+import authheader from "@/services/auth-header"
 export default {
   name: 'CreateConference',
 
@@ -214,23 +215,21 @@ export default {
     // },
 
     createConference: function () {
-      // 요청값 전처리하기
-
-      const token = localStorage.getItem('jwt')
-
+      
       // 로그인한 사용자인지 확인
       if (!this.$store.state.auth.status.loggedIn) {
         this.$router.push({name: 'Login'})
         return
       }
 
-      console.log(this.$store.state.auth.status.user)
+      console.log(this.user)
+      console.log(this.$store.state.auth.status)
       // 회의 개설 요청 보내기
       axios({
         method: 'POST',
         baseURL: SERVER_URL,
         url: '/conference',
-        // headers: this.$store.state. ,
+        headers: authheader(),
         data: {
           conference: {
             // 회의 개설 정보
@@ -262,6 +261,12 @@ export default {
       .catch(error => {
         console.log(error)
       })
+    }
+  },
+
+  computed: {
+    user: function () {
+      return this.$store.state.auth.status.user
     }
   },
 
