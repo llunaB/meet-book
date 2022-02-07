@@ -2,6 +2,8 @@ package com.ssafy.db.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,10 +15,10 @@ import com.ssafy.db.entity.User;
 
 @Repository
 public interface ConferenceRepository extends JpaRepository<Conference, Integer> {
-	List<Conference> findByTitleContaining(String title);
+	Page<Conference> findByTitleContaining(String title, Pageable pageable);
 	@Query(value = "select * from conference where book_id in :types", nativeQuery = true)
-	List<Conference> findConferencesByBook(@Param("types") List<Book> books);
+	Page<Conference> findConferencesByBook(@Param("types") List<Book> books, Pageable pageable);
 	@Query(value = "select * from conference where user_id in :types", nativeQuery = true)
-	List<Conference> findConferencesByUser(@Param("types") List<User> users);
-	List<Conference> findByTagsContaining(String tags);
+	Page<Conference> findConferencesByUser(@Param("types") List<User> users, Pageable pageable);
+	Page<Conference> findByTagsContaining(String tags, Pageable pageable);
 }
