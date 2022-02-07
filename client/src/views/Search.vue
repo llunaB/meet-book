@@ -5,29 +5,39 @@
       color="#798F88">
         <v-tabs-slider color="#798F88"></v-tabs-slider>
         <v-tab
-          @click="function () {searchType = 'conf'}"
-          :to="`conf?keyword=${keyword}`">회의</v-tab>
+          @click="function () {searchType = 'conference'; search('conference', keyword)}"
+          :to="`conference?keyword=${keyword}`">회의</v-tab>
         <v-tab
-          @click="function () {searchType = 'book'}"
+          @click="function () {searchType = 'book'; search('book', keyword)}"
           :to="`book?keyword=${keyword}`">도서</v-tab>
         <v-tab
-          @click="function() {searchType = 'users'}"
+          @click="function() {searchType = 'users'; search('users', keyword)}"
           :to="`users?keyword=${keyword}`">사용자</v-tab>
       </v-tabs>
     </v-row>
     <v-row>
       <v-col class="col-9">
-        <div v-if="searchType == 'conf'">
+        <div v-if="searchType == 'conference'">
           <p>회의 검색 결과입니다.</p>
-          
+          <ConferenceCard v-for="(conference, idx) in searchResult" :key="idx" :conference="conference" />
+          <v-pagination v-model="page" :length="searchResult.totalPage"></v-pagination>
+
         </div>
         <div v-else-if="searchType == 'book'">
           <p>도서 검색 결과입니다.</p>
+          <TheBookcard v-for="(book, idx) in searchResult" :key="idx" :book="book" />
+          <v-pagination v-model="page" :length="searchResult.totalPage"></v-pagination>
         </div>
         <div v-else>
           <p>사용자 검색 결과입니다.</p>
+          <p>{{searchResult.result}}</p>
+          <v-pagination v-model="page" :length="searchResult.totalPage"></v-pagination>
         </div>
 
+        <div v-show="searchResult.length == 0">
+          <p>검색 결과가 없습니다.</p>
+        </div>
+        
       </v-col>
       <v-col class="col-3">
         <p>"{{ $route.query.keyword }}"에 대해 {{$route.params.type}}로 검색한 결과입니다.</p>
@@ -38,34 +48,63 @@
 </template>
 
 <script>
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
+
 import axios from 'axios'
+import ConferenceCard from '@/components/home/ConferenceCard'
+import TheBookcard from '@/components/TheBookcard'
 export default {
   name: 'Search',
+  components: {
+    ConferenceCard, TheBookcard,
+  },
   data: function () {
     return {
       searchType: this.$route.params.type,
       keyword: this.$route.query.keyword,
-      searchResult: null,
+      searchResult: [],
     }
   },
   methods: {
     search: function (type, keyword) {
       console.log(type, keyword)
+      let typeString = ''
+      let goParams = {}
+      switch (type) {
+        case 'book':
+          typeString = 'book'
+          goParams = {book_name: keyword}
+          break
+        case 'users':
+          typeString = 'users'
+          goParams = {user: keyword}
+          break
+        default:
+          typeString = 'conference'
+          goParams = {title: keyword}
+          break
+      }
+
       axios({
-        url: '',
-        method: 'get',
-        params: '',
+        baseURL: SERVER_URL,
+        url: `/search/${typeString}`,
+        method: 'GET',
+        params: goParams,
       })
       .then(response => {
         console.log(response)
+        this.searchResult = []
       })
       .catch(error => {
         console.log(error)
       })
     },
-
-
   },
+
+  mounted: function () {
+    console.log('mount')
+    this.search(this.searchType, this.keyword)
+  }
 
 }
 </script>
