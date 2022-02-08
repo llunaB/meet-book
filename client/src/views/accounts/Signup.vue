@@ -1,48 +1,48 @@
 <template>
   <div class="card-container">
-    <div class="signup-form-group row">
-      <div class="col-lg-4 col-md-6 col-sm-8 mx-auto">
-        <!-- 회원가입 전체 Form Start-->
-        <div class="card flex-grid signup">
-          <main><h2> <strong>회원가입</strong></h2></main>
-          <form class="form-group my-2" @submit.prevent="handleRegister">
-            <!-- username 회원가입 Form -->
-            <v-text-field
-              type="text" label="이름" hide-details="auto"
-              v-model="user.name" id="username-signup" required />
-            <!-- nickname 회원가입 Form -->
-            <v-text-field
-              type="text" label="별명" hide-details="auto"
-              v-model="user.nickname" id="nickname-signup" required />
-            <!-- Email 회원가입 Form -->
-            <v-text-field
-              type="email" label="Email" hide-details="auto"
-              v-model="user.email" id="email-signup" required />
-            <div class="check_email" id="email-check"></div>
-            <!-- Password 회원가입 Form -->
-            <v-text-field
-              type="password" label="비밀번호" hide-details="auto"
-              v-model="user.password" id="password-signup" required />
-            <!-- PasswordConfirm 회원가입 Form -->
-            <v-text-field
-              type="password" label="비밀번호 확인" hide-details="auto"
-              v-model="user.passwordConfirm" id="passwordConfirm-signup" required />
-            <!-- 회원가입 제출 버튼 -->
-            <div class="field" id="submit-signup-form">
-              <v-btn type="submit" class="primary">가입하기</v-btn>
-              <br>
-              <a role="link" :href="'Login'">계정이 이미 있으신가요?</a>
-            </div>
-          </form>
-          <!-- 소셜 회원가입 전체 Form Start-->
-          <form class="social-form-group">
-            <div class="hr-sect">SNS로 로그인 하기</div>
-          </form>
-          <!-- 소셜 회원가입 전체 Form End -->
+      <div class="signup-form-group row">
+        <div class="col-lg-4 col-md-6 col-sm-8 mx-auto">
+          <!-- 회원가입 전체 Form Start-->
+          <div class="card flex-grid signup">
+            <main><h2> <strong>회원가입</strong></h2></main>
+            <form class="form-group my-2" @submit.prevent="handleRegister">
+              <!-- username 회원가입 Form -->
+              <v-text-field
+                type="text" label="이름" hide-details="auto"
+                v-model="user.name" id="username-signup" required />
+              <!-- nickname 회원가입 Form -->
+              <v-text-field
+                type="text" label="별명" hide-details="auto"
+                v-model="user.nickname" id="nickname-signup" required />
+              <!-- Email 회원가입 Form -->
+              <v-text-field
+                type="email" label="Email" hide-details="auto"
+                v-model="user.email" id="email-signup" required />
+              <div class="check_email" id="email-check"></div>
+              <!-- Password 회원가입 Form -->
+              <v-text-field
+                type="password" label="비밀번호" hide-details="auto"
+                v-model="user.password" id="password-signup" required />
+              <!-- PasswordConfirm 회원가입 Form -->
+              <v-text-field
+                type="password" label="비밀번호 확인" hide-details="auto"
+                v-model="user.passwordConfirm" id="passwordConfirm-signup" required />
+              <!-- 회원가입 제출 버튼 -->
+              <div class="field" id="submit-signup-form">
+                <v-btn type="submit" class="primary">가입하기</v-btn>
+                <br>
+                <a role="link" :href="'Login'">계정이 이미 있으신가요?</a>
+              </div>
+            </form>
+            <!-- 소셜 회원가입 전체 Form Start-->
+            <form class="social-form-group">
+              <div class="hr-sect">SNS로 로그인 하기</div>
+            </form>
+            <!-- 소셜 회원가입 전체 Form End -->
+          </div>
+            <!-- 회원가입 전체 Form End -->
         </div>
-        <!-- 회원가입 전체 Form End -->
       </div>
-    </div>
   </div>
 </template>
 
@@ -50,18 +50,18 @@
 import User from '@/api/users'
 
 export default {
-  name: 'Signup',
-  data() {
-    return{
-      user: new User("", "", "", "", ""),
-      submitted: false,
-      successful: false,
-      message: "",
-      gender: "",
-      items: ['Male', "Female"],
-    }
-  },
-  computed: {
+ name: 'Signup',
+ data() {
+   return{
+     user: new User("", "", "", "", ""),
+     submitted: false,
+     successful: false,
+     message: "",
+     gender: "",
+     items: ['Male', "Female"],
+  }
+ },
+ computed: {
     loggedIn() {
       return this.$store.state.auth.status.loggedIn
     },
@@ -83,10 +83,10 @@ export default {
           alert(this.message)
           setTimeout(()=>{this.$router.push({name: "Login"})}, 3000)
         }).catch(e => {
-        this.message = (e.response && e.response.data) || e.message || e.toString()
-        this.successful = false
-        alert(this.message)
-      })
+          this.message = (e.response && e.response.data) || e.message || e.toString()
+          this.successful = false
+          alert(this.message)
+          })
     },
   },
 
@@ -127,22 +127,26 @@ p {
   -webkit-backdrop-filter: blur(12px);
 }
 
-.hr-sect {
-  display: flex;
-  flex-basis: 100%;
+/* .signup-page {
   align-items: center;
-  color: rgba(0, 0, 0, 0.35);
-  font-size: 12px;
-  margin: 8px 0px;
+} */
+
+.hr-sect {
+	display: flex;
+	flex-basis: 100%;
+	align-items: center;
+	color: rgba(0, 0, 0, 0.35);
+	font-size: 12px;
+	margin: 8px 0;
 }
 .hr-sect::before,
 .hr-sect::after {
-  content: "";
-  flex-grow: 1;
-  background: rgba(0, 0, 0, 0.35);
-  height: 1px;
-  font-size: 0px;
-  line-height: 0px;
-  margin: 0px 16px;
+	content: "";
+	flex-grow: 1;
+	background: rgba(0, 0, 0, 0.35);
+	height: 1px;
+	font-size: 0;
+	line-height: 0;
+	margin: 0 16px;
 }
 </style>
