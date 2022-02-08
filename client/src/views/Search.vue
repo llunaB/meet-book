@@ -5,36 +5,36 @@
       color="#798F88">
         <v-tabs-slider color="#798F88"></v-tabs-slider>
         <v-tab
-          @click="function() {searchType = 'conference', page = 1; search('conference', $route.query.keyword, $route.query.page)}"
-          :to="{name: 'Search', params: {type: 'conference'}, query: {keyword: keyword, page: parseInt(page)}}">회의</v-tab>
+          @click="function() {search('conference', $route.query.keyword, parseInt($route.query.page))}"
+          :to="{name: 'Search', params: {type: 'conference'}, query: {keyword: $route.query.keyword, page: parseInt($route.query.page)}}">회의</v-tab>
         <v-tab
-          @click="function() {searchType = 'book', page = 1; search('book', $route.query.keyword, $route.query.page)}"
-          :to="{name: 'Search', params: {type: 'book'}, query: {keyword: keyword, page: parseInt(page)}}">도서</v-tab>
+          @click="function() {search('book', $route.query.keyword, parseInt($route.query.page))}"
+          :to="{name: 'Search', params: {type: 'book'}, query: {keyword: $route.query.keyword, page: parseInt($route.query.page)}}">도서</v-tab>
         <v-tab
-          @click="function() {searchType = 'users', page = 1; search('users', $route.query.keyword, $route.query.page)}"
-          :to="{name: 'Search', params: {type: 'users'}, query: {keyword: keyword, page: parseInt(page)}}">사용자</v-tab>
+          @click="function() {search('users', $route.query.keyword, parseInt($route.query.page))}"
+          :to="{name: 'Search', params: {type: 'users'}, query: {keyword: $route.query.keyword, page: parseInt($route.query.page)}}">사용자</v-tab>
       </v-tabs>
     </v-row>
     <v-row>
       <v-col class="col-12">
         <div v-if="searchType == 'conference'">
-          <p>"{{$route.query.keyword}}"의 회의 검색 결과입니다.</p>
+          <p>"{{keyword}}"의 회의 검색 결과입니다.</p>
           <ConferenceCard v-for="(conference, idx) in searchResult.content" :key="idx" :conference="conference" />
           <v-pagination v-model="page" :length="searchResult.totalPages"></v-pagination>
 
         </div>
         <div v-else-if="searchType == 'book'">
-          <p>"{{$route.query.keyword}}"의 도서 검색 결과입니다.</p>
+          <p>"{{keyword}}"의 도서 검색 결과입니다.</p>
           <TheBookcard v-for="(book, idx) in searchResult.content" :key="idx" :book="book" class="my-3 mx-auto" />
           <v-pagination v-model="page" :length="searchResult.totalPages"></v-pagination>
         </div>
         <div v-else>
-          <p>"{{$route.query.keyword}}"의 사용자 검색 결과입니다.</p>
+          <p>"{{keyword}}"의 사용자 검색 결과입니다.</p>
           <v-row>
             <ProfileSmallcard v-for="(user, idx) in searchResult.content" :key="idx" :person="user" class="my-3 mx-auto" />
           </v-row>
 
-          <v-pagination v-model="page" :length="searchResult.totalPages"></v-pagination>
+          <v-pagination v-model="page" :length="searchResult.totalPages" @input="onPageChange" ></v-pagination>
         </div>
 
         <div v-show="searchResult.content.length == 0">
@@ -64,8 +64,8 @@ export default {
   },
   data: function () {
     return {
-      searchType: this.$route.params.type,
-      keyword: this.$route.query.keyword,
+      // searchType: this.$route.params.type,
+      // keyword: this.$route.query.keyword,
       page: this.$route.query.page,
       searchResult: {
         content: [],
@@ -106,23 +106,30 @@ export default {
         console.log(error)
       })
     },
+
+    onPageChange(page) {
+      this.search(this.searchType, this.keyword, page)
+    },
   },
 
   mounted: function () {
-    console.log('mount')
+    
     this.search(this.searchType, this.keyword, this.page)
   },
 
   watch: {
-    searchType: function () {
-      this.$router.push({name: 'Search', params: {type: this.searchType}, query: {keyword: this.keyword, page: 1}})
-      this.search(this.searchType, this.keyword, 1)
+    page: function (newPage) {
+      this.onPageChange(newPage)
     },
-    page: function () {
-      this.$router.push({name: 'Search', params: {type: this.searchType}, query: {keyword: this.keyword, page: this.page}})
-      this.search(this.searchType, this.keyword, this.page)
-    },
+    keyword: function () {
+      this.search('conference', this.keyword, 1)
+    }
+    
   },
+  computed: {
+    keyword: function () {return this.$route.query.keyword},
+    searchType: function () {return this.$route.params.type},
+  }
 
 }
 </script>
