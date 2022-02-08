@@ -6,26 +6,31 @@
           <div class="card flex-grid signup">
             <main><h2> <strong>회원가입</strong></h2></main>
             <form class="form-group my-2" @submit.prevent="handleRegister">
-              <!-- username 회원가입 Form -->
-              <v-text-field
-                type="text" label="이름" hide-details="auto"
-                v-model="user.name" id="username-signup" required />
               <!-- nickname 회원가입 Form -->
               <v-text-field
                 type="text" label="별명" hide-details="auto"
                 v-model="user.nickname" id="nickname-signup" required />
               <!-- Email 회원가입 Form -->
-              <v-text-field
-                type="email" label="Email" hide-details="auto"
-                v-model="user.email" id="email-signup" required />
-              <div class="check_email" id="email-check"></div>
+              <div class="row my-3" style="align-items: baseline">
+                <v-text-field
+                  type="email" label="Email" hide-details="auto"
+                  v-model="user.email" id="email-signup" required />
+                <v-btn rounded @click="sendCheckKey" class="row-2">인증번호 받기</v-btn>
+              </div>
+              <div v-if="cert_key.length > 0" class="row my-3" style="align-items: baseline">
+                <v-text-field
+                  type="text" label="인증번호" hide-details="auto"
+                  v-model="confirm_key" id="cert-key" required />
+                <v-icon v-if="(cert_key === confirm_key) && cert_key.length > 0"> mdi-check-circle </v-icon>
+                <v-icon v-else> mdi-check-circle-outline </v-icon>
+              </div>
               <!-- Password 회원가입 Form -->
               <v-text-field
                 type="password" label="비밀번호" hide-details="auto"
                 v-model="user.password" id="password-signup" required />
               <!-- PasswordConfirm 회원가입 Form -->
               <v-text-field
-                type="password" label="비밀번호 확인" hide-details="auto"
+                type="password" label="비밀번호 확인" hide-details="auto" :error-messages=errorMessages
                 v-model="user.passwordConfirm" id="passwordConfirm-signup" required />
               <!-- 회원가입 제출 버튼 -->
               <div class="field" id="submit-signup-form">
@@ -48,17 +53,18 @@
 
 <script>
 import User from '@/api/users'
+import axios from "axios";
 
 export default {
  name: 'Signup',
  data() {
    return{
-     user: new User("", "", "", "", ""),
+     user: new User("", "", "", ""),
      submitted: false,
      successful: false,
      message: "",
-     gender: "",
-     items: ['Male', "Female"],
+     cert_key: "",
+     confirm_key: ""
   }
  },
  computed: {
@@ -76,21 +82,39 @@ export default {
       this.message = ""
       this.submitted = true
       console.log(this.user)
-      this.$store.dispatch("auth/register", this.user).then(
-        data => {
-          this.message = `${data.nickname}님 가입을 축하드립니다`
-          this.successful = true
-          alert(this.message)
-          setTimeout(()=>{this.$router.push({name: "Login"})}, 3000)
-        }).catch(e => {
+      if (this.cert_key === this.confirm_key) {
+        this.$store.dispatch("auth/register", this.user).then(
+          data => {
+            this.message = `${data.nickname}님 가입을 축하드립니다`
+            this.successful = true
+            alert(this.message)
+            setTimeout(() => {
+              this.$router.push({name: "Login"})
+            }, 3000)
+          }).catch(e => {
           this.message = (e.response && e.response.data) || e.message || e.toString()
           this.successful = false
           alert(this.message)
-          })
+        })
+      }
     },
-  },
-
-}
+    sendCheckKey: function () {
+      axios.get('https://localhost:8080/email/emailcheck', {params: {'mail': this.user.email}})
+        .then(res => {
+          alert(`해당 메일로 인증번호를 전송했습니다.`)
+          this.cert_key = res.data.key
+        })
+        .catch(() => {
+          return alert(`이메일을 확인해주세요`)
+        })
+    },
+    errorMessages() {
+      if ((this.user.password !== this.user.passwordConfirm) && (this.user.passwordConfirm.length > 0)) {
+        return '비밀번호가 다릅니다.'
+      }
+    }
+  }
+  }
 </script>
 
 <style>
