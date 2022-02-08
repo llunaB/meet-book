@@ -154,7 +154,7 @@ export default {
     // 검색 페이지에 검색 키워드로 전달하는 방식으로 수행됩니다.
     searchKeyword: function (keyword) {
       console.log(keyword)
-      this.$router.push({name: 'Search', params: {'type': 'conference'}, query: {'keyword': String(keyword)}})
+      this.$router.push({name: 'Search', params: {'type': 'conference'}, query: {'keyword': String(keyword), 'page': parseInt(1)}})
     },
   },
 
