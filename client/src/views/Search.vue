@@ -5,14 +5,14 @@
       color="#798F88">
         <v-tabs-slider color="#798F88"></v-tabs-slider>
         <v-tab
-          @click="function () {searchType = 'conference'; search('conference', $route.query.keyword)}"
-          :to="`conference?keyword=${$route.query.keyword}`">회의</v-tab>
+          @click="function() {searchType = 'conference', page = 1; search('conference', $route.query.keyword, $route.query.page)}"
+          :to="{name: 'Search', params: {type: 'conference'}, query: {keyword: keyword, page: parseInt(page)}}">회의</v-tab>
         <v-tab
-          @click="function () {searchType = 'book'; search('book', $route.query.keyword)}"
-          :to="`book?keyword=${$route.query.keyword}`">도서</v-tab>
+          @click="function() {searchType = 'book', page = 1; search('book', $route.query.keyword, $route.query.page)}"
+          :to="{name: 'Search', params: {type: 'book'}, query: {keyword: keyword, page: parseInt(page)}}">도서</v-tab>
         <v-tab
-          @click="function() {searchType = 'users'; search('users', $route.query.keyword)}"
-          :to="`users?keyword=${$route.query.keyword}`">사용자</v-tab>
+          @click="function() {searchType = 'users', page = 1; search('users', $route.query.keyword, $route.query.page)}"
+          :to="{name: 'Search', params: {type: 'users'}, query: {keyword: keyword, page: parseInt(page)}}">사용자</v-tab>
       </v-tabs>
     </v-row>
     <v-row>
@@ -66,29 +66,29 @@ export default {
     return {
       searchType: this.$route.params.type,
       keyword: this.$route.query.keyword,
+      page: this.$route.query.page,
       searchResult: {
         content: [],
       },
-      page: 1,
     }
   },
   methods: {
-    search: function (type, keyword) {
-      console.log(type, keyword)
+    search: function (type, keyword, page) {
+      console.log(type, keyword, page)
       let typeString = ''
       let goParams = {}
       switch (type) {
         case 'book':
           typeString = 'book'
-          goParams = {book_name: keyword}
+          goParams = {book_name: keyword, size: 10}
           break
         case 'users':
           typeString = 'users'
-          goParams = {nickname: keyword}
+          goParams = {nickname: keyword, size: 20}
           break
         default:
           typeString = 'conference'
-          goParams = {title: keyword}
+          goParams = {title: keyword, size: 12}
           break
       }
 
@@ -96,7 +96,7 @@ export default {
         baseURL: SERVER_URL,
         url: `/search/${typeString}`,
         method: 'GET',
-        params: Object.assign(goParams, {page: this.page - 1, size: 20}), 
+        params: Object.assign(goParams, {page: parseInt(page)-1}), 
       })
       .then(response => {
         console.log(response)
@@ -110,8 +110,19 @@ export default {
 
   mounted: function () {
     console.log('mount')
-    this.search(this.searchType, this.keyword)
-  }
+    this.search(this.searchType, this.keyword, this.page)
+  },
+
+  watch: {
+    searchType: function () {
+      this.$router.push({name: 'Search', params: {type: this.searchType}, query: {keyword: this.keyword, page: 1}})
+      this.search(this.searchType, this.keyword, 1)
+    },
+    page: function () {
+      this.$router.push({name: 'Search', params: {type: this.searchType}, query: {keyword: this.keyword, page: this.page}})
+      this.search(this.searchType, this.keyword, this.page)
+    },
+  },
 
 }
 </script>
