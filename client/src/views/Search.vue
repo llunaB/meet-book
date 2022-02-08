@@ -5,36 +5,36 @@
       color="#798F88">
         <v-tabs-slider color="#798F88"></v-tabs-slider>
         <v-tab
-          @click="function () {searchType = 'conference'; search('conference', keyword)}"
-          :to="`conference?keyword=${keyword}`">회의</v-tab>
+          @click="function () {searchType = 'conference'; search('conference', $route.query.keyword)}"
+          :to="`conference?keyword=${$route.query.keyword}`">회의</v-tab>
         <v-tab
-          @click="function () {searchType = 'book'; search('book', keyword)}"
-          :to="`book?keyword=${keyword}`">도서</v-tab>
+          @click="function () {searchType = 'book'; search('book', $route.query.keyword)}"
+          :to="`book?keyword=${$route.query.keyword}`">도서</v-tab>
         <v-tab
-          @click="function() {searchType = 'users'; search('users', keyword)}"
-          :to="`users?keyword=${keyword}`">사용자</v-tab>
+          @click="function() {searchType = 'users'; search('users', $route.query.keyword)}"
+          :to="`users?keyword=${$route.query.keyword}`">사용자</v-tab>
       </v-tabs>
     </v-row>
     <v-row>
       <v-col class="col-9">
         <div v-if="searchType == 'conference'">
           <p>회의 검색 결과입니다.</p>
-          <ConferenceCard v-for="(conference, idx) in searchResult" :key="idx" :conference="conference" />
-          <v-pagination v-model="page" :length="searchResult.totalPage"></v-pagination>
+          <ConferenceCard v-for="(conference, idx) in searchResult.content" :key="idx" :conference="conference" />
+          <v-pagination v-model="page" :length="searchResult.totalPages"></v-pagination>
 
         </div>
         <div v-else-if="searchType == 'book'">
           <p>도서 검색 결과입니다.</p>
-          <TheBookcard v-for="(book, idx) in searchResult" :key="idx" :book="book" />
-          <v-pagination v-model="page" :length="searchResult.totalPage"></v-pagination>
+          <TheBookcard v-for="(book, idx) in searchResult.content" :key="idx" :book="book" />
+          <v-pagination v-model="page" :length="searchResult.totalPages"></v-pagination>
         </div>
         <div v-else>
           <p>사용자 검색 결과입니다.</p>
-          <p>{{searchResult.result}}</p>
-          <v-pagination v-model="page" :length="searchResult.totalPage"></v-pagination>
+          <p>{{searchResult.content}}</p>
+          <v-pagination v-model="page" :length="searchResult.totalPages"></v-pagination>
         </div>
 
-        <div v-show="searchResult.length == 0">
+        <div v-show="searchResult.content.length == 0">
           <p>검색 결과가 없습니다.</p>
         </div>
         
@@ -63,6 +63,7 @@ export default {
       searchType: this.$route.params.type,
       keyword: this.$route.query.keyword,
       searchResult: [],
+      page: 1,
     }
   },
   methods: {
@@ -77,7 +78,7 @@ export default {
           break
         case 'users':
           typeString = 'users'
-          goParams = {user: keyword}
+          goParams = {nickname: keyword}
           break
         default:
           typeString = 'conference'
@@ -89,11 +90,11 @@ export default {
         baseURL: SERVER_URL,
         url: `/search/${typeString}`,
         method: 'GET',
-        params: goParams,
+        params: Object.assign(goParams, {page: this.page - 1, size: 20}), 
       })
       .then(response => {
         console.log(response)
-        this.searchResult = []
+        this.searchResult = response.data
       })
       .catch(error => {
         console.log(error)
