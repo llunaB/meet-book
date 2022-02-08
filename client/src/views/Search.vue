@@ -16,20 +16,20 @@
       </v-tabs>
     </v-row>
     <v-row>
-      <v-col class="col-9">
+      <v-col class="col-12">
         <div v-if="searchType == 'conference'">
-          <p>회의 검색 결과입니다.</p>
+          <p>"{{$route.query.keyword}}"의 회의 검색 결과입니다.</p>
           <ConferenceCard v-for="(conference, idx) in searchResult.content" :key="idx" :conference="conference" />
           <v-pagination v-model="page" :length="searchResult.totalPages"></v-pagination>
 
         </div>
         <div v-else-if="searchType == 'book'">
-          <p>도서 검색 결과입니다.</p>
-          <TheBookcard v-for="(book, idx) in searchResult.content" :key="idx" :book="book" />
+          <p>"{{$route.query.keyword}}"의 도서 검색 결과입니다.</p>
+          <TheBookcard v-for="(book, idx) in searchResult.content" :key="idx" :book="book" class="my-3 mx-auto" />
           <v-pagination v-model="page" :length="searchResult.totalPages"></v-pagination>
         </div>
         <div v-else>
-          <p>사용자 검색 결과입니다.</p>
+          <p>"{{$route.query.keyword}}"의 사용자 검색 결과입니다.</p>
           <p>{{searchResult.content}}</p>
           <v-pagination v-model="page" :length="searchResult.totalPages"></v-pagination>
         </div>
@@ -39,10 +39,10 @@
         </div>
         
       </v-col>
-      <v-col class="col-3">
+      <!-- <v-col class="col-3">
         <p>"{{ $route.query.keyword }}"에 대해 {{$route.params.type}}로 검색한 결과입니다.</p>
         <p>{{ $route.query.title }}</p>
-      </v-col>
+      </v-col> -->
     </v-row>
   </div>
 </template>
@@ -62,7 +62,9 @@ export default {
     return {
       searchType: this.$route.params.type,
       keyword: this.$route.query.keyword,
-      searchResult: [],
+      searchResult: {
+        content: [],
+      },
       page: 1,
     }
   },
