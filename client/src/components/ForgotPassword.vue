@@ -1,19 +1,23 @@
 <template>
   <v-card v-if="dialog">
     <v-card-title class="text-h5 grey lighten-2">Forgot My Password</v-card-title>
-    <form @submit.prevent="handleSubmit">
+    <form>
       <div class="form-group">
         <!-- Email Form -->
         <v-text-field
             type="email" label="Email" hide-details="auto"
-            v-model="email" id="useremailInput" required/>
+            v-model="user.useremail" id="useremailInput" required/>
         <br>
+        <!-- username Form -->
+        <v-text-field
+            type="text" label="Username" hide-details="auto"
+            v-model="user.username" id="usernameInput" required/>
       </div>
 
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn type="submit" color="primary" text>
+        <v-btn color="primary" text @click="handleSubmit">
           Submit
         </v-btn>
       </v-card-actions>
@@ -22,26 +26,27 @@
 </template>
 
 <script>
+import User from "@/api/users";
 import axios from "axios";
 
 export default {
   name: "ForgotPassword",
   data() {
     return {
-      email: "",
+      user: new User('', ''),
       dialog: true,
     }
   },
   methods: {
     handleSubmit() {
-      axios.post('https://localhost:8080/users/findpwd', { "email": this.email })
+      this.$emit('close')
+      axios.post('https://localhost:8080/forgotpassword', this.user)
       .then(res =>{
         console.log(res)
       })
       .catch(e => {
         console.log(e)
       })
-      this.$emit('close')
     }
   }
 }
