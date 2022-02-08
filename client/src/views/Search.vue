@@ -30,7 +30,10 @@
         </div>
         <div v-else>
           <p>"{{$route.query.keyword}}"의 사용자 검색 결과입니다.</p>
-          <p>{{searchResult.content}}</p>
+          <v-row>
+            <ProfileSmallcard v-for="(user, idx) in searchResult.content" :key="idx" :person="user" class="my-3 mx-auto" />
+          </v-row>
+
           <v-pagination v-model="page" :length="searchResult.totalPages"></v-pagination>
         </div>
 
@@ -53,10 +56,11 @@ const SERVER_URL = process.env.VUE_APP_SERVER_URL
 import axios from 'axios'
 import ConferenceCard from '@/components/home/ConferenceCard'
 import TheBookcard from '@/components/TheBookcard'
+import ProfileSmallcard from '@/components/ProfileSmallcard'
 export default {
   name: 'Search',
   components: {
-    ConferenceCard, TheBookcard,
+    ConferenceCard, TheBookcard, ProfileSmallcard
   },
   data: function () {
     return {
