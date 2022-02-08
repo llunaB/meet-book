@@ -109,7 +109,7 @@
           <v-list-item-title>모임</v-list-item-title>
         </v-list-item>
         <div v-for="(item, index) in shortMenuItems" :key="index">
-          <v-list-item v-if="item.needLogin == loggedIn" :to="{name: item.to}">
+          <v-list-item v-if="item.needLogin === loggedIn" :to="{name: item.to}">
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
         </div>

@@ -137,7 +137,7 @@ p {
 	align-items: center;
 	color: rgba(0, 0, 0, 0.35);
 	font-size: 12px;
-	margin: 8px 0px;
+	margin: 8px 0;
 }
 .hr-sect::before,
 .hr-sect::after {
@@ -145,8 +145,8 @@ p {
 	flex-grow: 1;
 	background: rgba(0, 0, 0, 0.35);
 	height: 1px;
-	font-size: 0px;
-	line-height: 0px;
-	margin: 0px 16px;
+	font-size: 0;
+	line-height: 0;
+	margin: 0 16px;
 }
 </style>
