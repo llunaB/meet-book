@@ -108,29 +108,18 @@ export default {
     },
 
     onPageChange(page) {
-      console.log('페이지전환')
       this.search(this.searchType, this.keyword, page)
     },
-    onKeywordChange(keyword) {
-      console.log('얍')
-      this.search('conference', keyword, 1)
-    }
   },
 
   mounted: function () {
-    console.log('mount')
+    
     this.search(this.searchType, this.keyword, this.page)
   },
 
   watch: {
-    // searchType: function () {
-    //   this.$router.push({name: 'Search', params: {type: this.searchType}, query: {keyword: this.keyword, page: 1}})
-    //   this.search(this.searchType, this.keyword, 1)
-    // },
     page: function (newPage) {
       this.onPageChange(newPage)
-      // this.$router.push({name: 'Search', params: {type: this.searchType}, query: {keyword: this.keyword, page: this.page}})
-      // this.search(this.searchType, this.keyword, this.page)
     },
     keyword: function () {
       this.search('conference', this.keyword, 1)
