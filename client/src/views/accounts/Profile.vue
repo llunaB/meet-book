@@ -18,7 +18,7 @@
           <strong>한마디</strong>
           <p>{{ this.user.profileDescription }}</p>
         </v-card>
-        <p>지난 한달간 {p}권의 책을 읽었어요!</p>
+        <span>{{ conferences.length }}개의 모임이 예약되어 있어요!!</span>
       </v-col>
     </v-row>
     <v-col style="padding-top:2rem">

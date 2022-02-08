@@ -10,13 +10,14 @@
               <v-text-field
                 type="text" label="별명" hide-details="auto"
                 v-model="user.nickname" id="nickname-signup" required />
-              <!-- Email 회원가입 Form -->
+              <!-- Email 회원가입 Form && 인증번호 받기 버튼 -->
               <div class="row my-3" style="align-items: baseline">
                 <v-text-field
                   type="email" label="Email" hide-details="auto"
                   v-model="user.email" id="email-signup" required />
                 <v-btn rounded @click="sendCheckKey" class="row-2">인증번호 받기</v-btn>
               </div>
+              <!--       인증번호 전송 후, 값 확인하는 Form       -->
               <div v-if="cert_key.length > 0" class="row my-3" style="align-items: baseline">
                 <v-text-field
                   type="text" label="인증번호" hide-details="auto"
@@ -42,6 +43,9 @@
             <!-- 소셜 회원가입 전체 Form Start-->
             <form class="social-form-group">
               <div class="hr-sect">SNS로 로그인 하기</div>
+              <v-icon> mdi-facebook </v-icon>
+              <v-icon> mdi-google </v-icon>
+
             </form>
             <!-- 소셜 회원가입 전체 Form End -->
           </div>
