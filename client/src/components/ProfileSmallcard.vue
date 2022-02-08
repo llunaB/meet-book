@@ -3,17 +3,16 @@
   max-width="344"
   elevation="0"
   :to="{name: 'Profile', params: person.userId}">
-
   <v-card-title>
     <v-avatar
-    color="primary"
+    color="#F7DBCE"
     size="48">
-      <img v-if="person.profile_image != ''" :src="person.profile_image" :alt="person.nickname">
-      <div v-else>
+      <img v-show="!!person.profile_image" :src="person.profile_image">
+      <span v-show="!person.profile_image">
         <v-icon>
           mdi-account-circle
         </v-icon>
-      </div>
+      </span>
     </v-avatar>
     <p class="ml-3">
       {{ person.nickname }}
