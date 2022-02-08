@@ -6,6 +6,10 @@
           <div class="card flex-grid signup">
             <main><h2> <strong>회원가입</strong></h2></main>
             <form class="form-group my-2" @submit.prevent="handleRegister">
+              <!-- username 회원가입 Form -->
+              <v-text-field
+                type="text" label="이름" hide-details="auto"
+                v-model="user.name" id="username-signup" required />
               <!-- nickname 회원가입 Form -->
               <v-text-field
                 type="text" label="별명" hide-details="auto"
@@ -133,7 +137,7 @@ p {
 	align-items: center;
 	color: rgba(0, 0, 0, 0.35);
 	font-size: 12px;
-	margin: 8px 0px;
+	margin: 8px 0;
 }
 .hr-sect::before,
 .hr-sect::after {
@@ -141,8 +145,8 @@ p {
 	flex-grow: 1;
 	background: rgba(0, 0, 0, 0.35);
 	height: 1px;
-	font-size: 0px;
-	line-height: 0px;
-	margin: 0px 16px;
+	font-size: 0;
+	line-height: 0;
+	margin: 0 16px;
 }
 </style>
