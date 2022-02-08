@@ -27,14 +27,14 @@
     <div class="hidden-sm-and-down">
       <div v-if="loggedIn" class="navbar-menu-loggedin">
         <v-btn
-            to="/conf/create"
+            :to="{name: 'CreateConference'}"
             text
             plain
           >
           <span class="mr-2">모임 개설</span>
         </v-btn>
         <v-btn
-            to="/conf/schedule"
+            to="#"
             text
             plain
           >
@@ -133,7 +133,7 @@ export default {
         { title: '계정 설정', to:'/accounts/settings',},
       ],
       shortMenuItems: [
-        { title: '모임 개설', to:'#', needLogin: true},
+        { title: '모임 개설', to:'CreateConference', needLogin: true},
         { title: '나의 일정', to:'#', needLogin: true},
         { title: '로그인', to:'Login', needLogin: false},
         { title: '회원가입', to:'Signup', needLogin: false},

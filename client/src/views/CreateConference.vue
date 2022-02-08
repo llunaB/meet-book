@@ -13,13 +13,15 @@
       ></v-text-field>
 
       <v-autocomplete
-        v-model="bookInput"
+        v-model="book"
+        clearable
+        hide-no-data
+        return-object
         :items="bookItems"
         :loading="bookLoading"
         :search-input.sync="bookSearch"
-        clearable
-        :item-text="selectedBook"
-        :item-value="selectedBookId"
+        item-text="shortName"
+        item-value="id"
         label="도서">
       </v-autocomplete>
       <!-- Autocomplete는 작성할 때 DB에서 책 제목을 찾게 되므로 서버 부하를 고려하여 여유 시간을 두고 로드하게 만들 것 -->
@@ -161,8 +163,8 @@ export default {
       v => !!v || '날짜를 설정해주세요.',
       // v => v - this.nowDate < 0 || '오늘 이후의 날짜를 설정해주세요.',
     ],
-    conf_question: null,
-    conf_answer: null,
+    conf_question: '',
+    conf_answer: '',
 
     // conf_answerRules: [
     //   v => !(!!this.conf_question&& !v) || '모임 비밀번호 없이 비밀번호 문제만 설정할 수 없습니다.',
@@ -170,11 +172,13 @@ export default {
 
 
     description: '',
+    thumbnailUrl: '',
 
-    bookInput: null,
+    book: null,
     bookSearch: null,
     bookLoading: false,
-    bookItems: [],
+    nameLimit: 20,
+    bookEntries: [],
     selectedBook: [],
     selectedBookId: [],
     tags: '',
@@ -189,30 +193,13 @@ export default {
       }
     },
     reset () {
-      console.log(this.title, this.date_time)
+      
       this.$refs.form.reset()
     },
     resetValidation () {
       this.$refs.form.resetValidation()
     },
 
-
-    // lookupBooks: function (keyword) {
-    //   if (keyword) {
-    //     axios({
-    //       method: 'GET', baseURL:SERVER_URL, url: `/api/v1/book?keyword=${keyword}`,
-    //       params: {
-    //         title: keyword
-    //       },
-    //     })
-    //     .then(response => {
-    //       console.log(response)
-    //     })
-    //     .catch(error => {
-    //       console.log(error)
-    //     })
-    //   }
-    // },
 
     createConference: function () {
       
@@ -222,33 +209,32 @@ export default {
         return
       }
 
-      console.log(this.user)
-      console.log(this.$store.state.auth.status)
+      let endTime = new Date(this.date_time)
+      endTime.setHours(endTime.getHours() + 1)
+
+      const conference = {
+        userId: this.$store.state.auth.user.id,
+        title: this.title,
+        bookId: this.book.id,
+        callEndTime: this.endTime,
+        callStartTime: this.date_time,
+        description: this.description,
+        maxMembers: this.max_members,
+        password: this.conf_answer,
+        question: this.conf_question,
+        tags: this.tags,
+        thumbnailUrl: this.thumbnailUrl,
+      }
+
+      console.log(conference)
+
       // 회의 개설 요청 보내기
       axios({
         method: 'POST',
         baseURL: SERVER_URL,
         url: '/conference',
         headers: authheader(),
-        data: {
-          conference: {
-            // 회의 개설 정보
-            user_id: this.$store.state.auth.status.user.id,
-            title: this.title,
-            book: this.book,
-            description: this.description,
-            max_members: this.max_members,
-            question: this.conf_question,
-            password: this.conf_answer,
-            call_start_time: this.date,
-            tags: this.tags,
-
-            // 서버에서 후처리할 것으로 예상되는 정보
-            // call_end_time
-            // 
-          },
-        },
-
+        data: conference,
       })
       .then(response => {
         // 요청이 이루어지면
@@ -267,27 +253,42 @@ export default {
   computed: {
     user: function () {
       return this.$store.state.auth.status.user
-    }
+    },
+
+    bookItems: function () {
+      return this.bookEntries.map(entry => {
+        const id = entry.id
+        const shortName = entry.name.length > this.nameLimit
+          ? entry.name.slice(0, this.nameLimit) + '...'
+          : entry.name
+        
+        return Object.assign({}, entry, {id: id, shortName: shortName})
+      })
+    },
   },
 
   watch: {
-    bookSearch (value) {
+    bookSearch () {
       if (this.bookItems.length > 0) return
+      if (this.bookLoading) return
       this.bookLoading = true
+      setTimeout(() => {
+        axios({
+          method: 'GET',
+          baseURL: SERVER_URL,
+          url: `/books`,
+        })
+        .then(response => {
+          console.log('searching')
+          this.bookEntries = response.data
+        })
+        .catch(error => {
+          console.log(error)
+        })
+        .finally(() => (this.bookLoading = false))
+      }, 500)
 
-      axios({
-        method: 'GET',
-        baseURL:SERVER_URL,
-        url: `/search/book?book_name=${value}`,
-      })
-      .then(response => {
-        console.log(response)
-        this.bookItems = response.data
-      })
-      .catch(error => {
-        console.log(error)
-      })
-      .finally(() => (this.bookLoading = false))
+
     }
   },
 }
