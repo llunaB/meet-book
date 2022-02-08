@@ -211,7 +211,7 @@ public class ConferenceController {
 		}
 	}
 
-	@PostMapping("/{id}/leave")
+	@DeleteMapping("/{id}/leave")
 	public ResponseEntity<JsonObject> deleteUser(@PathVariable("id") String id , @RequestBody String token, @AuthenticationPrincipal final User user) throws Exception {
 
 		System.out.println("Removing user | {sessionName, token}=" + id+", "+token);
