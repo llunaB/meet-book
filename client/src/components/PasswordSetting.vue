@@ -35,7 +35,9 @@ export default {
   methods: {
     passwordChange() {
       if (this.user.password === this.user.passwordConfirm) {
-
+        axios.patch('https://localhost:8080/users/' + this.$store.state.auth.user.id, { 'password': '!!'})
+        .then(res => console.log(res))
+        .catch(e => console.log(e))
       }
     }
   }

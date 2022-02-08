@@ -50,7 +50,6 @@
 </template>
 
 <script>
-import User from '@/api/users.js'
 import ForgotPassword from "@/components/ForgotPassword";
 
 export default {
@@ -58,7 +57,7 @@ export default {
   "components": {ForgotPassword},
   "data"() {
       return {
-        "user": new User('', ''),
+        "user": {},
         "loading": false,
         "dialog": false,
       }

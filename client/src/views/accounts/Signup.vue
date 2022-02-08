@@ -56,14 +56,13 @@
 </template>
 
 <script>
-import User from '@/api/users'
 import axios from "axios";
 
 export default {
  name: 'Signup',
  data() {
    return{
-     user: new User("", "", "", ""),
+     user: {},
      submitted: false,
      successful: false,
      message: "",

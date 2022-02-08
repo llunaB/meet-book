@@ -4,9 +4,7 @@
       <v-col class="text-center align-self-center justify-center text-center" cols="3">
         <v-avatar v-if="this.user.profileImage" :src="this.user.profileImage" />
         <div v-else class="img-upload">
-          <label for="file-input">
-            <v-avatar size="150" color="primary">{{ this.user.nickname }}</v-avatar>
-          </label>
+          <v-avatar size="150" color="primary">{{ this.user.nickname }}</v-avatar>
           <input id="file-input" type="file" />
         </div>
 
@@ -96,7 +94,6 @@ import axios from "axios";
 export default {name: 'Profile', data() {
     return {
       user: {},
-      // user: {"name": 'eonyong', "nickname": "yong", "host_point": 10, "guest_point": 11, "profile_description": "hihihihi"},
       conference: '',
       conferences: [],
     }
@@ -108,8 +105,8 @@ export default {name: 'Profile', data() {
     GoToConference(id) {
       this.$router.push("conference/" + id)
     },
-    getImg(host_point) {
-      if (host_point > 10) {
+    getImg(point) {
+      if (point > 10) {
         return require('@/assets/host_img/images.jpeg')
       } else {
         return require('@/assets/host_img/host2.jpeg')
@@ -118,8 +115,8 @@ export default {name: 'Profile', data() {
     userProfile() {
       axios.get('https://localhost:8080/users/' + this.$store.state.auth.user.id + "/detail")
         .then(res => {
-          console.log(res.data)
           this.user = res.data
+          console.log(res.data)
           this.userBookmark()
         })
         .catch(e => {

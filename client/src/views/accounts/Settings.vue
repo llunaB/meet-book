@@ -1,61 +1,81 @@
 <template>
   <v-container style="padding: 3rem">
-    <v-row>
-      <v-col class="text-center align-self-center justify-center text-center" cols="3">
-        <v-avatar v-if="loggedinUser.profile_image" :src="loggedinUser.profile_image" />
-        <div v-else class="img-upload">
-          <label for="file-input">
-            <v-avatar size="150" color="primary">{{ loggedinUser.nickname }}</v-avatar>
-          </label>
-          <input id="file-input" type="file" />
-        </div>
-
-      </v-col>
-      <v-col cols="8" style="margin-left: 2rem">
-        <h2>{{ loggedinUser.nickname }}님의 개인 프로필</h2>
+    <form>
+      <div class="form-group">
+        <v-text-field
+          type="text" label="닉네임" hide-details="auto"
+          v-model="user.nickname" id="nicknameInput" required/>
         <br>
-        <v-card>
-          <strong>한마디</strong>
-          <p>{{ loggedinUser.profile_description }}</p>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-col style="padding-top:2rem">
-      <h3>최근 모임에서 읽은 책</h3>
-      <v-item-group>
-        <v-container>
-          <v-row>
-            <v-col v-for="(item, idx) in conferences.slice(0, 5)" :key="idx" md="2.2">
-              <v-item>
-                <v-card
-                    class="d-flex align-center"
-                    width="10%"
-                >
-                  <v-img
-                      max-width="128px"
-                      @click="onclick(item)"
-                      :src="item.thumbnail_url"
-                  />
-                </v-card>
-              </v-item>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-item-group>
-    </v-col>
-    <v-col style="padding-top: 2rem">
+        <v-text-field
+          type="text" label="비밀번호 수정" hide-details="auto"
+          v-model="user.password" id="passwordEditInput" />
 
-    </v-col>
+        <v-text-field
+          type="password" label="비밀번호 수정 확인" hide-details="auto"
+          v-model="user.passwordConfirm" id="passwordConfirmEditInput" />
+
+        <br>
+        <v-textarea
+          type="text" label="나의 한마디" auto-grow outlined rows="3" row-height="100" shaped
+          v-model="user.profileDescription" id="profileDescriptionInput"/>
+      </div>
+
+      <v-btn color="primary" text @click="{informationChange, passwordEditChange}">
+        수정하기
+      </v-btn>
+    </form>
   </v-container>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "Settings",
   data() {
     return {
+      user: {},
       name: '',
     }
+  },
+  methods: {
+    informationChange() {
+      if (this.user.nickname.length > 0) {
+        axios.put('https://localhost:8080/users/' + this.$store.state.auth.user.id,
+          {
+            'nickname': this.nickname,
+            'profileDescription': this.profileDescription,
+          })
+          .then(res => console.log(res))
+          .catch(e => console.log(e))
+      }
+      else {
+        alert('닉네임을 입력하셔야 합니다.')
+      }
+    },
+    passwordEditChange() {
+      if ((this.password === this.passwordConfirm) && (this.user.password)) {
+        axios.put('https://localhost:8080/users/' + this.$store.state.auth.user.id + '/detail',
+          {'newPassword': this.password})
+        .then(res => {
+          console.log(res)
+          alert("비밀번호가 수정되었습니다.")
+        })
+        .catch(e => console.log(e))
+      }
+    },
+    userProfile() {
+      axios.get('https://localhost:8080/users/' + this.$store.state.auth.user.id + "/detail")
+        .then(res => {
+          this.user = res.data
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    }
+  },
+  beforeMount() {
+    this.userProfile()
   }
 }
 </script>
