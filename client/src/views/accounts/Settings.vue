@@ -8,11 +8,13 @@
         <br>
         <v-text-field
           type="text" label="비밀번호 수정" hide-details="auto"
-          v-model="user.password" id="passwordEditInput" />
+          v-model="user.password" id="passwordEditInput"
+          oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )" />
 
         <v-text-field
           type="password" label="비밀번호 수정 확인" hide-details="auto"
-          v-model="user.passwordConfirm" id="passwordConfirmEditInput" />
+          v-model="user.passwordConfirm" id="passwordConfirmEditInput"
+          oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )" />
 
         <br>
         <v-textarea
@@ -20,7 +22,7 @@
           v-model="user.profileDescription" id="profileDescriptionInput"/>
       </div>
 
-      <v-btn color="primary" text @click="{informationChange, passwordEditChange}">
+      <v-btn color="primary" text @click="informationChange">
         수정하기
       </v-btn>
     </form>
@@ -28,7 +30,9 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "axios"
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
+
 
 export default {
   name: "Settings",
@@ -36,16 +40,22 @@ export default {
     return {
       user: {},
       name: '',
+      errorMessage: ['비밀번호가 다릅니다.'],
     }
   },
   methods: {
     informationChange() {
+      this.passwordEditChange()
       if (this.user.nickname.length > 0) {
-        axios.put('https://localhost:8080/users/' + this.$store.state.auth.user.id,
-          {
-            'nickname': this.nickname,
-            'profileDescription': this.profileDescription,
-          })
+        axios({
+          baseURL: SERVER_URL,
+          url: `/users/${this.$store.state.auth.user.id}`,
+          method: 'PUT',
+          data: {
+            'nickname': this.user.nickname,
+            'profileDescription': this.user.profileDescription,
+          }
+        })
           .then(res => console.log(res))
           .catch(e => console.log(e))
       }
@@ -54,25 +64,25 @@ export default {
       }
     },
     passwordEditChange() {
-      if ((this.password === this.passwordConfirm) && (this.user.password)) {
-        axios.put('https://localhost:8080/users/' + this.$store.state.auth.user.id + '/detail',
-          {'newPassword': this.password})
-        .then(res => {
-          console.log(res)
-          alert("비밀번호가 수정되었습니다.")
+      if ((this.user.password === this.user.passwordConfirm) && (this.user.password)) {
+        axios({
+          baseURL: SERVER_URL,
+          url: `/users/${this.$store.state.auth.user.id}/detail`,
+          method: 'PUT',
+          data: {'newPassword': this.user.password}
         })
+        .then(() => alert("비밀번호가 수정되었습니다."))
         .catch(e => console.log(e))
       }
     },
     userProfile() {
-      axios.get('https://localhost:8080/users/' + this.$store.state.auth.user.id + "/detail")
-        .then(res => {
-          this.user = res.data
-        })
-        .catch(e => {
-          console.log(e)
-        })
-    }
+      axios({
+        baseURL: SERVER_URL,
+        url:`/users/${this.$store.state.auth.user.id}/detail`
+      })
+        .then(res => this.user = res.data)
+        .catch(e => console.log(e))
+    },
   },
   beforeMount() {
     this.userProfile()

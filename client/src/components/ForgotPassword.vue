@@ -22,7 +22,9 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "axios"
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
+
 
 export default {
   name: "ForgotPassword",
@@ -34,14 +36,14 @@ export default {
   },
   methods: {
     handleSubmit() {
-      axios.post('https://localhost:8080/users/findpwd', { "email": this.email })
-        .then(res =>{
-          console.log(res)
-        })
-        .catch(e => {
-          console.log(e)
-        })
-      this.$emit('close')
+      axios({
+        baseURL: SERVER_URL,
+        url: '/users/findpwd',
+        method: 'POST',
+        data: {"email": this.email}
+      })
+        .then(this.$emit('close'))
+        .catch(e => console.log(e))
     }
   }
 }

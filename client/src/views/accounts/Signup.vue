@@ -28,11 +28,13 @@
               <!-- Password 회원가입 Form -->
               <v-text-field
                 type="password" label="비밀번호" hide-details="auto"
-                v-model="user.password" id="password-signup" required />
+                v-model="user.password" id="password-signup" required
+                oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )" />
               <!-- PasswordConfirm 회원가입 Form -->
               <v-text-field
                 type="password" label="비밀번호 확인" hide-details="auto" :error-messages=errorMessages
-                v-model="user.passwordConfirm" id="passwordConfirm-signup" required />
+                v-model="user.passwordConfirm" id="passwordConfirm-signup" required
+                oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )"/>
               <!-- 회원가입 제출 버튼 -->
               <div class="field" id="submit-signup-form">
                 <v-btn type="submit" class="primary">가입하기</v-btn>
@@ -56,7 +58,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "axios"
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
 export default {
  name: 'Signup',
@@ -80,11 +83,9 @@ export default {
       this.$router.push({name: "Login"})
     }
   },
-  methods: {
-    handleRegister() {
+  methods: {handleRegister() {
       this.message = ""
       this.submitted = true
-      console.log(this.user)
       if (this.cert_key === this.confirm_key) {
         this.$store.dispatch("auth/register", this.user).then(
           data => {
@@ -100,23 +101,22 @@ export default {
           alert(this.message)
         })
       }
-    },
-    sendCheckKey: function () {
-      axios.get('https://localhost:8080/email/emailcheck', {params: {'mail': this.user.email}})
+    }, sendCheckKey: function () {
+      axios({
+        baseURL: SERVER_URL,
+        url: '/email/emailcheck',
+        method: 'GET',
+        params: {'mail': this.user.email}
+      })
         .then(res => {
           alert(`해당 메일로 인증번호를 전송했습니다.`)
           this.cert_key = res.data.key
         })
-        .catch(() => {
-          return alert(`이메일을 확인해주세요`)
-        })
-    },
-    errorMessages() {
-      if ((this.user.password !== this.user.passwordConfirm) && (this.user.passwordConfirm.length > 0)) {
+        .catch(()=>alert(`이메일을 확인해주세요`))
+    }, errorMessages() {
+      if ((this.user.password !== this.user.passwordConfirm) && (this.user.passwordConfirm.length > 0))
         return '비밀번호가 다릅니다.'
-      }
-    }
-  }
+    }}
   }
 </script>
 

@@ -88,8 +88,8 @@
 </template>
 
 <script>
-
 import axios from "axios";
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
 export default {name: 'Profile', data() {
     return {
@@ -113,25 +113,27 @@ export default {name: 'Profile', data() {
       }
     },
     userProfile() {
-      axios.get('https://localhost:8080/users/' + this.$store.state.auth.user.id + "/detail")
+      // 일단은 본인 프로필로 입장이여서 this.$store.state.auth.user.id를 사용 했습니다.
+      // 이후에 다른 유저가 들어올 경우에는 해당 부분을 수정하여 props한 값을 넣으면 됩니다.
+      axios({
+        baseURL: SERVER_URL,
+        url:`/users/${this.$store.state.auth.user.id}/detail`,
+        method: 'GET'
+      })
         .then(res => {
           this.user = res.data
-          console.log(res.data)
           this.userBookmark()
         })
-        .catch(e => {
-          console.log(e)
-        })
+        .catch(e => console.log(e))
     },
     userBookmark() {
-      axios.get('https://localhost:8080/users/' + this.$store.state.auth.user.id + '/bookmark')
-      .then(res => {
-        console.log(res.data)
-        this.conferences = res.data
+      axios({
+        baseURL: SERVER_URL,
+        url:`/users/${this.$store.state.auth.user.id}/bookmark`,
+        method: 'GET'
       })
-      .catch(e => {
-        console.log(e)
-      })
+      .then(res => this.conferences = res.data)
+      .catch(e => console.log(e))
     }
   },
   mounted() {
