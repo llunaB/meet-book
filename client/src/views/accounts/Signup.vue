@@ -6,10 +6,6 @@
           <div class="card flex-grid signup">
             <main><h2> <strong>회원가입</strong></h2></main>
             <form class="form-group my-2" @submit.prevent="handleRegister">
-              <!-- username 회원가입 Form -->
-              <v-text-field
-                type="text" label="이름" hide-details="auto"
-                v-model="user.name" id="username-signup" required />
               <!-- nickname 회원가입 Form -->
               <v-text-field
                 type="text" label="별명" hide-details="auto"

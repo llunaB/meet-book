@@ -29,10 +29,8 @@
                       비밀번호를 잊어버리셨다면..
                     </v-btn>
                   </template>
-                  <ForgotPassword v-if="dialog" @close="dialog = false"/>
+                  <ForgotPassword v-if="dialog" @close="dialog = false; snackbar = true"/>
                 </v-dialog>
-
-
               </div>
             </form>
             <!-- 소셜 로그인 전체 Form Start-->
@@ -44,9 +42,23 @@
             </form> -->
             <!-- 소셜 로그인 전체 Form End -->
           </div>
-            <!-- 로그인 전체 Form End -->
+          <!-- 로그인 전체 Form End -->
         </div>
       </div>
+    <!--  임시 비밀번호 전송 메세지  -->
+    <v-snackbar v-model="snackbar">
+      {{ Message }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="pink"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -62,6 +74,8 @@ export default {
         "user": new User('', ''),
         "loading": false,
         "dialog": false,
+        "snackbar": false,
+        "Message": "해당 메일로 임시 비밀번호가 전송 되었습니다."
       }
     },
     "computed": {
