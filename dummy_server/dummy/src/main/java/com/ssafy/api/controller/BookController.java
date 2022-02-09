@@ -32,7 +32,7 @@ public class BookController {
     public ResponseEntity<List<GetBookRes>> getBooks() {
         List<GetBookRes> getBookResList = new ArrayList<>();
         try {
-            List<BookDTO> bookDTOList = this.bookService.getBooks();
+            List<GetBookRes> bookDTOList = this.bookService.getBooks();
             // BookDTOList -> GetBookResList
             getBookResList = bookDTOList.stream().map(source -> {
                 GetBookRes getBookRes = modelMapper.map(source, GetBookRes.class);

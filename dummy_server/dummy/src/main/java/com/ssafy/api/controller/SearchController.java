@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.DTO.ConferenceDTO;
 import com.ssafy.api.responseDto.GetBookRes;
+import com.ssafy.api.responseDto.GetSimpleBooksRes;
 import com.ssafy.api.responseDto.GetUserByProfileRes;
 import com.ssafy.api.service.BookService;
 import com.ssafy.api.service.ConferenceService;
@@ -56,6 +57,20 @@ public class SearchController {
 		}
 		
 		return new ResponseEntity<Page<GetBookRes>>(list, HttpStatus.OK);
+	}
+	
+	@GetMapping("/book/simple")
+	public ResponseEntity<Page<GetSimpleBooksRes>> getSimpleBooks(@RequestParam("book_name") String bookname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+		Page<GetSimpleBooksRes> list = Page.empty();
+		PageRequest request = PageRequest.of(page, size);
+		
+		try {
+			list = bookService.getSimpleBooksByName(bookname, request);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<Page<GetSimpleBooksRes>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("/conference")
