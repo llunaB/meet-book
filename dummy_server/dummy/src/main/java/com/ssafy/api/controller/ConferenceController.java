@@ -138,14 +138,35 @@ public class ConferenceController {
 	/*** Session API ***/
 	/*******************/
 	
+	@GetMapping("/{id}/live")
+	public ResponseEntity<String> isSessionLive(@PathVariable("id") String id){
+		
+		if (this.mapSessions.get(id) == null) {
+			return new ResponseEntity<>("false", HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<>("true", HttpStatus.OK);
+	}
+	
 	@GetMapping("/{id}/token")
 	public ResponseEntity<String> getToken(@PathVariable("id") String id, @AuthenticationPrincipal final User user) {
 
 		System.out.println("Getting sessionId and token | {sessionName}=" + id);
 
 		// Role associated to this user
-		OpenViduRole role = OpenViduRole.MODERATOR;
-
+		OpenViduRole role = OpenViduRole.PUBLISHER;
+		
+		//Checking valid of conference.
+		ConferenceDTO target = conferenceService.getConferenceById(Integer.parseInt(id));
+		if(target == null) {
+			return new ResponseEntity<>("conference not found", HttpStatus.NOT_FOUND);
+		}
+		
+		//Give moderator role  if user make this conference.
+		if(target.getUserId() == user.getId()) {
+			role = OpenViduRole.MODERATOR;
+		}
+		
 		// Build connectionProperties object with the serverData and the role
 		ConnectionProperties connectionProperties = new ConnectionProperties.Builder().type(ConnectionType.WEBRTC)
 				.role(role).data("user_data").build();

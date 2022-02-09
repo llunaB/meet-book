@@ -1,23 +1,19 @@
 <template>
   <v-card v-if="dialog">
     <v-card-title class="text-h5 grey lighten-2">Forgot My Password</v-card-title>
-    <form>
+    <form @submit.prevent="handleSubmit">
       <div class="form-group">
         <!-- Email Form -->
         <v-text-field
-            type="email" label="Email" hide-details="auto"
-            v-model="user.useremail" id="useremailInput" required/>
+          type="email" label="Email" hide-details="auto"
+          v-model="email" id="useremailInput" required/>
         <br>
-        <!-- username Form -->
-        <v-text-field
-            type="text" label="Username" hide-details="auto"
-            v-model="user.username" id="usernameInput" required/>
       </div>
 
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" text @click="handleSubmit">
+        <v-btn type="submit" color="primary" text>
           Submit
         </v-btn>
       </v-card-actions>
@@ -26,27 +22,28 @@
 </template>
 
 <script>
-import User from "@/api/users";
-import axios from "axios";
+import axios from "axios"
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
+
 
 export default {
   name: "ForgotPassword",
   data() {
     return {
-      user: new User('', ''),
+      email: "",
       dialog: true,
     }
   },
   methods: {
     handleSubmit() {
-      this.$emit('close')
-      axios.post('https://localhost:8080/forgotpassword', this.user)
-      .then(res =>{
-        console.log(res)
+      axios({
+        baseURL: SERVER_URL,
+        url: '/users/findpwd',
+        method: 'POST',
+        data: {"email": this.email}
       })
-      .catch(e => {
-        console.log(e)
-      })
+        .then(this.$emit('close'))
+        .catch(e => console.log(e))
     }
   }
 }

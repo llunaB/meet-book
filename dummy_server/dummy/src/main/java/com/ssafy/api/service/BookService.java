@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.DTO.BookDTO;
 import com.ssafy.api.responseDto.GetBookRes;
+import com.ssafy.api.responseDto.GetSimpleBooksRes;
 import com.ssafy.db.entity.Book;
 import com.ssafy.db.openApi.OpenApiHelper;
 import com.ssafy.db.repository.BookRepository;
@@ -43,14 +44,14 @@ public class BookService {
 		}
 	}
 
-	public List<BookDTO> getBooks(){
-		List<BookDTO> bookDTOList = new ArrayList<>();
+	public List<GetBookRes> getBooks(){
+		List<GetBookRes> bookDTOList = new ArrayList<>();
 
 		try {
 			List<Book> bookList = bookRepository.findAll();
 			// Book List -> BookDTO List
 			bookDTOList = bookList.stream().map(source -> {
-				BookDTO bookDTO = modelMapper.map(source, BookDTO.class);
+				GetBookRes bookDTO = modelMapper.map(source, GetBookRes.class);
 				return bookDTO;
 			}).collect(Collectors.toList());
 
@@ -90,6 +91,18 @@ public class BookService {
 		try {
 			Page<Book> data = bookRepository.findByBookNameContaining(bookName, pageable);
 			list = data.map(source -> modelMapper.map(source, GetBookRes.class));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	public Page<GetSimpleBooksRes> getSimpleBooksByName(String bookName, Pageable pageable) {
+		Page<GetSimpleBooksRes> list = Page.empty();
+		try {
+			Page<Book> data = bookRepository.findByBookNameContaining(bookName, pageable);
+			list = data.map(source -> modelMapper.map(source, GetSimpleBooksRes.class));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
