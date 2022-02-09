@@ -22,6 +22,7 @@ export default {
 	computed: {
 		clientData () {
 			const { clientData } = this.getConnectionData();
+			console.log("streamManager:",this.streamManager)
 			return clientData;
 		},
 	},
@@ -29,7 +30,7 @@ export default {
 	methods: {
 		getConnectionData () {
 			const { connection } = this.streamManager.stream;
-			return JSON.parse(connection.data);
+			return JSON.parse(connection.data.split('%')[0]);
 		},
 	},
 };
