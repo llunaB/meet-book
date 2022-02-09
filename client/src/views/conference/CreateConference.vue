@@ -96,6 +96,7 @@ const SERVER_URL = process.env.VUE_APP_SERVER_URL
 import _ from 'lodash'
 import axios from 'axios'
 import moment from 'moment'
+import { mapState } from 'vuex'
 // import authheader from "@/services/auth-header"
 export default {
   name: 'CreateConference',
@@ -210,6 +211,7 @@ export default {
       })
       .catch(error => {
         console.log(error)
+        
       })
     },
 
@@ -249,6 +251,7 @@ export default {
         return Object.assign({}, entry, {id: id, shortName: shortName})
       })
     },
+    ...mapState(['auth'])
   },
 
   watch: {
@@ -257,11 +260,17 @@ export default {
       this.bookLoading = true
 
       this.fetchEntriesDebounced()
-      
-
-
-    }
+    },
   },
+
+  created: function () {
+    if (!this.auth.status.loggedIn) {
+      alert('로그인이 필요한 기능입니다.')
+      this.$router.push({name: 'Home'})
+    }
+  }
+
+  
 }
 </script>
 
