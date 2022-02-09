@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ssafy.DTO.ConferenceDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.DTO.BookDTO;
+import com.ssafy.api.responseDto.GetBookRes;
 import com.ssafy.db.entity.Book;
 import com.ssafy.db.openApi.OpenApiHelper;
 import com.ssafy.db.repository.BookRepository;
@@ -44,24 +44,28 @@ public class BookService {
 	}
 
 	public List<BookDTO> getBooks(){
-		List<BookDTO> list = new ArrayList<>();
+		List<BookDTO> bookDTOList = new ArrayList<>();
 
 		try {
-			list = bookRepository.findAll().stream().map(source -> {
-				BookDTO res = modelMapper.map(source,BookDTO.class);
-				return res;
+			List<Book> bookList = bookRepository.findAll();
+			// Book List -> BookDTO List
+			bookDTOList = bookList.stream().map(source -> {
+				BookDTO bookDTO = modelMapper.map(source, BookDTO.class);
+				return bookDTO;
 			}).collect(Collectors.toList());
+
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 
-		return list;
+		return bookDTOList;
 	}
 	
 	public BookDTO getBookById(int id) {
 		try {
 			Book source = bookRepository.findById(id).get();
 			System.out.println(source);
+			// Book -> BookDTO
 			return modelMapper.map(source, BookDTO.class);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -81,11 +85,11 @@ public class BookService {
 		return null;
 	}
 	
-	public Page<BookDTO> getBooksByName(String bookName, Pageable pageable) {
-		Page<BookDTO> list = Page.empty();
+	public Page<GetBookRes> getBooksByName(String bookName, Pageable pageable) {
+		Page<GetBookRes> list = Page.empty();
 		try {
 			Page<Book> data = bookRepository.findByBookNameContaining(bookName, pageable);
-			list = data.map(source -> modelMapper.map(source, BookDTO.class));
+			list = data.map(source -> modelMapper.map(source, GetBookRes.class));
 		}catch(Exception e){
 			e.printStackTrace();
 		}

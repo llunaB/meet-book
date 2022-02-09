@@ -13,10 +13,12 @@ import org.springframework.stereotype.Service;
 import com.ssafy.DTO.ConferenceDTO;
 import com.ssafy.DTO.ConferenceHistoryDTO;
 import com.ssafy.db.entity.Book;
+import com.ssafy.db.entity.Bookmark;
 import com.ssafy.db.entity.Conference;
 import com.ssafy.db.entity.ConferenceHistory;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.BookRepository;
+import com.ssafy.db.repository.BookmarkRepository;
 import com.ssafy.db.repository.ConferenceHistoryRepository;
 import com.ssafy.db.repository.ConferenceRepository;
 import com.ssafy.db.repository.UserConferenceRepository;
@@ -28,18 +30,20 @@ public class ConferenceService {
 	private ConferenceRepository conferenceRepository;
 	private UserRepository userRepository;
 	private BookRepository bookRepository;
+	private BookmarkRepository bookmarkRepository;
 	
 	private UserConferenceRepository userConferenceRepository;
 	private ConferenceHistoryRepository conferenceHistoryRepository;
 	private ModelMapper modelMapper;
 	
 	@Autowired
-	public ConferenceService(ConferenceRepository conferenceRepository, UserRepository userRepository, BookRepository bookRepository, UserConferenceRepository userConferenceRepository, ConferenceHistoryRepository conferenceHistoryRepository) {
+	public ConferenceService(ConferenceRepository conferenceRepository, UserRepository userRepository, BookRepository bookRepository, UserConferenceRepository userConferenceRepository, ConferenceHistoryRepository conferenceHistoryRepository, BookmarkRepository bookmarkRepository) {
 		this.conferenceRepository = conferenceRepository;
 		this.userRepository = userRepository;
 		this.bookRepository = bookRepository;
 		this.userConferenceRepository = userConferenceRepository;
 		this.conferenceHistoryRepository = conferenceHistoryRepository;
+		this.bookmarkRepository = bookmarkRepository;
 		this.modelMapper = new ModelMapper();
 	}
 	
@@ -73,7 +77,13 @@ public class ConferenceService {
 	
 	public boolean createConference(ConferenceDTO source) {
 		try {
-			conferenceRepository.save(modelMapper.map(source, Conference.class));
+			Conference conference = conferenceRepository.save(modelMapper.map(source, Conference.class));
+			Bookmark bookmark = new Bookmark();
+			
+			bookmark.setAlarm(1);
+			bookmark.setConference(conference);
+			bookmark.setUser(conference.getUser());
+			bookmarkRepository.save(bookmark);
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();

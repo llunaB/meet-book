@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +56,17 @@ public class BookmarkService {
 	public GetBookmarksRes getBookmarkById(int id) {
 		Bookmark source = bookmarkRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		return modelmapper.map(source, GetBookmarksRes.class);
+	}
+	
+	//check user have bookmark of conference
+	public boolean checkUserHaveBookmark(int uid, int cid) {
+		try {
+			return bookmarkRepository.findByUserAndConference(userRepository.findById(uid).get(), conferenceRepository.findById(cid).get()).size() > 0;
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 	
 	public List<GetBookmarksRes> getBookmarks(int id) {

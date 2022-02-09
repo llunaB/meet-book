@@ -38,7 +38,6 @@
             <!-- 소셜 로그인 전체 Form Start-->
             <form class="social-form-group">
               <div class="hr-sect">SNS로 로그인 하기</div>
-              <i icon="brands facebook" />
               <v-icon>mdi-facebook</v-icon>
               <v-icon>mdi-google</v-icon>
             </form> -->
@@ -117,18 +116,13 @@ p {
   margin-top: 2rem;
 }
 
-.login-page {
-  align-items: center;
-  /* background-color: black; */
-}
-
 .hr-sect {
 	display: flex;
 	flex-basis: 100%;
 	align-items: center;
 	color: rgba(0, 0, 0, 0.35);
 	font-size: 12px;
-	margin: 8px 0px;
+	margin: 8px 0;
 }
 .hr-sect::before,
 .hr-sect::after {
@@ -136,8 +130,6 @@ p {
 	flex-grow: 1;
 	background: rgba(0, 0, 0, 0.35);
 	height: 1px;
-	font-size: 0px;
-	line-height: 0px;
-	margin: 0px 16px;
+	margin: 16px;
 }
 </style>

@@ -1,6 +1,8 @@
-package com.ssafy.DTO;
+package com.ssafy.api.responseDto;
 
 import java.util.Date;
+
+import com.ssafy.DTO.BookDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,14 +13,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConferenceDTO {
+public class GetConferencesRes {
 	private int id; 
-	private int userId;
-	private int bookId;
+	private GetUserByProfileRes user;
+	private BookDTO book;
 	private Date callStartTime;
-	private Date callEndTime;
-	private String question;
-	private String password;
 	private String thumbnailUrl;
 	private String title;
 	private String description;
