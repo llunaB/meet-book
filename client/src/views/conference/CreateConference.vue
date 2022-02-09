@@ -34,50 +34,7 @@
         required
       ></v-select>
 
-      <!-- 날짜 -->
-      <!-- <v-menu
-        v-model="date_menu"
-        :close-on-content-click="false"
-        :nudge-right="40"
-        transition="scale-transition"
-        offset-y
-        min-width="auto"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-text-field
-            v-model="date"
-            label="회의 일시"
-            :rules="dateRules"
-            
-            v-bind="attrs"
-            v-on="on"
-          ></v-text-field>
-        </template>
-        <v-date-picker
-          v-model="date"
-          @input="menu2 = false"
-          :min="nowDate"
-          locale="ko"
-          no-title
-        ></v-date-picker>
-      </v-menu> -->
-
-      <!-- 시간 -->
-      <!-- <v-row>
-        <v-col class="col-12 col-sm-4">
-          <v-select :items="['오전', '오후']"  label="회의 시작" />
-        </v-col>
-        <v-col class="col-12 col-sm-4">
-          <v-select :items="['오전', '오후']" />
-        </v-col>
-        <v-col class="col-12 col-sm-4">
-          <v-select :items="['오전', '오후']" />
-        </v-col>
-      </v-row> -->
-
-      <!--  -->
       <v-text-field type="datetime-local" :value="date_time" v-model="date_time" :min="date_time_now" required>
-
       </v-text-field>
 
 
