@@ -76,7 +76,7 @@
       </v-row> -->
 
       <!--  -->
-      <v-text-field type="datetime-local" :value="date_time" v-model="date_time" :min="date_time_now" step="300" required>
+      <v-text-field type="datetime-local" :value="date_time" v-model="date_time" :min="date_time_now" required>
 
       </v-text-field>
 
@@ -138,7 +138,8 @@ const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
 import _ from 'lodash'
 import axios from 'axios'
-import authheader from "@/services/auth-header"
+import moment from 'moment'
+// import authheader from "@/services/auth-header"
 export default {
   name: 'CreateConference',
 
@@ -153,8 +154,11 @@ export default {
     max_members: null,
     max_member_items: _.range(2, 31),
 
-    date_time: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 14) + "00",
-    date_time_now: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 14) + "00",
+    date_time: moment().format('YYYY-MM-DDTHH:00'),
+    date_time_now: moment().format('YYYY-MM-DDTHH:mm'),
+
+    // date_time: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 14) + "00",
+    // date_time_now: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 14) + "00",
 
     date_menu: false,
     date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
@@ -206,9 +210,10 @@ export default {
         this.$router.push({name: 'Login'})
         return
       }
-
-      const endTime = new Date(this.date_time)
-      endTime.setHours(endTime.getHours() + 1)
+      // date_time: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 14) + "00",
+      
+      const endTime = moment(this.date_time, 'YYYY-MM-DDTHH:mm').add(1, 'hours').format('YYYY-MM-DDTHH:mm')
+      
       
 
       const conference = {
@@ -226,13 +231,16 @@ export default {
       }
 
       console.log(conference)
-      console.log(authheader())
+      // console.log(authheader())
       // 회의 개설 요청 보내기
       axios({
         method: 'POST',
         baseURL: SERVER_URL,
         url: '/conference',
-        headers: authheader(),
+        headers: {
+          'X-AUTH-TOKEN': this.$store.state.auth.user.token
+        },
+        // headers: authheader(),
         data: conference,
       })
       .then(response => {
@@ -241,7 +249,7 @@ export default {
         
         console.log(response)
         // 2. 일정 페이지 등으로 리다이렉트하기
-        this.$router.push('Home')
+        this.$router.push({name: 'Home'})
       })
       .catch(error => {
         console.log(error)
