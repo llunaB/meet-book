@@ -86,8 +86,16 @@ public class UserService {
 		return modelMapper.map(source, UserDTO.class);
 	}
 
+//	public UserDTO getUserByEmail(String email) {
+//		User source = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+//		return modelMapper.map(source, UserDTO.class);
+//	}
+
 	public UserDTO getUserByEmail(String email) {
-		User source = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		Optional<User> source = userRepository.findByEmail(email);
+		if(!source.isPresent()){
+			return null;
+		}
 		return modelMapper.map(source, UserDTO.class);
 	}
 
