@@ -8,5 +8,5 @@ import com.ssafy.db.entity.ConferenceHistory;
 
 @Repository
 public interface ConferenceHistoryRepository extends JpaRepository<ConferenceHistory, Integer> {
-
+	ConferenceHistory findTopByConferenceIdOrderByInsertedTime(int id);
 }
