@@ -179,8 +179,6 @@ export default {
     bookLoading: false,
     nameLimit: 20,
     bookEntries: [],
-    selectedBook: [],
-    selectedBookId: [],
     tags: '',
 
   }),
@@ -209,25 +207,26 @@ export default {
         return
       }
 
-      let endTime = new Date(this.date_time)
+      const endTime = new Date(this.date_time)
       endTime.setHours(endTime.getHours() + 1)
+      
 
       const conference = {
         userId: this.$store.state.auth.user.id,
         title: this.title,
         bookId: this.book.id,
-        callEndTime: this.endTime,
+        callEndTime: endTime,
         callStartTime: this.date_time,
         description: this.description,
         maxMembers: this.max_members,
         password: this.conf_answer,
         question: this.conf_question,
         tags: this.tags,
-        thumbnailUrl: this.thumbnailUrl,
+        thumbnailUrl: this.thumbnailUrl ? this.thumbnailUrl : this.book.thumbnailUrl,
       }
 
       console.log(conference)
-
+      console.log(authheader())
       // 회의 개설 요청 보내기
       axios({
         method: 'POST',
@@ -247,7 +246,27 @@ export default {
       .catch(error => {
         console.log(error)
       })
-    }
+    },
+
+    fetchEntriesDebounced: function () {
+      clearTimeout(this._timerId)
+      this._timerId = setTimeout(() => {
+        axios({
+        method: 'GET',
+        baseURL: SERVER_URL,
+        url: `/search/book?book_name=${this.bookSearch}&page=0&size=10`,
+      })
+      .then(response => {
+        console.log('searching')
+        this.bookEntries = response.data.content
+      })
+      .catch(error => {
+        console.log(error)
+      })
+      .finally(() => (this.bookLoading = false))
+        
+      }, 500)
+    },
   },
 
   computed: {
@@ -269,24 +288,11 @@ export default {
 
   watch: {
     bookSearch () {
-      if (this.bookItems.length > 0) return
       if (this.bookLoading) return
       this.bookLoading = true
-      setTimeout(() => {
-        axios({
-          method: 'GET',
-          baseURL: SERVER_URL,
-          url: `/books`,
-        })
-        .then(response => {
-          console.log('searching')
-          this.bookEntries = response.data
-        })
-        .catch(error => {
-          console.log(error)
-        })
-        .finally(() => (this.bookLoading = false))
-      }, 500)
+
+      this.fetchEntriesDebounced()
+      
 
 
     }
