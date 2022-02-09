@@ -1,48 +1,53 @@
 <template>
-  <v-container style="padding: 3rem" v-if="loggedinUser.user">
-    <v-row>
+  <v-container style="padding: 3rem" v-if="userProfile">
+    <v-row @load="userProfile">
       <v-col class="text-center align-self-center justify-center text-center" cols="3">
-        <v-avatar v-if="loggedinUser.profile_image" :src="loggedinUser.profile_image" />
+        <v-avatar v-if="this.user.profileImage" :src="this.user.profileImage" />
         <div v-else class="img-upload">
-          <label for="file-input">
-            <v-avatar size="150" color="primary">{{ loggedinUser.nickname }}</v-avatar>
-          </label>
+          <v-avatar size="150" color="primary">{{ this.user.nickname }}</v-avatar>
           <input id="file-input" type="file" />
         </div>
 
       </v-col>
       <v-col cols="8" style="margin-left: 2rem">
-        <h2>{{ loggedinUser.nickname }}님의 개인 프로필</h2>
+        <h2>{{ this.user.nickname }}님의 개인 프로필</h2>
         <br>
         <v-card>
           <strong>한마디</strong>
-          <p>{{ loggedinUser.profile_description }}</p>
+          <p>{{ this.user.profileDescription }}</p>
         </v-card>
-        <p>지난 한달간 {p}권의 책을 읽었어요!</p>
+        <span>{{ conferences.length }}개의 모임이 예약되어 있어요!!</span>
       </v-col>
     </v-row>
     <v-col style="padding-top:2rem">
-      <h3>최근 모임에서 읽은 책</h3>
-      <v-item-group>
-        <v-container>
-          <v-row>
-            <v-col v-for="(item, idx) in conferences.slice(0, 5)" :key="idx" md="2.2">
-              <v-item>
-                <v-card
+      <v-item-group v-if="!this.conferences.length" style="text-align-last: center">
+        <h2 style="color: #ff3170;">아직 함께 참여한 모임이 없어요 ㅠㅠ</h2>
+        <br>
+        <v-btn rounded class="primary" href="conference">참여하러가기</v-btn>
+      </v-item-group>
+      <div v-else>
+        <h3>최근 모임에서 읽은 책</h3>
+        <v-item-group>
+          <v-container>
+            <v-row>
+              <v-col v-for="(item, idx) in conferences.slice(0, 5)" :key="idx" md="2.2">
+                <v-item>
+                  <v-card
                     class="d-flex align-center"
                     width="10%"
-                >
-                  <v-img
+                  >
+                    <v-img
                       max-width="128px"
                       @click="onclick(item)"
                       :src="item.thumbnail_url"
-                  />
-                </v-card>
-              </v-item>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-item-group>
+                    />
+                  </v-card>
+                </v-item>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-item-group>
+      </div>
     </v-col>
     <v-col style="padding-top: 2rem">
 
@@ -83,29 +88,14 @@
 </template>
 
 <script>
+import axios from "axios";
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
-export default {
-  name: 'Profile',
-  data() {
+export default {name: 'Profile', data() {
     return {
-      user: '',
-      // user: {"name": 'eonyong', "nickname": "yong", "host_point": 10, "guest_point": 11, "profile_description": "hihihihi"},
+      user: {},
       conference: '',
-      conferences: [
-        {"id":1, "title":"오이디푸스1", "call_start_time": "2020-12-29", "thumbnail_url":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"asdasd","isActive":true, "tag": "#하루#종일"},
-        {"id":2, "title":"오이디푸스2", "call_start_time": "2020-12-29", "thumbnail_url":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"asdasd","isActive":true, "tag": "#하루#종일"},
-        {"id":3, "title":"정의란 무엇인가", "call_start_time": "2020-12-29", "thumbnail_url":"https://image.yes24.com/goods/15156691/XL", "description":"welcome2","isActive":true},
-        {"id":4, "title":"오이디푸스", "thumbnail_url":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"Welcome","isActive":true},
-        {"id":5, "title":"정의란 무엇인가", "thumbnail_url":"https://image.yes24.com/goods/15156691/XL", "description":"welcome2","isActive":false},
-        {"id":6, "title":"오이디푸스", "thumbnail_url":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"Welcome", "isActive":false},
-        {"id":7, "title":"정의란 무엇인가", "thumbnail_url":"https://image.yes24.com/goods/15156691/XL", "description":"welcome2", "isActive":false},
-        {"id":8, "title":"오이디푸스", "thumbnail_url":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"Welcome", "isActive":false},
-        {"id":9, "title":"정의란 무엇인가", "thumbnail_url":"https://image.yes24.com/goods/15156691/XL", "description":"welcome2", "isActive":false},]
-    }
-  },
-  computed: {
-    loggedinUser(){
-      return this.$store.state.auth
+      conferences: [],
     }
   },
   methods: {
@@ -115,14 +105,39 @@ export default {
     GoToConference(id) {
       this.$router.push("conference/" + id)
     },
-    getImg(host_point) {
-      if (host_point > 10) {
+    getImg(point) {
+      if (point > 10) {
         return require('@/assets/host_img/images.jpeg')
-      }
-      else {
+      } else {
         return require('@/assets/host_img/host2.jpeg')
       }
     },
+    userProfile() {
+      // 일단은 본인 프로필로 입장이여서 this.$store.state.auth.user.id를 사용 했습니다.
+      // 이후에 다른 유저가 들어올 경우에는 해당 부분을 수정하여 props한 값을 넣으면 됩니다.
+      axios({
+        baseURL: SERVER_URL,
+        url:`/users/${this.$store.state.auth.user.id}/detail`,
+        method: 'GET'
+      })
+        .then(res => {
+          this.user = res.data
+          this.userBookmark()
+        })
+        .catch(e => console.log(e))
+    },
+    userBookmark() {
+      axios({
+        baseURL: SERVER_URL,
+        url:`/users/${this.$store.state.auth.user.id}/bookmark`,
+        method: 'GET'
+      })
+      .then(res => this.conferences = res.data)
+      .catch(e => console.log(e))
+    }
+  },
+  mounted() {
+    this.userProfile()
   }
 }
 </script>

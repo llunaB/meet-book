@@ -4,14 +4,14 @@
     outlined
     min-width="560px"
     max-width="560px"
-    :to="'/book/' + book.id"
+    :to="{name: 'Bookinfo', params: {id: book.id}}"
     >
     <div class="d-flex flex-no-wrap justify-space-between">
       <div class="mx-1 my-auto">
-        <v-img width="160px" :src="book.thumbnail_url"></v-img>
+        <v-img width="160px" :src="book.thumbnailUrl"></v-img>
       </div>
       <div>
-        <v-card-title :title="book.title">{{ title_trim }}</v-card-title>
+        <v-card-title :title="book.name">{{ title_trim }}</v-card-title>
         <v-card-subtitle class="text-right">{{ book.author }}<br>{{ book.pubdate }}</v-card-subtitle>
         <v-divider />
         <v-card-text>
@@ -41,7 +41,7 @@ export default {
   computed: {
     // title과 content에서 긴 내용을 잘라냅니다.
     title_trim: function () {
-      return (this.book.title.length < title_max_length ? this.book.title : this.book.title.slice(0, title_max_length) + ' ...')
+      return (this.book.name.length < title_max_length ? this.book.name : this.book.name.slice(0, title_max_length) + ' ...')
     },
     contents_trim: function () {
       return (this.book.contents.length < content_max_length ? this.book.contents : this.book.contents.slice(0, content_max_length) + ' ...')

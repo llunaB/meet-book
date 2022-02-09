@@ -20,6 +20,7 @@ import com.ssafy.api.requestDto.DeleteUserReq;
 import com.ssafy.api.requestDto.LoginReq;
 import com.ssafy.api.requestDto.UpdateUserByDetailReq;
 import com.ssafy.api.requestDto.UpdateUserByProfileReq;
+import com.ssafy.api.responseDto.GetUserByProfileRes;
 import com.ssafy.config.JwtTokenProvider;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.UserRepository;
@@ -97,11 +98,11 @@ public class UserService {
         return passwordEncoder.matches(rawPassword,encryptPassword);
     }
 	
-	public Page<UserDTO> getUsersByNickname(String nickname, Pageable pageable) {
-		Page<UserDTO> list = Page.empty();
+	public Page<GetUserByProfileRes> getUsersByNickname(String nickname, Pageable pageable) {
+		Page<GetUserByProfileRes> list = Page.empty();
 		try {
 			Page<User> dataList = userRepository.findByNicknameContaining(nickname, pageable);
-			list = dataList.map(source -> modelMapper.map(source, UserDTO.class));
+			list = dataList.map(source -> modelMapper.map(source, GetUserByProfileRes.class));
 			return list;
 		}catch(Exception e){
 			e.printStackTrace();

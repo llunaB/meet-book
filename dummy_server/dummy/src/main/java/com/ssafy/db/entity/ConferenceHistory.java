@@ -31,7 +31,7 @@ public class ConferenceHistory {
 	private int id;
 
 	@ManyToOne
-	@JoinColumn(name = "CONFE_ID")
+	@JoinColumn(name = "CONFERENCE_ID")
 	private Conference conference;
 	
 	@ManyToOne

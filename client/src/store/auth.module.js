@@ -1,4 +1,5 @@
 import AuthService from "../services/auth.service"
+import axios from "axios";
 
 const user = JSON.parse(localStorage.getItem('user'))
 const initialState = user ? {status: { loggedIn: true }, user }
@@ -9,14 +10,17 @@ export const auth = {
     state: initialState,
     actions: {
         login({ commit }, user) {
-            const user_info = user
             return AuthService.login(user).then(
                 user => {
-                    // user_info['token'] = user.token
-                    user_info['password'] = ''
-                    user_info["token"] = user.token
-                    commit('loginSuccess', user_info)
-                    return Promise.resolve(user)
+                    const result = JSON.parse(Buffer.from(user.token.split('.')[1], 'base64').toString())
+                    axios.get('https://localhost:8080/users/' + result["sub"] +'/detail')
+                      .then(res => {
+                          res.data['token'] = user.token
+                          commit('loginSuccess', res.data)
+                          return Promise.resolve(user)
+                        })
+                      .catch(e => console.log(e))
+
                 }).catch(e => {
                     commit('loginFailure')
                     return Promise.reject(e.response.data)})
@@ -29,7 +33,6 @@ export const auth = {
             console.log(user)
             return AuthService.register(user).then(
                 res => {
-                    console.log(res)
                     commit('registerSuccess')
                     return Promise.resolve(res.data)
                 }).catch(e => {
