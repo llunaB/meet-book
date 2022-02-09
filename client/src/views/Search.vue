@@ -17,14 +17,14 @@
     </v-row>
     <v-row>
       <v-col class="col-12">
-        <div v-if="searchType == 'conference'">
-          <p>"{{keyword}}"의 회의 검색 결과입니다.</p>
+        <div v-if="searchType === 'conference'">
+          <p>"{{$route.query.keyword}}"의 회의 검색 결과입니다.</p>
           <ConferenceCard v-for="(conference, idx) in searchResult.content" :key="idx" :conference="conference" />
           <v-pagination v-model="page" :length="searchResult.totalPages"></v-pagination>
 
         </div>
-        <div v-else-if="searchType == 'book'">
-          <p>"{{keyword}}"의 도서 검색 결과입니다.</p>
+        <div v-else-if="searchType === 'book'">
+          <p>"{{$route.query.keyword}}"의 도서 검색 결과입니다.</p>
           <TheBookcard v-for="(book, idx) in searchResult.content" :key="idx" :book="book" class="my-3 mx-auto" />
           <v-pagination v-model="page" :length="searchResult.totalPages"></v-pagination>
         </div>
@@ -37,7 +37,7 @@
           <v-pagination v-model="page" :length="searchResult.totalPages" @input="onPageChange" ></v-pagination>
         </div>
 
-        <div v-show="searchResult.content.length == 0">
+        <div v-show="searchResult.content.length === 0">
           <p>검색 결과가 없습니다.</p>
         </div>
         
