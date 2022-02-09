@@ -1,17 +1,27 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.DTO.BookDTO;
+import com.ssafy.DTO.ConferenceDTO;
 import com.ssafy.api.responseDto.GetBookRes;
+import com.ssafy.api.responseDto.GetConferencesRes;
 import com.ssafy.api.service.BookService;
+import com.ssafy.api.service.ConferenceService;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.spi.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -20,11 +30,13 @@ import java.util.stream.Collectors;
 public class BookController {
 
     private BookService bookService;
+    private ConferenceService conferenceService;
     private ModelMapper modelMapper;
 
     @Autowired
-    public BookController(BookService bookService) {
+    public BookController(BookService bookService, ConferenceService conferenceService) {
         this.bookService = bookService;
+        this.conferenceService = conferenceService;
         this.modelMapper = new ModelMapper();
     }
 
@@ -57,4 +69,46 @@ public class BookController {
         return new ResponseEntity<GetBookRes>(new GetBookRes(bookDTO), HttpStatus.OK);
     }
 
+
+    @GetMapping("{id}/expecting_conf")
+    public ResponseEntity<Page<ConferenceDTO>> getConferencesExpectingByBookId(@PathVariable("id") String id, @RequestParam("page") Integer page , @RequestParam("size") Integer size) {
+            Page<ConferenceDTO> list = Page.empty();
+            PageRequest request = PageRequest.of(page, size);
+
+            try {
+                list = conferenceService.getExpectingConferencesByBookId(Integer.parseInt(id), request);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+
+            return new ResponseEntity<Page<ConferenceDTO>>(list, HttpStatus.OK);
+        }
+
+
+    @GetMapping("{id}/finished_conf")
+    public ResponseEntity<Page<ConferenceDTO>> getConferencesFinishedByBookId(@PathVariable("id") String id, @RequestParam("page") Integer page , @RequestParam("size") Integer size) {
+        Page<ConferenceDTO> list = Page.empty();
+        PageRequest request = PageRequest.of(page, size);
+
+        try {
+            list = conferenceService.getFinishedConferencesByBookId(Integer.parseInt(id), request);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<Page<ConferenceDTO>>(list, HttpStatus.OK);
+    }
+
+
+
+    @GetMapping("/list/{pageno}")
+    public ResponseEntity<List<ConferenceDTO>> getConferences(@PathVariable("pageno") String pageno){
+        List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
+        try {
+            list = conferenceService.getConferences();
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<List<ConferenceDTO>>(list, HttpStatus.OK);
+    }
 }

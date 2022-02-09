@@ -20,6 +20,7 @@ public class GetBookRes {
     private String thumbnailUrl;
 
     public GetBookRes(BookDTO data) {
+        setId(data.getId());
         setName(data.getBookName());
         setAuthor(data.getBookAuthor());
         setContents(data.getBookContents());
