@@ -129,7 +129,13 @@ export default {
     return {
       login: this.$store.state.login,
       profileMenuItems: [
-        { title: '내 프로필', to:'/profile',},
+        {
+          title: '내 프로필',
+          to: {
+            name:'Profile',
+            params: { userId: this.$store.state.auth.user.id },
+          }
+        },
         { title: '계정 설정', to:'/accounts/settings',},
       ],
       shortMenuItems: [

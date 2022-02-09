@@ -37,9 +37,10 @@ const routes = [
     component: ConferenceIndex
   },
   {
-    path: '/profile',
+    path: '/profile/',
     name: 'Profile',
-    component: Profile
+    component: Profile,
+    props: true,
   },
   {
     path: '/conference/:conferenceId',
