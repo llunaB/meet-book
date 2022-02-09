@@ -105,4 +105,21 @@ public class User implements UserDetails {
 		// TODO Auto-generated method stub
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"id=" + id +
+				", password='" + password + '\'' +
+				", nickname='" + nickname + '\'' +
+				", email='" + email + '\'' +
+				", gender=" + gender +
+				", age=" + age +
+				", hostPoint=" + hostPoint +
+				", guestPoint=" + guestPoint +
+				", profileImage='" + profileImage + '\'' +
+				", profileDescription='" + profileDescription + '\'' +
+				", roles=" + roles +
+				'}';
+	}
 }

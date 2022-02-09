@@ -34,4 +34,14 @@ public class Bookmark {
 	
 	@Column
 	private int alarm;
+
+	@Override
+	public String toString() {
+		return "Bookmark{" +
+				"id=" + id +
+				", conference=" + conference +
+				", user=" + user +
+				", alarm=" + alarm +
+				'}';
+	}
 }
