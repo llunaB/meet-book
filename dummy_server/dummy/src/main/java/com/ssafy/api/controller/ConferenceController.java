@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.ssafy.api.responseDto.GetConferencesRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -93,6 +94,7 @@ public class ConferenceController {
 		
 		return new ResponseEntity<ConferenceDTO>(response, HttpStatus.OK);
 	}
+
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Map<String,String>> updateConference(@PathVariable("id") String id, @RequestBody ConferenceDTO conferenceDto){

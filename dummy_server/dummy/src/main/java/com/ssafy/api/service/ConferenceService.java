@@ -126,6 +126,32 @@ public class ConferenceService {
 		
 		return list;
 	}
+
+	public Page<ConferenceDTO> getFinishedConferencesByBookId(Integer book_id, Pageable pageable){
+		Page<ConferenceDTO> page = Page.empty();
+		try {
+			Page<Conference> data = conferenceRepository.findFinishedConferencesByBookId(book_id, pageable);
+			page = data.map(source -> modelMapper.map(source, ConferenceDTO.class));
+
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
+		return page;
+	}
+
+	public Page<ConferenceDTO> getExpectingConferencesByBookId(Integer book_id, Pageable pageable){
+		Page<ConferenceDTO> page = Page.empty();
+		try {
+			Page<Conference> data = conferenceRepository.findExpectingConferencesByBookId(book_id, pageable);
+			page = data.map(source -> modelMapper.map(source, ConferenceDTO.class));
+
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
+		return page;
+	}
 	
 	public Page<ConferenceDTO> getConferencesByNickname(String nickname, Pageable pageable){
 		Page<ConferenceDTO> list = Page.empty();
