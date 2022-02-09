@@ -33,23 +33,23 @@
       <label>
         <v-icon>mdi-chat</v-icon>
       </label>
-      <select v-model="connection">
+      <select v-model="talkTo">
         <option v-for="(connection,n) in connections" :key="n" :value="n">
-          {{n!==0 ? JSON.parse(connection.data).clientData : "모두에게"}}
+          {{n!==0 ? JSON.parse(connection.data.split('%')[0]).clientData : "모두에게"}}
         </option>
       </select>
       <input id="textInput" v-bind:value="inputText" v-on:input="updateInput">
       <v-btn @click="sendMessage">
         메세지 보내기
       </v-btn>
-      <!-- <select v-model="connection">
+      <select v-model="banTo">
         <option v-for="(connection,n) in connections" :key="n" :value="n">
-          {{n!==0 ? JSON.parse(connection.data).clientData : "모두에게"}}
+          {{n!==0 ? JSON.parse(connection.data.split('%')[0]).clientData : "강퇴하기"}}
         </option>
       </select>      
       <v-btn @click="kickUser">
         강퇴
-      </v-btn>       -->
+      </v-btn>      
     </div>
     <div id="chat">
     </div>
@@ -63,8 +63,8 @@ import { OpenVidu } from 'openvidu-browser'
 import UserVideo from '@/components/conference/UserVideo'
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
-const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
-const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+// const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
+// const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
   name: "ConferenceMeeting",
@@ -74,10 +74,10 @@ export default {
 			session: undefined,
 			mainStreamManager: undefined,
 			publisher: undefined,
-			subscribers: [],
-      users: [],
-      connection: 0,
+			subscribers: [],      
+      talkTo: 0,
       connections: [],
+      banTo: 0,
       videoMuted: false,
       audioMuted: false,
       mySessionId: null,
@@ -104,8 +104,7 @@ export default {
 
       this.session.on('streamCreated', ({ stream }) => {
         const subscriber = this.session.subscribe(stream)
-        this.subscribers.push(subscriber)
-        this.users.push(subscriber.clientData)        
+        this.subscribers.push(subscriber)             
       })
 
       this.session.on('streamDestroyed', ({ stream }) => {
@@ -122,15 +121,29 @@ export default {
       this.session.on('signal:my-chat', (event) => {
         const chat = document.getElementById("chat")
         const p = document.createElement("p")
-        p.innerText = `${JSON.parse(event.from.data).clientData}: ${event.data}`
-        chat.append(p)
-        
+        p.innerText = `${JSON.parse(event.from.data.split('%')[0]).clientData}: ${event.data}`
+        chat.append(p)        
       })
 
       this.session.on('connectionCreated', (event) => {
         this.connections.push(event.connection)        
         console.log("connections:", this.connections)
       })
+
+      this.session.on('connectionDestroyed', (event)=> {
+        console.log("disconnection:", event)
+        const index = this.connections.indexOf(event.connection, 0)
+        console.log("index:", index)
+        if (index >= 0) {
+          this.connections.splice(index, 1)
+        }
+      })
+
+      this.session.on('signal:kick-msg', () => {
+        alert("강퇴당했습니다.")
+        this.$router.push({ name: 'Home'})
+      })
+      
 
       //수정?
       this.session.on('publisherStartSpeaking', (event) => {
@@ -158,10 +171,9 @@ export default {
             })
 
             this.mainStreamManager = publisher
-            this.publisher = publisher
-            this.users.push(this.pusblisher)
+            this.publisher = publisher            
 
-            this.session.publish(this.publisher)
+            this.session.publish(this.publisher)            
           })
           .catch(error => {
             console.log('There was an error connecting to the session:', error.code, error.message);
@@ -194,49 +206,54 @@ export default {
 
     // 여기서부터 server와 상호작용
     getToken (mySessionId) {      
-      return this.createSession(mySessionId).then(sessionId => this.createToken(sessionId))
+      const token = this.createToken(mySessionId)
+      console.log("createdToken:", token)
+      return token
     },
 
-    createSession (sessionId) {
-      return new Promise((resolve, reject) => {
-        axios
-          .post(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions`, JSON.stringify({
-            customSessionId: sessionId,
-          }), {
-            auth: {
-              username: 'OPENVIDUAPP',
-              password: OPENVIDU_SERVER_SECRET,
-            },
-          })
-          .then(response => response.data)
-          .then(data => resolve(data.id))
-          .catch(error => {
-            if(error.response.status === 409) {
-              resolve(sessionId)
-            } else {
-              console.warn(`No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}`);
-							if (window.confirm(`No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}\n\nClick OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${OPENVIDU_SERVER_URL}"`)) {
-								location.assign(`${OPENVIDU_SERVER_URL}/accept-certificate`);
-              }
-							reject(error.response);
-            }
-          })
-      })
-    },
+    // createSession (sessionId) {
+    //   return new Promise((resolve, reject) => {
+    //     axios
+    //       .post(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions`, JSON.stringify({
+    //         customSessionId: sessionId,
+    //       }), {
+    //         auth: {
+    //           username: 'OPENVIDUAPP',
+    //           password: OPENVIDU_SERVER_SECRET,
+    //         },
+    //       })
+    //       .then(response => {
+    //         console.log("response",response)
+    //         response.data})
+    //       .then(data => resolve(data.id))
+    //       .catch(error => {
+    //         if(error.response.status === 409) {
+    //           resolve(sessionId)
+    //         } else {
+    //           console.warn(`No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}`);
+		// 					if (window.confirm(`No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}\n\nClick OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${OPENVIDU_SERVER_URL}"`)) {
+		// 						location.assign(`${OPENVIDU_SERVER_URL}/accept-certificate`);
+    //           }
+		// 					reject(error.response);
+    //         }
+    //       })
+    //   })
+    // },
 
     //여기까지 createSession
 
     createToken (sessionId) {
 			return new Promise((resolve, reject) => {
 				axios
-					.post(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`, {}, {
+					.get(`https://localhost:8080/conference/${sessionId}/token`, {}, {
 						auth: {
-							username: 'OPENVIDUAPP',
-							password: OPENVIDU_SERVER_SECRET,
+							'X-AUTH-TOKEN': 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI3NyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NDQyMTk4NDMsImV4cCI6MTY0NDIyMTY0M30.wTBZ4JZzaS6W6E_vOzMOmvgaWjrjdrji0uv-b97pzPM'
 						},
 					})
-					.then(response => response.data)
-					.then(data => resolve(data.token))
+					.then(response => {
+            console.log(response.data)
+            return response.data})
+					.then(data => resolve(data))
 					.catch(error => reject(error.response));
 			});
 		},
@@ -264,7 +281,7 @@ export default {
       this.inputText = updatedText
     },
     sendMessage(){
-      if(this.connection === 0) {
+      if(this.talkTo === 0) {
         this.session.signal({
           data: this.inputText,
           to: [],
@@ -280,7 +297,7 @@ export default {
       } else {
         this.session.signal({
           data: this.inputText,
-          to: [this.connections[0],this.connections[this.connection]],
+          to: [this.connections[0],this.connections[this.talkTo]],
           type: 'my-chat'
         })
         .then(() => {          
@@ -293,8 +310,17 @@ export default {
       }
     },
     kickUser(){
-      console.log("connection:", this.connections[this.connection])
-      this.session.forceDisconnect(this.connections[this.connection])
+      console.log("connection:", this.connections[this.banTo])
+      if(this.banTo !== 0){
+        this.session.signal({
+          to: [this.connections[this.banTo]],
+          type: 'kick-msg'
+        })
+        .then(res => console.log(res))
+        .catch(err => console.error(err))
+        this.session.forceDisconnect(this.connections[this.banTo])
+        this.banTo = 0
+      }
     }
   }
 }
