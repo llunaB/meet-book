@@ -4,9 +4,7 @@
       <v-col class="text-center align-self-center justify-center text-center" cols="3">
         <v-avatar v-if="this.user.profileImage" :src="this.user.profileImage" />
         <div v-else class="img-upload">
-          <label for="file-input">
-            <v-avatar size="150" color="primary">{{ this.user.nickname }}</v-avatar>
-          </label>
+          <v-avatar size="150" color="primary">{{ this.user.nickname }}</v-avatar>
           <input id="file-input" type="file" />
         </div>
 
@@ -18,7 +16,7 @@
           <strong>한마디</strong>
           <p>{{ this.user.profileDescription }}</p>
         </v-card>
-        <p>지난 한달간 {p}권의 책을 읽었어요!</p>
+        <span>{{ conferences.length }}개의 모임이 예약되어 있어요!!</span>
       </v-col>
     </v-row>
     <v-col style="padding-top:2rem">
@@ -90,13 +88,12 @@
 </template>
 
 <script>
-
 import axios from "axios";
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
 export default {name: 'Profile', data() {
     return {
       user: {},
-      // user: {"name": 'eonyong', "nickname": "yong", "host_point": 10, "guest_point": 11, "profile_description": "hihihihi"},
       conference: '',
       conferences: [],
     }
@@ -108,33 +105,35 @@ export default {name: 'Profile', data() {
     GoToConference(id) {
       this.$router.push("conference/" + id)
     },
-    getImg(host_point) {
-      if (host_point > 10) {
+    getImg(point) {
+      if (point > 10) {
         return require('@/assets/host_img/images.jpeg')
       } else {
         return require('@/assets/host_img/host2.jpeg')
       }
     },
     userProfile() {
-      axios.get('https://localhost:8080/users/' + this.$store.state.auth.user.id + "/detail")
+      // 일단은 본인 프로필로 입장이여서 this.$store.state.auth.user.id를 사용 했습니다.
+      // 이후에 다른 유저가 들어올 경우에는 해당 부분을 수정하여 props한 값을 넣으면 됩니다.
+      axios({
+        baseURL: SERVER_URL,
+        url:`/users/${this.$store.state.auth.user.id}/detail`,
+        method: 'GET'
+      })
         .then(res => {
-          console.log(res.data)
           this.user = res.data
           this.userBookmark()
         })
-        .catch(e => {
-          console.log(e)
-        })
+        .catch(e => console.log(e))
     },
     userBookmark() {
-      axios.get('https://localhost:8080/users/' + this.$store.state.auth.user.id + '/bookmark')
-      .then(res => {
-        console.log(res.data)
-        this.conferences = res.data
+      axios({
+        baseURL: SERVER_URL,
+        url:`/users/${this.$store.state.auth.user.id}/bookmark`,
+        method: 'GET'
       })
-      .catch(e => {
-        console.log(e)
-      })
+      .then(res => this.conferences = res.data)
+      .catch(e => console.log(e))
     }
   },
   mounted() {

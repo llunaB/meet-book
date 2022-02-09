@@ -16,7 +16,8 @@
               <!-- Password 로그인 Form -->
               <v-text-field
                 type="password" label="비밀번호" hide-details="auto"
-                v-model="user.password" id="passwordLogin" required/>
+                v-model="user.password" id="passwordLogin" required
+                oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )"/>
               <!-- 로그인 제출 버튼 -->
               <div class="field" id="submit-login-form">
                 <v-btn type="submit" class="primary">로그인하기</v-btn>
@@ -37,7 +38,7 @@
             </form>
             <!-- 소셜 로그인 전체 Form Start-->
             <form class="social-form-group">
-              <div class="hr-sect">SNS로 로그인 하기</div>
+              <div class="hr-sect">SNS 로그인 하기</div>
               <v-icon>mdi-facebook</v-icon>
               <v-icon>mdi-google</v-icon>
             </form> -->
@@ -50,7 +51,6 @@
 </template>
 
 <script>
-import User from '@/api/users.js'
 import ForgotPassword from "@/components/ForgotPassword";
 
 export default {
@@ -58,7 +58,7 @@ export default {
   "components": {ForgotPassword},
   "data"() {
       return {
-        "user": new User('', ''),
+        "user": {},
         "loading": false,
         "dialog": false,
       }
@@ -85,7 +85,7 @@ export default {
             }).catch(e => {
               console.log(e)
               this.loading = false;
-              alert('Email 혹은 Password를 잘못입력하셨습니다.')
+              alert('Email 혹은 Password 잘못입력하셨습니다.')
             })
         }
       }
