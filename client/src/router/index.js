@@ -1,13 +1,17 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/views/Home'
+
 import Login from '@/views/accounts/Login'
 import Signup from '@/views/accounts/Signup'
-import ConferenceIndex from '@/views/conference/ConferenceIndex'
 import Profile from '@/views/accounts/Profile'
-import ConferenceMeeting from '@/views/conference/ConferenceMeeting'
-import Search from '@/views/Search'
 import Settings from "@/views/accounts/Settings";
+
+import ConferenceIndex from '@/views/conference/ConferenceIndex'
+import ConferenceMeeting from '@/views/conference/ConferenceMeeting'
+import CreateConference from '@/views/conference/CreateConference'
+
+import Search from '@/views/Search'
 
 Vue.use(VueRouter)
 
@@ -41,6 +45,12 @@ const routes = [
     name: 'Profile',
     component: Profile
   },
+  // 주의: Router에서 CreateConference가 ConferenceMeeting보다 밑에 있으면 작동하지 않습니다.
+  {
+    path: '/conference/new',
+    name: 'CreateConference',
+    component: CreateConference
+  },
   {
     path: '/conference/:conferenceId',
     name: 'ConferenceMeeting',
@@ -61,6 +71,8 @@ const routes = [
     name: 'Search',
     component: Search
   },
+
+  
 ]
 
 const router = new VueRouter({
