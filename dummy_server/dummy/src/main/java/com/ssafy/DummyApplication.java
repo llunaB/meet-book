@@ -13,17 +13,17 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class DummyApplication {
 
 
-	public static BookService bookService;
-
-	@Autowired
-	public DummyApplication(BookService bookService) {
-		this.bookService = bookService;
-	}
+//	public static BookService bookService;
+//
+//	@Autowired
+//	public DummyApplication(BookService bookService) {
+//		this.bookService = bookService;
+//	}
 
 
 	public static void main(String[] args) {
 		SpringApplication.run(DummyApplication.class, args);
 
-		bookService.getBookData();
+//		bookService.getBookData();
 	}
 }

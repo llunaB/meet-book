@@ -72,7 +72,7 @@ public class ConferenceController {
 	}
 	
 	@GetMapping("/list")
-	public ResponseEntity<Page<GetConferencesRes>> getConferences(@PathVariable("pageno") String pageno, @RequestParam("size") Integer size, @RequestParam("page") Integer page){
+	public ResponseEntity<Page<GetConferencesRes>> getConferences(@RequestParam("size") Integer size, @RequestParam("page") Integer page){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 		
