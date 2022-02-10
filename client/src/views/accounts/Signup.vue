@@ -92,11 +92,13 @@ export default {
    // 가입하기 버튼 클릭
    handleRegister() {
       this.submitted = true
-      this.$store.dispatch("auth/register", this.user)
-        .then(() => {
-          alert(`${this.user.nickname}님 가입을 축하드립니다`)
-          setTimeout(() => this.$router.push({name: "Login"}))
-        }).catch(() => alert('가입 정보를 한 번 확인해보시기 바랍니다.'))
+     if (this.validated_key) {
+       this.$store.dispatch("auth/register", this.user)
+         .then(() => {
+           alert(`${this.user.nickname}님 가입을 축하드립니다`)
+           setTimeout(() => this.$router.push({name: "Login"}))
+         }).catch(() => alert('가입 정보를 한 번 확인해보시기 바랍니다.'))
+     }
     },
     // 이메일 중복 확인 및 인증코드 확인
     emailDuplication() {
