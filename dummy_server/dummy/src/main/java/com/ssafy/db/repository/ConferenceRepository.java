@@ -21,4 +21,10 @@ public interface ConferenceRepository extends JpaRepository<Conference, Integer>
 	@Query(value = "select * from conference where user_id in :types", nativeQuery = true)
 	Page<Conference> findConferencesByUser(@Param("types") List<User> users, Pageable pageable);
 	Page<Conference> findByTagsContaining(String tags, Pageable pageable);
+
+	@Query(value = "select * from conference c where c.book_id = :id AND c.call_end_time < CURRENT_TIMESTAMP", nativeQuery = true)
+	Page<Conference> findFinishedConferencesByBookId(@Param("id") Integer id, Pageable pageable);
+
+	@Query(value = "select * from conference c where c.book_id = :id AND c.call_start_time > CURRENT_TIMESTAMP", nativeQuery = true)
+	Page<Conference> findExpectingConferencesByBookId(@Param("id") Integer id, Pageable pageable);
 }
