@@ -4,26 +4,26 @@
       <v-col class="text-center align-self-center justify-center text-center" cols="3">
         <v-avatar v-if="this.user.profileImage" :src="this.user.profileImage" />
         <div v-else class="img-upload">
-          <v-avatar size="150" color="primary">{{ this.user.nickname }}</v-avatar>
+          <v-avatar size="150" color="primary">{{ user.nickname }}</v-avatar>
           <input id="file-input" type="file" />
         </div>
 
       </v-col>
       <v-col cols="8" style="margin-left: 2rem">
-        <h2>{{ this.user.nickname }}님의 개인 프로필</h2>
+        <h2>{{ user.nickname }}님의 개인 프로필</h2>
         <br>
         <v-card>
           <strong>한마디</strong>
-          <p>{{ this.user.profileDescription }}</p>
+          <p>{{ user.profileDescription }}</p>
         </v-card>
         <span>{{ conferences.length }}개의 모임이 예약되어 있어요!!</span>
       </v-col>
     </v-row>
     <v-col style="padding-top:2rem">
       <v-item-group v-if="!this.conferences.length" style="text-align-last: center">
-        <h2 style="color: #ff3170;">아직 함께 참여한 모임이 없어요 ㅠㅠ</h2>
+        <h2 style="color: #ff3170;">아직 함께 참여한 모임이 없어요 ㅠㅠ </h2>
         <br>
-        <v-btn rounded class="primary" href="conference">참여하러가기</v-btn>
+        <v-btn v-if="searchUser === this.$store.state.auth.user.id" rounded class="primary" href="conference">참여하러가기</v-btn>
       </v-item-group>
       <div v-else>
         <h3>최근 모임에서 읽은 책</h3>
@@ -96,6 +96,7 @@ export default {name: 'Profile', data() {
       user: {},
       conference: '',
       conferences: [],
+      searchUser: this.$route.params.userId,
     }
   },
   methods: {
@@ -115,9 +116,12 @@ export default {name: 'Profile', data() {
     userProfile() {
       // 일단은 본인 프로필로 입장이여서 this.$store.state.auth.user.id를 사용 했습니다.
       // 이후에 다른 유저가 들어올 경우에는 해당 부분을 수정하여 props한 값을 넣으면 됩니다.
+      if (!this.searchUser) {
+        this.searchUser = this.$store.state.auth.user.id
+      }
       axios({
         baseURL: SERVER_URL,
-        url:`/users/${this.$store.state.auth.user.id}/detail`,
+        url:`/users/${this.searchUser}/detail`,
         method: 'GET'
       })
         .then(res => {
@@ -127,9 +131,12 @@ export default {name: 'Profile', data() {
         .catch(e => console.log(e))
     },
     userBookmark() {
+      if (!this.searchUser) {
+        this.searchUser = this.$store.state.auth.user.id
+      }
       axios({
         baseURL: SERVER_URL,
-        url:`/users/${this.$store.state.auth.user.id}/bookmark`,
+        url:`/users/${this.searchUser}/bookmark`,
         method: 'GET'
       })
       .then(res => this.conferences = res.data)

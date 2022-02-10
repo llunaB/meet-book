@@ -7,13 +7,18 @@
           v-model="user.nickname" id="nicknameInput" required/>
         <br>
         <v-text-field
+          type="password" label="현재 비밀번호" hide-details="auto"
+          v-model="oldPassword" id="oldPasswordEditInput"
+          oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )" />
+
+        <v-text-field
           type="text" label="비밀번호 수정" hide-details="auto"
-          v-model="user.password" id="passwordEditInput"
+          v-model="newPassword" id="passwordEditInput"
           oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )" />
 
         <v-text-field
           type="password" label="비밀번호 수정 확인" hide-details="auto"
-          v-model="user.passwordConfirm" id="passwordConfirmEditInput"
+          v-model="newPasswordConfirm" id="passwordConfirmEditInput"
           oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )" />
 
         <br>
@@ -25,12 +30,28 @@
       <v-btn color="primary" text @click="informationChange">
         수정하기
       </v-btn>
+      <v-snackbar
+        v-model="snackbar">
+        {{ errorMessage[messageNum] }}
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            color="pink"
+            text
+            v-bind="attrs"
+            @click="snackbar = false"
+          >
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
     </form>
+
   </v-container>
 </template>
 
 <script>
 import axios from "axios"
+import User from "@/api/users"
 const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
 
@@ -38,50 +59,79 @@ export default {
   name: "Settings",
   data() {
     return {
-      user: {},
-      name: '',
-      errorMessage: ['비밀번호가 다릅니다.'],
+      user: new User(),
+      name: this.$store.state.auth.user.id,
+      userEmail: this.$store.state.auth.user,
+      oldPassword: '',
+      newPassword: '',
+      newPasswordConfirm: '',
+      messageNum:0,
+      snackbar: false,
+      errorMessage: ['변경하려는 Password가 다릅니다.', '현재Password 잘못입력하셨습니다.', '비밀번호가 수정되었습니다.', '닉네임을 입력하셔야 합니다.', '닉네임이 수정되었습니다..'],
     }
   },
   methods: {
     informationChange() {
-      this.passwordEditChange()
       if (this.user.nickname.length > 0) {
         axios({
           baseURL: SERVER_URL,
-          url: `/users/${this.$store.state.auth.user.id}`,
+          url: `/users/${this.name}`,
           method: 'PUT',
           data: {
             'nickname': this.user.nickname,
             'profileDescription': this.user.profileDescription,
           }
         })
-          .then(res => console.log(res))
-          .catch(e => console.log(e))
+          .then(() => {
+            this.messageNum = 4
+            this.snackbar = !this.snackbar
+            this.passwordEditChange()
+          })
+        .catch(e => {
+          console.log(e.data)
+          this.messageNum = 3
+          this.snackbar = !this.snackbar
+          this.passwordEditChange()
+        })
       }
-      else {
-        alert('닉네임을 입력하셔야 합니다.')
-      }
+      this.passwordEditChange()
     },
     passwordEditChange() {
-      if ((this.user.password === this.user.passwordConfirm) && (this.user.password)) {
-        axios({
-          baseURL: SERVER_URL,
-          url: `/users/${this.$store.state.auth.user.id}/detail`,
-          method: 'PUT',
-          data: {'newPassword': this.user.password}
+      if (this.oldPassword.length > 0) {
+        this.$store.dispatch('auth/login', {'email': this.userEmail.email, 'password':this.oldPassword})
+          .then(() => {
+            if ((this.newPassword === this.newPasswordConfirm) && (this.newPassword.length > 0)) {
+              axios({
+                baseURL: SERVER_URL,
+                url: `/users/${this.name}/detail`,
+                method: 'PUT',
+                data: {'newPassword': this.newPassword}
+              })
+                .then(() => this.messageNum = 2)
+                .catch(e => console.log(e.data))
+            }
+            else {
+              this.messageNum = 0
+            }
+          })
+          .catch(e => {
+            console.log(e.data)
+            this.messageNum = 1
+            this.snackbar = !this.snackbar
         })
-        .then(() => alert("비밀번호가 수정되었습니다."))
-        .catch(e => console.log(e))
       }
+
     },
     userProfile() {
       axios({
         baseURL: SERVER_URL,
         url:`/users/${this.$store.state.auth.user.id}/detail`
       })
-        .then(res => this.user = res.data)
-        .catch(e => console.log(e))
+        .then(res => {
+          this.user = res.data
+          console.log(this.user)
+        })
+        .catch(e => console.log(e.data))
     },
   },
   beforeMount() {

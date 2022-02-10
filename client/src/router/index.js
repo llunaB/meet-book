@@ -41,9 +41,10 @@ const routes = [
     component: ConferenceIndex
   },
   {
-    path: '/profile',
+    path: '/profile/',
     name: 'Profile',
-    component: Profile
+    component: Profile,
+    props: true,
   },
   // 주의: Router에서 CreateConference가 ConferenceMeeting보다 밑에 있으면 작동하지 않습니다.
   {

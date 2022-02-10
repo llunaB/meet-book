@@ -4,40 +4,46 @@
         <div class="col-lg-4 col-md-6 col-sm-8 mx-auto">
           <!-- 회원가입 전체 Form Start-->
           <div class="card flex-grid signup">
-            <main><h2> <strong>회원가입</strong></h2></main>
+            <main><h2><strong>회원가입</strong></h2></main>
+
             <form class="form-group my-2" @submit.prevent="handleRegister">
               <!-- nickname 회원가입 Form -->
-              <v-text-field
+              <v-text-field class="row"
                 type="text" label="별명" hide-details="auto"
                 v-model="user.nickname" id="nickname-signup" required />
               <!-- Email 회원가입 Form && 인증번호 받기 버튼 -->
-              <div class="row my-3" style="align-items: baseline">
+              <div class="row m-3" style="align-items: baseline">
                 <v-text-field
                   type="email" label="Email" hide-details="auto"
                   v-model="user.email" id="email-signup" required />
-                <v-btn rounded @click="sendCheckKey" class="row-2">인증번호 받기</v-btn>
+
+                <v-btn rounded elevation="11" class="row-2" color="error"
+                       @click="emailDuplication">이메일 중복확인</v-btn>
               </div>
               <!--       인증번호 전송 후, 값 확인하는 Form       -->
-              <div v-if="cert_key.length > 0" class="row my-3" style="align-items: baseline">
+              <div v-if="cert_key" class="row my-3" style="align-items: baseline">
+
                 <v-text-field
                   type="text" label="인증번호" hide-details="auto"
                   v-model="confirm_key" id="cert-key" required />
-                <v-icon v-if="(cert_key === confirm_key) && cert_key.length > 0"> mdi-check-circle </v-icon>
-                <v-icon v-else> mdi-check-circle-outline </v-icon>
+
+                <v-btn rounded @click="confirmKey" elevation="11" color="error"
+                       :disabled="validated_key">인증번호 확인</v-btn>
               </div>
               <!-- Password 회원가입 Form -->
-              <v-text-field
+              <v-text-field class="row"
                 type="password" label="비밀번호" hide-details="auto"
                 v-model="user.password" id="password-signup" required
                 oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )" />
               <!-- PasswordConfirm 회원가입 Form -->
-              <v-text-field
-                type="password" label="비밀번호 확인" hide-details="auto" :error-messages=errorMessages
+              <v-text-field class="row"
+                type="password" label="비밀번호 확인" hide-details="auto"
+                :rules="errorMessages"
                 v-model="user.passwordConfirm" id="passwordConfirm-signup" required
                 oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )"/>
               <!-- 회원가입 제출 버튼 -->
-              <div class="field" id="submit-signup-form">
-                <v-btn type="submit" class="primary">가입하기</v-btn>
+              <div class="field text-center" id="submit-signup-form">
+                <v-btn elevation="11" type="submit" class="primary">가입하기</v-btn>
                 <br>
                 <a role="link" :href="'Login'">계정이 이미 있으신가요?</a>
               </div>
@@ -47,7 +53,6 @@
               <div class="hr-sect">SNS로 로그인 하기</div>
               <v-icon> mdi-facebook </v-icon>
               <v-icon> mdi-google </v-icon>
-
             </form>
             <!-- 소셜 회원가입 전체 Form End -->
           </div>
@@ -68,9 +73,13 @@ export default {
      user: {},
      submitted: false,
      successful: false,
-     message: "",
-     cert_key: "",
-     confirm_key: ""
+     cert_key: false,
+     confirm_key: "",
+     validated_key: false,
+     num: 0,
+     errorMessages: [
+       value => !!value || 'Required.',
+       value => (value === this.user.password) || "비밀번호가 다릅니다."]
   }
  },
  computed: {
@@ -83,40 +92,63 @@ export default {
       this.$router.push({name: "Login"})
     }
   },
-  methods: {handleRegister() {
-      this.message = ""
+  methods: {
+   handleRegister() {
       this.submitted = true
       if (this.cert_key === this.confirm_key) {
         this.$store.dispatch("auth/register", this.user).then(
           data => {
-            this.message = `${data.nickname}님 가입을 축하드립니다`
             this.successful = true
-            alert(this.message)
+            alert(`${data.nickname}님 가입을 축하드립니다`)
             setTimeout(() => {
               this.$router.push({name: "Login"})
             }, 3000)
           }).catch(e => {
-          this.message = (e.response && e.response.data) || e.message || e.toString()
-          this.successful = false
-          alert(this.message)
+            this.successful = false
+            alert(e.toString())
         })
       }
-    }, sendCheckKey: function () {
-      axios({
-        baseURL: SERVER_URL,
-        url: '/email/emailcheck',
-        method: 'GET',
-        params: {'mail': this.user.email}
-      })
-        .then(res => {
-          alert(`해당 메일로 인증번호를 전송했습니다.`)
-          this.cert_key = res.data.key
+    },
+    // 이메일 중복 확인 및 인증코드 확인
+    emailDuplication() {
+     this.confirm_key = ''
+      this.validated_key = false
+      if (this.user.email && this.user.email.indexOf('@') !== -1) {
+        this.cert_key = true
+        axios({
+          baseURL: SERVER_URL,
+          url: '/email/key',
+          method: 'POST',
+          data: {'email': this.user.email},
         })
-        .catch(()=>alert(`이메일을 확인해주세요`))
-    }, errorMessages() {
-      if ((this.user.password !== this.user.passwordConfirm) && (this.user.passwordConfirm.length > 0))
-        return '비밀번호가 다릅니다.'
-    }}
+          .then(res => alert(`사용가능한 이메일입니다.\n${res.data.msg}`))
+          .catch(() => {
+            alert('다른 이메일을 사용해주세요.')
+            this.cert_key = false
+          })
+      }
+      else {alert('이메일을 입력해주세요')}
+    },
+    // 이메일 인증코드 확인 함수
+    confirmKey() {
+     axios({
+       baseURL: SERVER_URL,
+       url: '/email/key-check',
+       method: 'POST',
+       data: {
+         'email': this.user.email,
+         'key': this.confirm_key,
+       },
+     })
+      .then(() => {
+        alert('인증되었습니다.')
+        this.validated_key = true
+      })
+      .catch(() => {
+        alert('인증번호가 잘못되었습니다.')
+        this.validated_key = false
+      })}
+    },
   }
 </script>
 

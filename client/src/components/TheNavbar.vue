@@ -121,16 +121,14 @@
 </template>
 
 <script>
-// import axios from 'axios'
-// import { mapGetters } from 'vuex'
 export default {
   name: "navbar",
   data: function () {
     return {
       login: this.$store.state.login,
       profileMenuItems: [
-        { title: '내 프로필', to:'/profile',},
-        { title: '계정 설정', to:'/accounts/settings',},
+        { title: '내 프로필', to: '/profile' },
+        { title: '계정 설정', to:'/accounts/settings' },
       ],
       shortMenuItems: [
         { title: '모임 개설', to:'CreateConference', needLogin: true},

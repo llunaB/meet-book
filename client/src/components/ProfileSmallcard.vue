@@ -2,7 +2,10 @@
   <v-card
   max-width="344"
   elevation="0"
-  :to="{name: 'Profile', params: person.userId}">
+  :to="{
+    name: 'Profile',
+    params: { userId: person.id }
+  }">
   <v-card-title>
     <v-avatar
     color="#F7DBCE"
@@ -20,7 +23,7 @@
   </v-card-title>
   <v-card-subtitle>
     <p class="caption text-right">
-      {{ person.email }}
+      {{ person.profileDescription }}
     </p>
   </v-card-subtitle>
 
