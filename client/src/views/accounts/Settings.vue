@@ -42,13 +42,33 @@
           v-model="user.profileDescription" id="profileDescriptionInput"/>
       </div>
 
-      <v-btn color="primary" text @click="informationChange">
-        수정하기
-      </v-btn>
+      <div class="col justify-around">
+        <v-btn color="primary" text @click="informationChange">
+          수정하기
+        </v-btn>
 
-      <v-btn color="error" text>
-        탈퇴하기
-      </v-btn>
+        <v-dialog
+          v-model="resignBtn" persistent max-width="290"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn color="primary" dark v-bind="attrs" v-on="on"
+            >탈퇴하기</v-btn>
+          </template>
+          <v-card>
+            <v-card-title class="text-h5">
+              정말 탈퇴하시겠습니까??
+            </v-card-title>
+            <v-card-text>탈퇴를 하시면, 저장된 정보가 모두 사라집니다. 그래도 탈퇴하시겠습니까?
+              <v-text-field style="padding-top: 0" id="user-resign-input" dense
+                            type="password" v-model="resign" />
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="green darken-1" text @click="userResign">탈퇴하기</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>>
+      </div>
 
       <v-snackbar
         v-model="snackbar">
@@ -88,6 +108,8 @@ export default {
       newPasswordConfirm: '',
       messageNum:0,
       snackbar: false,
+      resign: '',
+      resignBtn: false,
       errorMessages: [
         value => !!value || 'Required.',
         value => (value === this.newPassword) || "비밀번호가 다릅니다."],
@@ -144,18 +166,30 @@ export default {
             this.snackbar = !this.snackbar
         })
       }
-
     },
     userProfile() {
       axios({
         baseURL: SERVER_URL,
-        url:`/users/${this.$store.state.auth.user.id}/detail`
+        url:`/users/${this.$store.state.auth.user.id}/detail`,
+        method: 'GET',
       })
         .then(res => {
           this.user = res.data
           console.log(this.user)
         })
         .catch(e => console.log(e.data))
+    },
+    userResign() {
+      axios({
+        baseURL: SERVER_URL,
+        url:`/users/${this.$store.state.auth.user.id}`,
+        method: 'DELETE'
+      })
+        .then(() => {
+          alert('탈퇴되었습니다.')
+          setTimeout(() => this.$router.push({name: "Home"}), 1000)
+        })
+        .catch(e => console.log(e))
     },
   },
   beforeMount() {
