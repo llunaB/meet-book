@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.DTO.ConferenceDTO;
 import com.ssafy.api.responseDto.GetBookRes;
+import com.ssafy.api.responseDto.GetConferencesRes;
 import com.ssafy.api.responseDto.GetSimpleBooksRes;
 import com.ssafy.api.responseDto.GetUserByProfileRes;
 import com.ssafy.api.service.BookService;
@@ -74,8 +75,8 @@ public class SearchController {
 	}
 	
 	@GetMapping("/conference")
-	public ResponseEntity<Page<ConferenceDTO>> getConferencesByTitle(@RequestParam("title") String title, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
-		Page<ConferenceDTO> list = Page.empty();
+	public ResponseEntity<Page<GetConferencesRes>> getConferencesByTitle(@RequestParam("title") String title, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 
 		try {
@@ -83,12 +84,12 @@ public class SearchController {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		return new ResponseEntity<Page<ConferenceDTO>>(list, HttpStatus.OK);
+		return new ResponseEntity<Page<GetConferencesRes>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("/conference/book")
-	public ResponseEntity<Page<ConferenceDTO>> getConferencesByBook(@RequestParam("book") String bookname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
-		Page<ConferenceDTO> list = Page.empty();
+	public ResponseEntity<Page<GetConferencesRes>> getConferencesByBook(@RequestParam("book") String bookname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 
 		try {
@@ -97,12 +98,12 @@ public class SearchController {
 			e.printStackTrace();
 		}
 		
-		return new ResponseEntity<Page<ConferenceDTO>>(list, HttpStatus.OK);
+		return new ResponseEntity<Page<GetConferencesRes>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("/conference/user")
-	public ResponseEntity<Page<ConferenceDTO>> getConferencesByUser(@RequestParam("user") String nickname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
-		Page<ConferenceDTO> list = Page.empty();
+	public ResponseEntity<Page<GetConferencesRes>> getConferencesByUser(@RequestParam("user") String nickname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 
 		try {
@@ -110,12 +111,12 @@ public class SearchController {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		return new ResponseEntity<Page<ConferenceDTO>>(list, HttpStatus.OK);
+		return new ResponseEntity<Page<GetConferencesRes>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("/conference/tag")
-	public ResponseEntity<Page<ConferenceDTO>> getConferencesByTags(@RequestParam("tag") String tag, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
-		Page<ConferenceDTO> list = Page.empty();
+	public ResponseEntity<Page<GetConferencesRes>> getConferencesByTags(@RequestParam("tag") String tag, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 
 		try {
@@ -123,6 +124,6 @@ public class SearchController {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		return new ResponseEntity<Page<ConferenceDTO>>(list, HttpStatus.OK);
+		return new ResponseEntity<Page<GetConferencesRes>>(list, HttpStatus.OK);
 	}
 }

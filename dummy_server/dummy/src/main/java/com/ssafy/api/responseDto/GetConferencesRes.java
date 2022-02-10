@@ -18,9 +18,12 @@ public class GetConferencesRes {
 	private GetUserByProfileRes user;
 	private BookDTO book;
 	private Date callStartTime;
+	private Date callEndTime;
 	private String thumbnailUrl;
 	private String title;
 	private String description;
 	private int maxMembers;
 	private String tags;
+	private String question;
+	private String password;
 }
