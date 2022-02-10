@@ -21,7 +21,7 @@
     </v-row>
     <v-col style="padding-top:2rem">
       <v-item-group v-if="!this.conferences.length" style="text-align-last: center">
-        <h2 style="color: #ff3170;">아직 함께 참여한 모임이 없어요 ㅠㅠ</h2>
+        <h2 style="color: #ff3170;">아직 함께 참여한 모임이 없어요 ㅠㅠ </h2>
         <br>
         <v-btn v-if="searchUser === this.$store.state.auth.user.id" rounded class="primary" href="conference">참여하러가기</v-btn>
       </v-item-group>
@@ -116,10 +116,12 @@ export default {name: 'Profile', data() {
     userProfile() {
       // 일단은 본인 프로필로 입장이여서 this.$store.state.auth.user.id를 사용 했습니다.
       // 이후에 다른 유저가 들어올 경우에는 해당 부분을 수정하여 props한 값을 넣으면 됩니다.
-      const userId = this.searchUser || this.$store.state.auth.user.id
+      if (!this.searchUser) {
+        this.searchUser = this.$store.state.auth.user.id
+      }
       axios({
         baseURL: SERVER_URL,
-        url:`/users/${userId}/detail`,
+        url:`/users/${this.searchUser}/detail`,
         method: 'GET'
       })
         .then(res => {
@@ -129,10 +131,12 @@ export default {name: 'Profile', data() {
         .catch(e => console.log(e))
     },
     userBookmark() {
-      const userId = this.searchUser || this.$store.state.auth.user.id
+      if (!this.searchUser) {
+        this.searchUser = this.$store.state.auth.user.id
+      }
       axios({
         baseURL: SERVER_URL,
-        url:`/users/${userId}/bookmark`,
+        url:`/users/${this.searchUser}/bookmark`,
         method: 'GET'
       })
       .then(res => this.conferences = res.data)
