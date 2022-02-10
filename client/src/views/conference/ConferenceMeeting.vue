@@ -244,17 +244,25 @@ export default {
 
     createToken (sessionId) {
 			return new Promise((resolve, reject) => {
-				axios
-					.get(`https://localhost:8080/conference/${sessionId}/token`, {}, {
-						auth: {
-							'X-AUTH-TOKEN': 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI3NyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NDQyMTk4NDMsImV4cCI6MTY0NDIyMTY0M30.wTBZ4JZzaS6W6E_vOzMOmvgaWjrjdrji0uv-b97pzPM'
-						},
-					})
-					.then(response => {
-            console.log(response.data)
-            return response.data})
-					.then(data => resolve(data))
-					.catch(error => reject(error.response));
+				axios({
+          method:'get',
+          url: `https://localhost:8080/conference/${sessionId}/token`,
+          headers: {
+            'X-AUTH-TOKEN': this.$store.state.auth.user.token
+          },
+
+          }
+        )
+        .then(response => {
+          console.log(response.data)
+          return response.data})
+        .then(data => resolve(data))
+        .catch(error => reject(error.response));
+					// .get(`https://localhost:8080/conference/${sessionId}/token`, {}, {
+					// 	headers: {
+          //     'X-AUTH-TOKEN': this.$store.state.auth.user.token
+          //   },
+					// })
 			});
 		},
     videoMute() {      
