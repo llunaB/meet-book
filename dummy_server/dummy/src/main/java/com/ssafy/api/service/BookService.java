@@ -35,8 +35,11 @@ public class BookService {
 	// 도서데이터 생성
 	public boolean getBookData() {
 		try {
-			List<Book> list = openApiHelper.loadBookData();
-			bookRepository.saveAll(list);
+			for(int i = 0; i < 10; i++) {
+				List<Book> list = openApiHelper.loadBookDataWithKDC(i);
+				bookRepository.saveAll(list);
+			}
+			
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

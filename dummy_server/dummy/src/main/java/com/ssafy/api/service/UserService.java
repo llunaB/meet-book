@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.ssafy.DTO.UserDTO;
 import com.ssafy.api.requestDto.DeleteUserReq;
 import com.ssafy.api.requestDto.LoginReq;
+import com.ssafy.api.requestDto.UpdatePasswordReq;
 import com.ssafy.api.requestDto.UpdateUserByDetailReq;
 import com.ssafy.api.requestDto.UpdateUserByProfileReq;
 import com.ssafy.api.responseDto.GetUserByProfileRes;
@@ -82,8 +83,14 @@ public class UserService {
 
 
 	public UserDTO getUserById(int id) {
-		User source = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-		return modelMapper.map(source, UserDTO.class);
+		try {
+			User source = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+			return modelMapper.map(source, UserDTO.class);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
 	}
 
 //	public UserDTO getUserByEmail(String email) {
@@ -131,12 +138,25 @@ public class UserService {
 		return true;
 	}
 	
+	public boolean updatePassword(UpdatePasswordReq data, int id) {
+		try {
+			User entity = userRepository.getById(id);
+			if(entity == null) return false;
+			entity = updateEntityWithPassword(entity, data);
+			entity.setPassword(passwordEncoder.encode(entity.getPassword()));
+			userRepository.save(entity);
+			return true;
+		}catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	public boolean updateUserByDetail(UpdateUserByDetailReq data, int id) {
 		try {
 			User entity = userRepository.getById(id);
 			if(entity == null) return false;
-			entity = updateEntityByUserInfo(entity, data);
-			entity.setPassword(passwordEncoder.encode(entity.getPassword()));
+			entity = updateEntityByAgeAndGender(entity, data);
 			userRepository.save(entity);
 			return true;
 		}catch(Exception e){
@@ -164,8 +184,14 @@ public class UserService {
 		return entity;
 	}
 	
-	private User updateEntityByUserInfo(User entity, UpdateUserByDetailReq data) {
+	private User updateEntityWithPassword(User entity, UpdatePasswordReq data) {
 		entity.setPassword(data.getNewPassword());
+		return entity;
+	}
+	
+	private User updateEntityByAgeAndGender(User entity, UpdateUserByDetailReq data) {
+		entity.setAge(data.getAge());
+		entity.setGender(data.getGender());
 		return entity;
 	}
 	
