@@ -142,7 +142,7 @@ public class ConferenceController {
 	public ResponseEntity<String> isSessionLive(@PathVariable("id") String id){
 		
 		if (this.mapSessions.get(id) == null) {
-			return new ResponseEntity<>("false", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>("false", HttpStatus.OK);
 		}
 		
 		return new ResponseEntity<>("true", HttpStatus.OK);
