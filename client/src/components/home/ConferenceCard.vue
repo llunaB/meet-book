@@ -1,7 +1,7 @@
 <template>
   <v-card class="card-flip">
     <div class="card-front" v-bind:class="{frontLocked: locked}">
-      <v-img :src="conference.thumbnail" class="border" eager="true" max-width="219">
+      <v-img :src="conference.thumbnail" class="border" :eager="true" max-width="219">
       <div v-if="conference.isActive">
         <v-btn color="red" dark>
           <v-icon dark left>mdi-broadcast</v-icon>
