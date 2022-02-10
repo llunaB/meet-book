@@ -82,7 +82,6 @@
         <v-img :src="getImg(user.host_point)" contain aspect-ratio="3" />
         <v-img :src="getImg(user.guest_point)" contain aspect-ratio="3" />
       </v-row>
-
     </v-col>
   </v-container>
 </template>
@@ -113,9 +112,9 @@ export default {name: 'Profile', data() {
         return require('@/assets/host_img/host2.jpeg')
       }
     },
+    // 일단은 본인 프로필로 입장이여서 this.$store.state.auth.user.id를 사용 했습니다.
+    // 이후에 다른 유저가 들어올 경우에는 해당 부분을 수정하여 props한 값을 넣으면 됩니다.
     userProfile() {
-      // 일단은 본인 프로필로 입장이여서 this.$store.state.auth.user.id를 사용 했습니다.
-      // 이후에 다른 유저가 들어올 경우에는 해당 부분을 수정하여 props한 값을 넣으면 됩니다.
       if (!this.searchUser) {
         this.searchUser = this.$store.state.auth.user.id
       }

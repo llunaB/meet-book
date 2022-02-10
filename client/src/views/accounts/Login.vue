@@ -69,25 +69,17 @@ export default {
       }
     },
     "mounted"() {
-      if (this.loggedIn) {
-        this.$router.push({"name": 'Home'})
-      }
+      if (this.loggedIn) this.$router.push({"name": 'Home'})
     },
     "methods": {
       "handleLogin"() {
         this.loading = true
-
-        if (this.user.email && this.user.password) {
-          this.$store.dispatch('auth/login', this.user).then(
-              () => {
-                // 여기에 로그인 정보를 전송하는 함수를 추가 해야합니다.
-                this.$router.push({"name": "Home"})
-            }).catch(e => {
-              console.log(e)
-              this.loading = false;
-              alert('Email 혹은 Password 잘못입력하셨습니다.')
-            })
-        }
+        this.$store.dispatch('auth/login', this.user)
+          .then(() => this.$router.push({"name": "Home"}))
+          .catch(() => {
+            this.loading = false;
+            alert('Email 혹은 Password 잘못입력하셨습니다.')
+          })
       }
     },
 }

@@ -12,16 +12,31 @@
           oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )" />
 
         <v-text-field
-          type="text" label="비밀번호 수정" hide-details="auto"
+          type="password" label="비밀번호 수정" hide-details="auto"
           v-model="newPassword" id="passwordEditInput"
           oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )" />
 
         <v-text-field
           type="password" label="비밀번호 수정 확인" hide-details="auto"
-          v-model="newPasswordConfirm" id="passwordConfirmEditInput"
+          v-model="newPasswordConfirm" id="passwordConfirmEditInput" :rule="rule"
           oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )" />
 
         <br>
+        <!-- 나이 및 성별 값 입력 Form -->
+        <div class="row align-self-center">
+          <div class="col">
+            <p>나이</p>
+            <v-text-field style="padding-top: 0" id="user-birth-input" dense
+                          type="date" v-model="user.birth" /></div>
+          <div class="col">
+            <p>성별</p>
+            <v-container fluid style="padding-top: 0">
+              <v-radio-group v-model="user.gender" row style="margin: 0;">
+                <v-radio v-for="n in 2" :key="n" :label=genderGroup[n] :value="n" />
+              </v-radio-group>
+            </v-container>
+          </div>
+        </div>
         <v-textarea
           type="text" label="나의 한마디" auto-grow outlined rows="3" row-height="100" shaped
           v-model="user.profileDescription" id="profileDescriptionInput"/>
@@ -30,6 +45,11 @@
       <v-btn color="primary" text @click="informationChange">
         수정하기
       </v-btn>
+
+      <v-btn color="error" text>
+        탈퇴하기
+      </v-btn>
+
       <v-snackbar
         v-model="snackbar">
         {{ errorMessage[messageNum] }}
@@ -60,6 +80,7 @@ export default {
   data() {
     return {
       user: new User(),
+      genderGroup: ['', '남자', '여자'],
       name: this.$store.state.auth.user.id,
       userEmail: this.$store.state.auth.user,
       oldPassword: '',
@@ -67,7 +88,10 @@ export default {
       newPasswordConfirm: '',
       messageNum:0,
       snackbar: false,
-      errorMessage: ['변경하려는 Password가 다릅니다.', '현재Password 잘못입력하셨습니다.', '비밀번호가 수정되었습니다.', '닉네임을 입력하셔야 합니다.', '닉네임이 수정되었습니다..'],
+      errorMessages: [
+        value => !!value || 'Required.',
+        value => (value === this.newPassword) || "비밀번호가 다릅니다."],
+      submitMessage: ['비밀번호가 수정되었습니다.', '닉네임을 입력하셔야 합니다.', '닉네임이 수정되었습니다..'],
     }
   },
   methods: {
