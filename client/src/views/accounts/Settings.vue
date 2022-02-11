@@ -74,17 +74,7 @@
 
       <v-snackbar
         v-model="snackbar">
-        {{ submitMessage[messageNum] }}
-        <template v-slot:action="{ attrs }">
-          <v-btn
-            color="pink"
-            text
-            v-bind="attrs"
-            @click="snackbar = false"
-          >
-            Close
-          </v-btn>
-        </template>
+        {{ submitMessage }}        
       </v-snackbar>
     </form>
 
@@ -108,14 +98,13 @@ export default {
       oldPassword: '',
       newPassword: '',
       newPasswordConfirm: '',
-      messageNum:0,
       snackbar: false,
       resign: '',
       resignBtn: false,
       errorMessages: [
         value => !!value || 'Required.',
         value => (value === this.newPassword) || "비밀번호가 다릅니다."],
-      submitMessage: ['비밀번호가 수정되었습니다.', '닉네임을 입력하셔야 합니다.', '입력 값을 수정해주세요', '수정되었습니다'],
+      submitMessage: '',
     }
   },
   methods: {
@@ -131,14 +120,14 @@ export default {
           }
         })
           .then(() => {
-            this.messageNum = 3
-            this.snackbar = !this.snackbar
+            this.submitMessage = '수정되었습니다'
+            setTimeout(() => this.snackbar = !this.snackbar, 2000);
             this.passwordEditChange()
           })
         .catch(e => {
           console.log(e.data)
-          this.messageNum = 2
-          this.snackbar = !this.snackbar
+          this.submitMessage = '입력 값을 수정해주세요'
+          setTimeout(() => this.snackbar = !this.snackbar, 2000);
           this.passwordEditChange()
         })
       }
@@ -157,13 +146,13 @@ export default {
               })
             }
             else {
-              this.messageNum = 0
+              this.submitMessage = '비밀번호를 입력해주세요'
             }
           })
           .catch(() => {
-            this.messageNum = 1
-            this.snackbar = !this.snackbar
-        })
+            this.submitMessage = '닉네임을 입력하셔야 합니다'
+            setTimeout(() => this.snackbar = !this.snackbar, 2000);
+            })
       }
     },
     userProfile() {
