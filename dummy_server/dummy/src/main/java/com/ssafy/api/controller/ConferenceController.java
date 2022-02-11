@@ -38,7 +38,7 @@ import io.openvidu.java.client.OpenViduRole;
 import io.openvidu.java.client.Session;
 
 @RestController
-@RequestMapping("/conference")
+@RequestMapping("/api/conference")
 public class ConferenceController {
 	
 	private ConferenceService conferenceService;

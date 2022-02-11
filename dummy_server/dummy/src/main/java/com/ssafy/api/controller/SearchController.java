@@ -33,7 +33,7 @@ public class SearchController {
 		this.conferenceService = conferenceService;
 	}
 
-	@GetMapping("/users")
+	@GetMapping("/api/users")
 	public ResponseEntity<Page<GetUserByProfileRes>> getUsers(@RequestParam("nickname") String nickname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
 		Page<GetUserByProfileRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
