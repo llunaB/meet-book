@@ -41,7 +41,7 @@
               <div class="hr-sect">SNS 로그인 하기</div>
               <v-icon>mdi-facebook</v-icon>
               <v-icon>mdi-google</v-icon>
-            </form> -->
+            </form>
             <!-- 소셜 로그인 전체 Form End -->
           </div>
             <!-- 로그인 전체 Form End -->
@@ -69,7 +69,7 @@ export default {
       }
     },
     "mounted"() {
-      if (this.loggedIn) this.$router.push({"name": 'Home'})
+      if (this.loggedIn) {this.$router.push({"name": 'Home'})}
     },
     "methods": {
       "handleLogin"() {

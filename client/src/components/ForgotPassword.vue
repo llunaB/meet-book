@@ -1,9 +1,12 @@
 <template>
   <v-card v-if="dialog">
-    <v-card-title class="text-h5 grey lighten-2">Forgot My Password</v-card-title>
+    <v-card-title class="text-h5 lighten-2">Forgot My Password</v-card-title>
     <form @submit.prevent="handleSubmit">
       <div class="form-group">
         <!-- Email Form -->
+        <v-card-text>비밀번호를 잊어버리셨다면, 해당 이메일을 입력해주세요</v-card-text>
+        <v-card-text>해당 메일로 임시비밀번호를 보내 드리겠습니다.</v-card-text>
+
         <v-text-field
           type="email" label="Email" hide-details="auto"
           v-model="email" id="useremailInput" required/>
