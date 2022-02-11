@@ -1,5 +1,5 @@
 <template>
-  <v-container style="padding: 3rem">
+  <v-container style="padding-inline: 10%;">
     <form>
       <div class="form-group">
         <v-text-field
@@ -18,7 +18,7 @@
 
         <v-text-field
           type="password" label="비밀번호 수정 확인" hide-details="auto"
-          v-model="newPasswordConfirm" id="passwordConfirmEditInput" :rule="rule"
+          v-model="newPasswordConfirm" id="passwordConfirmEditInput" :rules="errorMessages"
           oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )" />
 
         <br>
@@ -48,7 +48,7 @@
         </v-btn>
 
         <v-dialog
-          v-model="resignBtn" persistent max-width="290"
+          v-model="resignBtn" max-width="290"
         >
           <template v-slot:activator="{ on, attrs }">
             <v-btn color="primary" dark v-bind="attrs" v-on="on"
@@ -58,31 +58,23 @@
             <v-card-title class="text-h5">
               정말 탈퇴하시겠습니까??
             </v-card-title>
-            <v-card-text>탈퇴를 하시면, 저장된 정보가 모두 사라집니다. 그래도 탈퇴하시겠습니까?
+            <v-card-text>탈퇴를 하시면, 저장된 정보가 모두 사라집니다. 그래도 탈퇴하시겠습니까?</v-card-text>
+            <v-card-text>
+              비밀번호를 한번 더 입력해주세요.
               <v-text-field style="padding-top: 0" id="user-resign-input" dense
-                            type="password" v-model="resign" />
+                          type="password" v-model="resign" />
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" text @click="userResign">탈퇴하기</v-btn>
             </v-card-actions>
           </v-card>
-        </v-dialog>>
+        </v-dialog>
       </div>
 
       <v-snackbar
         v-model="snackbar">
-        {{ errorMessage[messageNum] }}
-        <template v-slot:action="{ attrs }">
-          <v-btn
-            color="pink"
-            text
-            v-bind="attrs"
-            @click="snackbar = false"
-          >
-            Close
-          </v-btn>
-        </template>
+        {{ submitMessage }}        
       </v-snackbar>
     </form>
 
@@ -106,14 +98,13 @@ export default {
       oldPassword: '',
       newPassword: '',
       newPasswordConfirm: '',
-      messageNum:0,
       snackbar: false,
       resign: '',
       resignBtn: false,
       errorMessages: [
         value => !!value || 'Required.',
         value => (value === this.newPassword) || "비밀번호가 다릅니다."],
-      submitMessage: ['비밀번호가 수정되었습니다.', '닉네임을 입력하셔야 합니다.', '닉네임이 수정되었습니다..'],
+      submitMessage: '',
     }
   },
   methods: {
@@ -129,14 +120,14 @@ export default {
           }
         })
           .then(() => {
-            this.messageNum = 4
-            this.snackbar = !this.snackbar
+            this.submitMessage = '수정되었습니다'
+            setTimeout(() => this.snackbar = !this.snackbar, 2000);
             this.passwordEditChange()
           })
         .catch(e => {
           console.log(e.data)
-          this.messageNum = 3
-          this.snackbar = !this.snackbar
+          this.submitMessage = '입력 값을 수정해주세요'
+          setTimeout(() => this.snackbar = !this.snackbar, 2000);
           this.passwordEditChange()
         })
       }
@@ -153,18 +144,15 @@ export default {
                 method: 'PUT',
                 data: {'newPassword': this.newPassword}
               })
-                .then(() => this.messageNum = 2)
-                .catch(e => console.log(e.data))
             }
             else {
-              this.messageNum = 0
+              this.submitMessage = '비밀번호를 입력해주세요'
             }
           })
-          .catch(e => {
-            console.log(e.data)
-            this.messageNum = 1
-            this.snackbar = !this.snackbar
-        })
+          .catch(() => {
+            this.submitMessage = '닉네임을 입력하셔야 합니다'
+            setTimeout(() => this.snackbar = !this.snackbar, 2000);
+            })
       }
     },
     userProfile() {
@@ -173,11 +161,7 @@ export default {
         url:`/users/${this.$store.state.auth.user.id}/detail`,
         method: 'GET',
       })
-        .then(res => {
-          this.user = res.data
-          console.log(this.user)
-        })
-        .catch(e => console.log(e.data))
+        .then(res => this.user = res.data)
     },
     userResign() {
       axios({
@@ -189,7 +173,6 @@ export default {
           alert('탈퇴되었습니다.')
           setTimeout(() => this.$router.push({name: "Home"}), 1000)
         })
-        .catch(e => console.log(e))
     },
   },
   beforeMount() {

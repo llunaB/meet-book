@@ -71,6 +71,35 @@ public class OpenApiHelper {
         }
         return books;
     }
+    
+    public List<Book> loadBookDataWithKDC(int kdc) {
+
+        String uriString = constructUriStringWithQueryParameter(kdc);
+        List<Map<String, Map<String, Object>>> list = uriToJsonObjectToList(uriString);
+
+        ArrayList<Book> books = new ArrayList<>();
+
+        int genreId = kdc + 1;
+        Genre genre = genreRepository.findById(genreId).orElseThrow(NullPointerException::new);
+        
+        for (Map<String, Map<String, Object>> doc : list) {
+            Map<String, Object> bookInfo = doc.get("doc");
+            Book book = Book.builder()
+                    .bookName((String) bookInfo.getOrDefault("bookname", ""))
+                    .bookAuthor((String) (bookInfo.getOrDefault("authors", "")))
+                    .bookContents("")
+                    .bookPublisher((String) bookInfo.getOrDefault("publisher", ""))
+                    .isbn((String) bookInfo.getOrDefault("isbn13", ""))
+                    .bookPubYear(Integer.parseInt(((String) bookInfo.get("publication_year")).isEmpty() ? "0000" : ((String) bookInfo.get("publication_year"))))
+                    .loanCount(Integer.parseInt((String) bookInfo.getOrDefault("loan_count", "0")))
+                    .genre(genre)
+                    .bookThumbnailUrl((String) bookInfo.getOrDefault("bookImageURL", ""))
+                    .build();
+
+            books.add(book);
+        }
+        return books;
+    }
 
     private static List<Map<String, Map<String, Object>>> uriToJsonObjectToList(String uriString) {
 
@@ -112,6 +141,35 @@ public class OpenApiHelper {
 
         return uriComponents.toString();
     }
+    
+    private static String constructUriStringWithQueryParameter(int kdc) {
+
+        String key = "b85da2e2bb1b06d1ad67b0f945bf6dcf87e99dd3eb09f70ebe777db8b58d01bd";
+        String startDate = "2021-01-01";
+        String endDate = "2021-12-31";
+        int fromAge = 20;
+        int toAge = 40;
+        int pageSize = 200;
+        String format = "json";
+
+        UriComponents uriComponents = UriComponentsBuilder.newInstance()
+                .scheme("http")
+                .host("data4library.kr")
+                .path("/api/loanItemSrch")
+                .queryParam("authKey", key)
+                .queryParam("startDt", startDate)
+                .queryParam("endDt", endDate)
+                .queryParam("from_age", fromAge)
+                .queryParam("to_age", toAge)
+                .queryParam("pageSize", pageSize)
+                .queryParam("format", format)
+                .queryParam("kdc", kdc)
+                .build();
+
+        return uriComponents.toString();
+    }
+    
+    
 }
 
 

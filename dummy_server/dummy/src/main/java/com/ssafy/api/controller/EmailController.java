@@ -4,6 +4,7 @@ package com.ssafy.api.controller;
 import com.ssafy.DTO.UserDTO;
 import com.ssafy.api.requestDto.EmailCheckReq;
 import com.ssafy.api.requestDto.EmailReq;
+import com.ssafy.api.requestDto.UpdatePasswordReq;
 import com.ssafy.api.requestDto.UpdateUserByDetailReq;
 import com.ssafy.api.responseDto.MessageRes;
 import com.ssafy.api.service.UserService;
@@ -86,7 +87,7 @@ public class EmailController {
     @RequestMapping("/pwdcheck/{id}/{email}") // AJAX와 URL을 매핑시켜줌
     @ResponseBody  //AJAX후 값을 리턴하기위해 작성
     public ResponseEntity<Map<String,String>> updatePwdByMail(@PathVariable("id") String id,@PathVariable("email") String email) {
-        UpdateUserByDetailReq updateUserByDetailReq = new UpdateUserByDetailReq();
+        UpdatePasswordReq updatePasswordReq = new UpdatePasswordReq();
         Map<String,String> map = new HashMap<>();
         MessageRes messageRes = new MessageRes();
         Random random=new Random();  //난수 생성을 위한 랜덤 클래스
@@ -106,8 +107,8 @@ public class EmailController {
         message.setText("비밀번호: "+password);
 
         try {
-            updateUserByDetailReq.setNewPassword(password);
-            if(userService.updateUserByDetail(updateUserByDetailReq, Integer.parseInt(id))){
+        	updatePasswordReq.setNewPassword(password);
+            if(userService.updatePassword(updatePasswordReq, Integer.parseInt(id))){
                 UserDTO user = userService.getUserById(Integer.parseInt(id));
                 map.put("message", "비밀번호 수정 성공");
                 mailSender.send(message);

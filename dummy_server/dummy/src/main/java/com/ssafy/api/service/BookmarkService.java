@@ -36,7 +36,7 @@ public class BookmarkService {
 		this.modelmapper = new ModelMapper();
 	}
 	
-	public boolean createBookmark(int userId, int conferenceId) {
+	public int createBookmark(int userId, int conferenceId) {
 		try {
 			Bookmark bookmark = new Bookmark();
 			User user = userRepository.getById(userId);
@@ -47,10 +47,11 @@ public class BookmarkService {
 			bookmark.setUser(user);
 
 			bookmarkRepository.save(bookmark);
+			bookmarkRepository.flush();
+			return bookmarkRepository.findByUserAndConference(user, conf).get(0).getId();
 		} catch (Exception e) {
-			return false;
+			return -1;
 		}
-		return  true;
 	}
 	
 	public GetBookmarksRes getBookmarkById(int id) {
@@ -59,14 +60,15 @@ public class BookmarkService {
 	}
 	
 	//check user have bookmark of conference
-	public boolean checkUserHaveBookmark(int uid, int cid) {
+	public int checkUserHaveBookmark(int uid, int cid) {
 		try {
-			return bookmarkRepository.findByUserAndConference(userRepository.findById(uid).get(), conferenceRepository.findById(cid).get()).size() > 0;
+			return bookmarkRepository.findByUserAndConference(userRepository.findById(uid).get(), conferenceRepository.findById(cid).get()).get(0).getId();
 		}catch(Exception e) {
 			e.printStackTrace();
+			return -1;
 		}
 		
-		return false;
+		
 	}
 	
 	public List<GetBookmarksRes> getBookmarks(int id) {

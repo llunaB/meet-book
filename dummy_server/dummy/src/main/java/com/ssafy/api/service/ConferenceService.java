@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.DTO.ConferenceDTO;
 import com.ssafy.DTO.ConferenceHistoryDTO;
+import com.ssafy.api.responseDto.GetConferencesRes;
 import com.ssafy.db.entity.Book;
 import com.ssafy.db.entity.Bookmark;
 import com.ssafy.db.entity.Conference;
@@ -62,12 +63,12 @@ public class ConferenceService {
 		return list;
 	}
 	
-	public Page<ConferenceDTO> getConferences(Pageable pageable){
-		Page<ConferenceDTO> list = Page.empty();
+	public Page<GetConferencesRes> getConferences(Pageable pageable){
+		Page<GetConferencesRes> list = Page.empty();
 		
 		try {
 			Page<Conference> data = conferenceRepository.findAll(pageable);
-			list = data.map(source -> modelMapper.map(source, ConferenceDTO.class));
+			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -91,10 +92,10 @@ public class ConferenceService {
 		}
 	}
 	
-	public ConferenceDTO getConferenceById(int id) {
+	public GetConferencesRes getConferenceById(int id) {
 		try {
 			Conference source = conferenceRepository.findById(id).get();
-			return modelMapper.map(source, ConferenceDTO.class); 
+			return modelMapper.map(source, GetConferencesRes.class); 
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -102,11 +103,11 @@ public class ConferenceService {
 		return null;
 	}
 	
-	public Page<ConferenceDTO> getConferencesByTitle(String title, Pageable pageable){
-		Page<ConferenceDTO> list = Page.empty();
+	public Page<GetConferencesRes> getConferencesByTitle(String title, Pageable pageable){
+		Page<GetConferencesRes> list = Page.empty();
 		try {
 			Page<Conference> data = conferenceRepository.findByTitleContaining(title, pageable);
-			list = data.map(source -> modelMapper.map(source, ConferenceDTO.class));
+			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -114,11 +115,11 @@ public class ConferenceService {
 		return list;
 	}
 	
-	public Page<ConferenceDTO> getConferencesByBook(String bookname, Pageable pageable){
-		Page<ConferenceDTO> list = Page.empty();
+	public Page<GetConferencesRes> getConferencesByBook(String bookname, Pageable pageable){
+		Page<GetConferencesRes> list = Page.empty();
 		try {
 			Page<Book> data = bookRepository.findByBookNameContaining(bookname, pageable);
-			list = data.map(source -> modelMapper.map(source, ConferenceDTO.class));
+			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
 
 		}catch(Exception e){
 			e.printStackTrace();
@@ -127,11 +128,11 @@ public class ConferenceService {
 		return list;
 	}
 
-	public Page<ConferenceDTO> getFinishedConferencesByBookId(Integer book_id, Pageable pageable){
-		Page<ConferenceDTO> page = Page.empty();
+	public Page<GetConferencesRes> getFinishedConferencesByBookId(Integer book_id, Pageable pageable){
+		Page<GetConferencesRes> page = Page.empty();
 		try {
 			Page<Conference> data = conferenceRepository.findFinishedConferencesByBookId(book_id, pageable);
-			page = data.map(source -> modelMapper.map(source, ConferenceDTO.class));
+			page = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
 
 		}catch(Exception e){
 			e.printStackTrace();
@@ -140,11 +141,11 @@ public class ConferenceService {
 		return page;
 	}
 
-	public Page<ConferenceDTO> getExpectingConferencesByBookId(Integer book_id, Pageable pageable){
-		Page<ConferenceDTO> page = Page.empty();
+	public Page<GetConferencesRes> getExpectingConferencesByBookId(Integer book_id, Pageable pageable){
+		Page<GetConferencesRes> page = Page.empty();
 		try {
 			Page<Conference> data = conferenceRepository.findExpectingConferencesByBookId(book_id, pageable);
-			page = data.map(source -> modelMapper.map(source, ConferenceDTO.class));
+			page = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
 
 		}catch(Exception e){
 			e.printStackTrace();
@@ -153,11 +154,11 @@ public class ConferenceService {
 		return page;
 	}
 	
-	public Page<ConferenceDTO> getConferencesByNickname(String nickname, Pageable pageable){
-		Page<ConferenceDTO> list = Page.empty();
+	public Page<GetConferencesRes> getConferencesByNickname(String nickname, Pageable pageable){
+		Page<GetConferencesRes> list = Page.empty();
 		try {
 			Page<User> data = userRepository.findByNicknameContaining(nickname, pageable);
-			list = data.map(source -> modelMapper.map(source, ConferenceDTO.class));
+			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
 
 		}catch(Exception e){
 			e.printStackTrace();
@@ -166,11 +167,11 @@ public class ConferenceService {
 		return list;
 	}
 	
-	public Page<ConferenceDTO> getConferencesByTags(String tags, Pageable pageable){
-		Page<ConferenceDTO> list = Page.empty();
+	public Page<GetConferencesRes> getConferencesByTags(String tags, Pageable pageable){
+		Page<GetConferencesRes> list = Page.empty();
 		try {
 			Page<Conference> data = conferenceRepository.findByTagsContaining(tags, pageable);
-			list = data.map(source -> modelMapper.map(source, ConferenceDTO.class));
+			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
 		}catch(Exception e){
 			e.printStackTrace();
 		}

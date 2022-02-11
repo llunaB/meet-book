@@ -7,20 +7,36 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import com.ssafy.api.requestDto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.DTO.UserDTO;
+import com.ssafy.api.requestDto.DeleteUserReq;
+import com.ssafy.api.requestDto.FindPwdReq;
+import com.ssafy.api.requestDto.LoginReq;
+import com.ssafy.api.requestDto.SignUpReq;
+import com.ssafy.api.requestDto.UpdatePasswordReq;
+import com.ssafy.api.requestDto.UpdateUserByDetailReq;
+import com.ssafy.api.requestDto.UpdateUserByProfileReq;
 import com.ssafy.api.responseDto.GetBookmarksRes;
 import com.ssafy.api.responseDto.GetUserByDetailRes;
 import com.ssafy.api.responseDto.GetUserByProfileRes;
 import com.ssafy.api.responseDto.MessageRes;
 import com.ssafy.api.service.BookmarkService;
 import com.ssafy.api.service.UserService;
+import com.ssafy.db.entity.User;
 import com.ssafy.error.exception.AlreadyExistEmailException;
 import com.ssafy.error.exception.AlreadyExistNicknameException;
 
@@ -142,7 +158,11 @@ public class UserController {
 	}
 	
 	@GetMapping("/{id}/detail")
-	public ResponseEntity<GetUserByDetailRes> getUserDetail(@PathVariable("id") String id) {
+	public ResponseEntity<GetUserByDetailRes> getUserDetail(@PathVariable("id") String id, @AuthenticationPrincipal User userEntity) {
+		if(Integer.parseInt(id) != userEntity.getId()) {
+			return new ResponseEntity<GetUserByDetailRes>(new GetUserByDetailRes(), HttpStatus.FORBIDDEN);
+		}
+		
 		UserDTO user = userService.getUserById(Integer.parseInt(id));
 		return new ResponseEntity<GetUserByDetailRes>(new GetUserByDetailRes(user), HttpStatus.OK);
 	}
@@ -177,6 +197,21 @@ public class UserController {
 		return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
 	}
 	
+	@PutMapping("/{id}/Password")
+	public ResponseEntity<Map<String,String>> updatePassword(@PathVariable("id") String id,@RequestBody UpdatePasswordReq updatePasswordReq){
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		if(userService.updatePassword(updatePasswordReq, Integer.parseInt(id))){
+			 UserDTO user = userService.getUserById(Integer.parseInt(id));
+	            map.put("message", "비밀번호 수정 성공");
+	            map.put("token",userService.login(new LoginReq(user.getEmail(), user.getPassword())));
+			return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
+		}
+		map.put("message", "비밀번호 수정 실패");
+		return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
+	}
+	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Map<String,String>> deleteUser(@RequestBody DeleteUserReq deleteUserReq, @PathVariable("id") String id){
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -194,12 +229,12 @@ public class UserController {
 	public ResponseEntity<Map<String,String>> createBookmark(@PathVariable("user") String userId, @PathVariable("conference") String conferenceId){
 		
 		HashMap<String, String> map = new HashMap<String, String>();
-		
-		if (bookmarkService.createBookmark(Integer.parseInt(userId), Integer.parseInt(conferenceId))) {
-			map.put("message", "북마크 추가 성공");
+		int bookmarkId = bookmarkService.createBookmark(Integer.parseInt(userId), Integer.parseInt(conferenceId));
+		if (bookmarkId > -1) {
+			map.put("bookmarkId",Integer.toString(bookmarkId));
 			return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
 		} else {
-			map.put("message", "북마크 추가 실패");
+			map.put("bookmarkId", "-1");
 			return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -229,12 +264,12 @@ public class UserController {
 	public ResponseEntity<Map<String, String>> getBookmark(@PathVariable("user") String userId, @PathVariable("conference") String conferenceId){
 		
 		Map<String, String>list = new HashMap<String, String>();
-		
-		if(bookmarkService.checkUserHaveBookmark(Integer.parseInt(userId), Integer.parseInt(conferenceId) )) {
-			list.put("id", conferenceId);
+		int bookmarkId = bookmarkService.checkUserHaveBookmark(Integer.parseInt(userId), Integer.parseInt(conferenceId));
+		if(bookmarkId > -1) {
+			list.put("id", Integer.toString(bookmarkId));
 			return new ResponseEntity<Map<String, String>>(list, HttpStatus.OK);
 		}
-		list.put("id", "");
+		list.put("id", "-1");
 		return new ResponseEntity<Map<String, String>>(list, HttpStatus.NOT_FOUND);
 		
 	}

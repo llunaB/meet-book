@@ -92,8 +92,8 @@ public class BookController {
 
 
     @GetMapping("{id}/expecting_conf")
-    public ResponseEntity<Page<ConferenceDTO>> getConferencesExpectingByBookId(@PathVariable("id") String id, @RequestParam("page") Integer page , @RequestParam("size") Integer size) {
-            Page<ConferenceDTO> list = Page.empty();
+    public ResponseEntity<Page<GetConferencesRes>> getConferencesExpectingByBookId(@PathVariable("id") String id, @RequestParam("page") Integer page , @RequestParam("size") Integer size) {
+            Page<GetConferencesRes> list = Page.empty();
             PageRequest request = PageRequest.of(page, size);
 
             try {
@@ -102,13 +102,13 @@ public class BookController {
                 e.printStackTrace();
             }
 
-            return new ResponseEntity<Page<ConferenceDTO>>(list, HttpStatus.OK);
+            return new ResponseEntity<Page<GetConferencesRes>>(list, HttpStatus.OK);
         }
 
 
     @GetMapping("{id}/finished_conf")
-    public ResponseEntity<Page<ConferenceDTO>> getConferencesFinishedByBookId(@PathVariable("id") String id, @RequestParam("page") Integer page , @RequestParam("size") Integer size) {
-        Page<ConferenceDTO> list = Page.empty();
+    public ResponseEntity<Page<GetConferencesRes>> getConferencesFinishedByBookId(@PathVariable("id") String id, @RequestParam("page") Integer page , @RequestParam("size") Integer size) {
+        Page<GetConferencesRes> list = Page.empty();
         PageRequest request = PageRequest.of(page, size);
 
         try {
@@ -117,6 +117,6 @@ public class BookController {
             e.printStackTrace();
         }
 
-        return new ResponseEntity<Page<ConferenceDTO>>(list, HttpStatus.OK);
+        return new ResponseEntity<Page<GetConferencesRes>>(list, HttpStatus.OK);
     }
 }
