@@ -227,12 +227,12 @@ public class UserController {
 	public ResponseEntity<Map<String,String>> createBookmark(@PathVariable("user") String userId, @PathVariable("conference") String conferenceId){
 		
 		HashMap<String, String> map = new HashMap<String, String>();
-		
-		if (bookmarkService.createBookmark(Integer.parseInt(userId), Integer.parseInt(conferenceId))) {
-			map.put("message", "북마크 추가 성공");
+		int bookmarkId = bookmarkService.createBookmark(Integer.parseInt(userId), Integer.parseInt(conferenceId));
+		if (bookmarkId > -1) {
+			map.put("bookmarkId",Integer.toString(bookmarkId));
 			return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
 		} else {
-			map.put("message", "북마크 추가 실패");
+			map.put("bookmarkId", "-1");
 			return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
 		}
 	}

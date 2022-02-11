@@ -45,6 +45,7 @@ public class ConferenceController {
 	private OpenVidu openVidu;
 	private Map<String, Session> mapSessions = new ConcurrentHashMap<>();
 	private Map<String, Map<String, OpenViduRole>> mapSessionNamesTokens = new ConcurrentHashMap<>();
+	private Map<String, Map<String, Integer>> mapSessionNamesUsers = new ConcurrentHashMap<>();
 	
 	private String OPENVIDU_URL;
 	private String SECRET;
@@ -184,6 +185,7 @@ public class ConferenceController {
 
 				// Update our collection storing the new token
 				this.mapSessionNamesTokens.get(id).put(token, role);
+				this.mapSessionNamesUsers.get(id).put(token, user.getId());
 				conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), user.getId(), "JOIN"));
 				// Prepare the response with the token
 				responseJson.addProperty("token", token);
@@ -201,6 +203,7 @@ public class ConferenceController {
 					// anymore. Clean collections and continue as new session
 					this.mapSessions.remove(id);
 					this.mapSessionNamesTokens.remove(id);
+					this.mapSessionNamesUsers.remove(id);
 				}
 			}
 		}
@@ -220,6 +223,9 @@ public class ConferenceController {
 
 			this.mapSessionNamesTokens.put(id, new ConcurrentHashMap<>());
 			this.mapSessionNamesTokens.get(id).put(token, role);
+
+			this.mapSessionNamesUsers.put(id, new ConcurrentHashMap<>());
+			this.mapSessionNamesUsers.get(id).put(token, user.getId());
 			conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), user.getId(), "JOIN"));
 
 
@@ -235,40 +241,43 @@ public class ConferenceController {
 		}
 	}
 
-//	@DeleteMapping("/{id}/leave")
-//	public ResponseEntity<JsonObject> deleteUser(@PathVariable("id") String id , @RequestBody String token, @AuthenticationPrincipal final User user) throws Exception {
-//
-//		System.out.println("Removing user | {sessionName, token}=" + id+", "+token);
-//
-//		// If the session exists
-//		if (this.mapSessions.get(id) != null && this.mapSessionNamesTokens.get(id) != null) {
-//
-//			// If the token exists
-//			if (this.mapSessionNamesTokens.get(id).remove(token) != null) {
-//				// User left the session
-//				conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), user.getId(), "EXIT"));
-//
-//				if (this.mapSessionNamesTokens.get(id).isEmpty()) {
-//					// Last user left: session must be removed
-//					this.mapSessions.remove(id);
-//					conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), user.getId(), "CLOSE"));
-//				}
-//				return new ResponseEntity<>(HttpStatus.OK);
-//			} else {
-//				// The TOKEN wasn't valid
-//				System.out.println("Problems in the app server: the TOKEN wasn't valid");
-//				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//			}
-//
-//		} else {
-//			// The SESSION does not exist
-//			System.out.println("Problems in the app server: the SESSION does not exist");
-//			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
-//
+	@DeleteMapping("/{id}/leave")
+	public ResponseEntity<JsonObject> deleteUser(@PathVariable("id") String id , @RequestBody String token) throws Exception {
+
+		System.out.println("Removing user | {sessionName, token}=" + id+", "+token);
+		
+		// If the session exists
+		if (this.mapSessions.get(id) != null && this.mapSessionNamesTokens.get(id) != null) {
+			int userId = this.mapSessionNamesUsers.get(id).get(token);
+			
+			
+			// If the token exists
+			if (this.mapSessionNamesTokens.get(id).remove(token) != null) {
+				// User left the session
+
+				this.mapSessionNamesUsers.get(id).remove(token);
+				conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), userId, "EXIT"));
+
+				if (this.mapSessionNamesTokens.get(id).isEmpty()) {
+					// Last user left: session must be removed
+					this.mapSessions.remove(id);
+				}
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				// The TOKEN wasn't valid
+				System.out.println("Problems in the app server: the TOKEN wasn't valid");
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+
+		} else {
+			// The SESSION does not exist
+			System.out.println("Problems in the app server: the SESSION does not exist");
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	@DeleteMapping("/{id}/close")
-	public ResponseEntity<JsonObject> deleteSession(@PathVariable("id") String id, @AuthenticationPrincipal final User user) throws Exception {
+	public ResponseEntity<JsonObject> deleteSession(@PathVariable("id") String id) throws Exception {
 
 		System.out.println("Closing session | {sessionName}=" + id);
 
@@ -278,7 +287,6 @@ public class ConferenceController {
 			s.close();
 			this.mapSessions.remove(id);
 			this.mapSessionNamesTokens.remove(id);
-			conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), user.getId(), "CLOSE"));
 
 			return new ResponseEntity<>(HttpStatus.OK);
 		} else {
@@ -287,50 +295,50 @@ public class ConferenceController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-//
-//	@RequestMapping(value = "/force-disconnect", method = RequestMethod.DELETE)
-//	public ResponseEntity<JsonObject> forceDisconnect(@RequestBody Map<String, Object> params) {
-//		try {
-//			// Retrieve the param from BODY
-//			String session = (String) params.get("sessionName");
-//			String connectionId = (String) params.get("connectionId");
-//
-//			// If the session exists
-//			if (this.mapSessions.get(session) != null && this.mapSessionNamesTokens.get(session) != null) {
-//				Session s = this.mapSessions.get(session);
-//				s.forceDisconnect(connectionId);
-//				return new ResponseEntity<>(HttpStatus.OK);
-//			} else {
-//				// The SESSION does not exist
-//				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//			}
-//		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
-//			e.printStackTrace();
-//			return getErrorResponse(e);
-//		}
-//	}
-//
-//	@RequestMapping(value = "/force-unpublish", method = RequestMethod.DELETE)
-//	public ResponseEntity<JsonObject> forceUnpublish(@RequestBody Map<String, Object> params) {
-//		try {
-//			// Retrieve the param from BODY
-//			String session = (String) params.get("sessionName");
-//			String streamId = (String) params.get("streamId");
-//
-//			// If the session exists
-//			if (this.mapSessions.get(session) != null && this.mapSessionNamesTokens.get(session) != null) {
-//				Session s = this.mapSessions.get(session);
-//				s.forceUnpublish(streamId);
-//				return new ResponseEntity<>(HttpStatus.OK);
-//			} else {
-//				// The SESSION does not exist
-//				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//			}
-//		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
-//			e.printStackTrace();
-//			return getErrorResponse(e);
-//		}
-//	}
+
+	@RequestMapping(value = "/force-disconnect", method = RequestMethod.DELETE)
+	public ResponseEntity<JsonObject> forceDisconnect(@RequestBody Map<String, Object> params) {
+		try {
+			// Retrieve the param from BODY
+			String session = (String) params.get("sessionName");
+			String connectionId = (String) params.get("connectionId");
+
+			// If the session exists
+			if (this.mapSessions.get(session) != null && this.mapSessionNamesTokens.get(session) != null) {
+				Session s = this.mapSessions.get(session);
+				s.forceDisconnect(connectionId);
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				// The SESSION does not exist
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
+			e.printStackTrace();
+			return getErrorResponse(e);
+		}
+	}
+
+	@RequestMapping(value = "/force-unpublish", method = RequestMethod.DELETE)
+	public ResponseEntity<JsonObject> forceUnpublish(@RequestBody Map<String, Object> params) {
+		try {
+			// Retrieve the param from BODY
+			String session = (String) params.get("sessionName");
+			String streamId = (String) params.get("streamId");
+
+			// If the session exists
+			if (this.mapSessions.get(session) != null && this.mapSessionNamesTokens.get(session) != null) {
+				Session s = this.mapSessions.get(session);
+				s.forceUnpublish(streamId);
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				// The SESSION does not exist
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
+			e.printStackTrace();
+			return getErrorResponse(e);
+		}
+	}
 	
 	private ResponseEntity<JsonObject> getErrorResponse(Exception e) {
 		JsonObject json = new JsonObject();
