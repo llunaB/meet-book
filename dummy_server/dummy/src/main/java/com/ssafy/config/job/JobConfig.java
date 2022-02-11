@@ -23,6 +23,7 @@ public class JobConfig {
 
 
         try{
+            //시간변경 1시간
             scheduler.scheduleJob(jobDetailA, buildJobTrigger("0 0 0/1 * * ?"));
 
         } catch(SchedulerException e){
