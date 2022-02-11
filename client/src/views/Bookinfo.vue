@@ -23,10 +23,10 @@
     <div class="col-12 col-lg-6">
       <h3>{{ book.name }}을 읽은/읽을 모임</h3> <br>
 
-      <div v-if="conferences.length == 0">
+      <div v-if="conferences.length === 0">
         <div class="text-center">
           <p>아직 이 책에 관한 모임이 없어요!</p>
-          <router-link to="#">지금 이 책 모임 만들기</router-link>
+          <router-link :to="{name: 'CreateConference', query: {bookId: book.id}}">지금 이 책 모임 만들기</router-link>
         </div>
       </div>
 
@@ -63,24 +63,16 @@ export default {
   data: function () {
     return {
       book: {
-        id: 1,
-        name: '책 제목',
-        author: '작가',
-        contents: '여기는 책의 설명이 들어가는 부분입니다. 적당히 길 수도 있습니다.',
-        publisher: '출판사',
-        isbn: '00000000000000',
-        pubYear: '1900',
-        thumbnailUrl: 'https://image.aladin.co.kr/product/25241/8/cover/k872633007_1.jpg',
+        id: 0,
+        name: '',
+        author: '',
+        contents: '',
+        publisher: '',
+        isbn: '',
+        pubYear: '',
+        thumbnailUrl: '',
       },
-      // conferences: [{"id":1, "title":"오이디푸스", "thumbnail":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"Welcome","isActive":true},
-      //   {"id":2, "title":"정의란 무엇인가", "thumbnail":"https://image.yes24.com/goods/15156691/XL", "description":"welcome2","isActive":true},
-      //   {"id":3, "title":"오이디푸스", "thumbnail":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"Welcome","isActive":true},
-      //   {"id":4, "title":"정의란 무엇인가", "thumbnail":"https://image.yes24.com/goods/15156691/XL", "description":"welcome2","isActive":false},
-      //   {"id":5, "title":"오이디푸스", "thumbnail":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"Welcome", "isActive":false},
-      //   {"id":6, "title":"정의란 무엇인가", "thumbnail":"https://image.yes24.com/goods/15156691/XL", "description":"welcome2", "isActive":false},
-      //   {"id":7, "title":"오이디푸스", "thumbnail":"https://image.yes24.com/momo/TopCate393/MidCate005/6417738.jpg","description":"Welcome", "isActive":false},
-      //   {"id":8, "title":"정의란 무엇인가", "thumbnail":"https://image.yes24.com/goods/15156691/XL", "description":"welcome2", "isActive":false},
-      // ],
+
       conferences: [
 
       ],
@@ -113,22 +105,21 @@ export default {
     },
 
     getConfByBook: function (bookId) {
+      // 책 ID로 Conf 조회하기
       axios({
         method: 'GET',
         baseURL: SERVER_URL,
-        url: `conference?bookId=${bookId}`
+        url: `conference?bookId=${bookId}/expecting_conf?page=0&size=4`,
+
       })
       .then(response => {
         // this.book = response.data.book
-        
         console.log(response)
-        // this.conferences = response.data.---
+        this.conferences = response.data.content
       })
       .catch(error => {
         console.log(error)
       })
-      console.log(bookId)
-      // 책 ID로 Conf 조회하기
     },
 
 
@@ -136,7 +127,7 @@ export default {
 
   mounted: function () {
     this.getBookDetail(this.$route.params.id)
-    // this.getConfByBook(this.$route.params.id)
+    this.getConfByBook(this.$route.params.id)
   },
 }
 </script>
