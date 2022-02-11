@@ -121,13 +121,13 @@ export default {
         })
           .then(() => {
             this.submitMessage = '수정되었습니다'
-            setTimeout(() => {this.snackbar = !this.snackbar}, 2000);
+            setTimeout(() => this.snackbar = !this.snackbar, 2000);
             this.passwordEditChange()
           })
         .catch(e => {
           console.log(e.data)
           this.submitMessage = '입력 값을 수정해주세요'
-          setTimeout(() => {this.snackbar = !this.snackbar}, 2000);
+          setTimeout(() => this.snackbar = !this.snackbar, 2000);
           this.passwordEditChange()
         })
       }
@@ -151,7 +151,7 @@ export default {
           })
           .catch(() => {
             this.submitMessage = '닉네임을 입력하셔야 합니다'
-            setTimeout(() => {this.snackbar = !this.snackbar}, 2000);
+            setTimeout(() => this.snackbar = !this.snackbar, 2000);
             })
       }
     },
