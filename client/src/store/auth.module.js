@@ -13,7 +13,7 @@ export const auth = {
             return AuthService.login(user).then(
                 user => {
                     const result = JSON.parse(Buffer.from(user.token.split('.')[1], 'base64').toString())
-                    axios.get('https://localhost:8080/users/' + result["sub"] +'/detail')
+                    axios.get('https://localhost:8080/users/' + result["sub"])
                       .then(res => {
                           res.data['token'] = user.token
                           commit('loginSuccess', res.data)
