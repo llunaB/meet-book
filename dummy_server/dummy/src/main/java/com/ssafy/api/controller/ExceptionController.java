@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/exception")
+@RequestMapping("/exception")
 public class ExceptionController {
 
     @GetMapping("/entryPoint")

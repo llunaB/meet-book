@@ -29,7 +29,7 @@ import java.util.Random;
 
 @Slf4j
 @Controller
-@RequestMapping("/api/email")
+@RequestMapping("/email")
 public class EmailController {
 
     @Autowired
