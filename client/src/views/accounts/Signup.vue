@@ -1,5 +1,5 @@
 <template>
-  <div class="card-container text-center">
+  <div class="card-container text-center loginClass">
       <div class="signup-form-group row">
         <div class="col-lg-4 col-md-6 col-sm-8 mx-auto">
           <!-- 회원가입 전체 Form Start-->
@@ -15,7 +15,7 @@
                 <v-text-field type="email" label="* Email" hide-details="auto" :rules="Message"
                               v-model="user.email" id="email-signup" required />
 
-                <v-btn rounded elevation="11" class="row-2" color="error"
+                <v-btn rounded elevation="3" class="row-2" color="#fffdad"
                        @click="emailDuplication">이메일 중복확인</v-btn>
               </div>
               <!--       인증번호 전송 후, 값 확인하는 Form       -->
@@ -24,7 +24,7 @@
                 <v-text-field type="text" label="* 인증번호" hide-details="auto" :rules="Message"
                               v-model="confirm_key" id="cert-key" required />
 
-                <v-btn rounded @click="confirmKey" elevation="11" color="error"
+                <v-btn rounded @click="confirmKey" elevation="5" color="#fffdad"
                        :disabled="validated_key">인증번호 확인</v-btn>
               </div>
               <div class="row">
@@ -42,7 +42,7 @@
               <br>
               <h5><strong>* 표시는 필수 입력값입니다.</strong></h5>
               <div class="field text-center" id="submit-signup-form">
-                <v-btn elevation="11" type="submit" class="primary">가입하기</v-btn>
+                <v-btn elevation="11" type="submit" color="#fffdad">가입하기</v-btn>
                 <br>
                 <a role="link" :href="'Login'">계정이 이미 있으신가요?</a>
               </div>
@@ -196,14 +196,10 @@ p {
 
 .field > button:hover {
   background: rgb(80, 87, 80);
-  color: white;
+  color: #000000;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
-
-/* .signup-page {
-  align-items: center;
-} */
 
 .hr-sect {
 	display: flex;
@@ -223,4 +219,11 @@ p {
 	line-height: 0;
 	margin: 0 16px;
 }
+
+.loginClass {
+  background-color: #ffffff10;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
 </style>
