@@ -3,7 +3,7 @@
 
   <v-card>
     <v-tabs v-model="tab">      
-      <v-tab v-for="genre in genres" :key="genre" @click="loging(), loading()">
+      <v-tab v-for="genre in genres" :key="genre" @click="loging()">
         {{genre}}
       </v-tab>
     </v-tabs>
@@ -29,6 +29,7 @@
 <script>
 import ConferenceCard from '@/components/home/ConferenceCard'
 import axios from 'axios'
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
 export default {
   name: "ConferenceIndex",
@@ -88,17 +89,17 @@ export default {
       console.log(this.tab)      
       this.page = 1
     },
-    loading: function() {
-      console.log(this.genres[this.tab])
-      axios({
-        method: 'get',
-        url: `https://localhost:8080/conference/list/${this.page}`,        
-      })
-      .then(res=>{
-        this.conferences[10] = res.data
-        console.log("a",this.tab)})
-      .catch(err => console.error(err))
-    }
+    // loading: function() {
+    //   console.log(this.genres[this.tab])
+    //   axios({
+    //     method: 'get',
+    //     url: `/conference/list/${this.page}`,        
+    //   })
+    //   .then(res=>{
+    //     this.conferences[10] = res.data
+    //     console.log("a",this.tab)})
+    //   .catch(err => console.error(err))
+    // }
   },
   components: {
     ConferenceCard,
@@ -111,10 +112,15 @@ export default {
   watch: {
     tab: function(){
       axios({
+        baseURL: SERVER_URL,
         method: 'get',
-        url: `https://localhost:8080/conference/list/${this.page}`,
+        url: `/conference/list/${this.page}`,
+        headers: {
+          'X-AUTH-TOKEN': this.$store.state.auth.user.token
+        }
       })
       .then(res=> {
+        console.log("watch!!")
         this.showing = res.data        
       })
       .catch(err => console.error(err))
@@ -122,15 +128,19 @@ export default {
     // page에 대해서도 만들 것.
   },
   mounted(){
-    // axios({
-    //     method: 'get',
-    //     url: `https://localhost:8080/conference/list/${this.page}`,
-    //   })
-    //   .then(res=> {
-    //     this.showing = res.data        
-    //   })
-    //   .catch(err => console.error(err))
-    this.showing = this.conferences[0]
+    axios({
+        baseURL: SERVER_URL,
+        method: 'get',
+        url: `/conference/list?page=${this.page-1}&size=24`,
+        // headers: {
+        //   'X-AUTH-TOKEN': this.$store.state.auth.user.token
+        // }
+      })
+      .then(res=> {        
+        console.log(res)
+        this.showing = res.data.content        
+      })
+      .catch(err => console.error(err))    
   }
 }
 </script>
