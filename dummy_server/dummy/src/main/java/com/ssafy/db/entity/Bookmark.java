@@ -21,7 +21,6 @@ import lombok.Setter;
 public class Bookmark {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "Key")
 	private int id;
 
 	@ManyToOne
