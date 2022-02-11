@@ -142,7 +142,7 @@ public class ConferenceController {
 	public ResponseEntity<String> isSessionLive(@PathVariable("id") String id){
 		
 		if (this.mapSessions.get(id) == null) {
-			return new ResponseEntity<>("false", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>("false", HttpStatus.OK);
 		}
 		
 		return new ResponseEntity<>("true", HttpStatus.OK);
@@ -250,6 +250,7 @@ public class ConferenceController {
 				if (this.mapSessionNamesTokens.get(id).isEmpty()) {
 					// Last user left: session must be removed
 					this.mapSessions.remove(id);
+					conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), user.getId(), "CLOSE"));
 				}
 				return new ResponseEntity<>(HttpStatus.OK);
 			} else {
@@ -266,7 +267,7 @@ public class ConferenceController {
 	}
 
 	@DeleteMapping("/{id}/close")
-	public ResponseEntity<JsonObject> deleteSession(@PathVariable("id") String id) throws Exception {
+	public ResponseEntity<JsonObject> deleteSession(@PathVariable("id") String id, @AuthenticationPrincipal final User user) throws Exception {
 
 		System.out.println("Closing session | {sessionName}=" + id);
 
@@ -276,6 +277,8 @@ public class ConferenceController {
 			s.close();
 			this.mapSessions.remove(id);
 			this.mapSessionNamesTokens.remove(id);
+			conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), user.getId(), "CLOSE"));
+
 			return new ResponseEntity<>(HttpStatus.OK);
 		} else {
 			// The SESSION does not exist

@@ -11,9 +11,11 @@ public class ActionConverter implements AttributeConverter<String, Integer> {
 			return 0;
 		}else if("JOIN".equals(attribute)) {
 			return 1;
+		}else if("EXIT".equals(attribute)) {
+			return 2;
 		}
 		
-		return 2;
+		return 3;
 	}
 
 	@Override
@@ -23,9 +25,11 @@ public class ActionConverter implements AttributeConverter<String, Integer> {
 			return "CREATE";
 		}else if(1 == dbData) {
 			return "JOIN";
+		}else if(2 == dbData) {
+			return "EXIT";
 		}
 		
-		return "EXIT";
+		return "CLOSE";
 	}
 
 }

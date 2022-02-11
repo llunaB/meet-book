@@ -17,6 +17,7 @@ import lombok.Setter;
 @Builder
 public class GetBookmarksRes {
 	private int id;
+	private int conferenceId;
 	private String title;
 	private Date date;
 	private boolean alarm;
