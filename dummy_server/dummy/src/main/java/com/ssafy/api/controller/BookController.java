@@ -70,6 +70,7 @@ public class BookController {
     }
 
 
+/*
     @GetMapping("/popular")
     public ResponseEntity<List<GetBookRes>> getBooksOrderByLoanCount() {
         List<GetBookRes> getBookResList = new ArrayList<>();
@@ -86,6 +87,7 @@ public class BookController {
         }
         return new ResponseEntity<List<GetBookRes>>(getBookResList, HttpStatus.OK);
     }
+*/
 
 
 
