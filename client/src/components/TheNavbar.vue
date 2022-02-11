@@ -2,7 +2,7 @@
   <v-app-bar app color="#FAF6EA">
     <v-toolbar-title>
       <router-link :to="{name: 'Home'}" class="text-decoration-none">
-        <v-img src='@/assets/Logo.gif'/>
+        <v-img src='@/assets/Logo2.gif'/>
       </router-link>
     </v-toolbar-title>
     <v-btn text plain to="/conference" class="hidden-sm-and-down">
