@@ -2,7 +2,7 @@
   <v-app-bar app color="#FAF6EA">
     <v-toolbar-title>
       <router-link :to="{name: 'Home'}" class="text-decoration-none">
-      Meetbook
+        <v-img src='@/assets/Logo.gif'/>
       </router-link>
     </v-toolbar-title>
     <v-btn text plain to="/conference" class="hidden-sm-and-down">
@@ -66,16 +66,9 @@
     <v-menu offset-y>
       <template v-slot:activator="{ on, attrs }">
         <v-btn
-          icon
-          v-bind="attrs"
-          v-on="on">
-          <v-avatar>
-            <v-icon>
-              mdi-account-circle
-            </v-icon>
-          </v-avatar>
+          icon v-bind="attrs" v-on="on">
+          <v-avatar><v-img src='@/assets/host_img/HostImg.png' /></v-avatar>
         </v-btn>
-
       </template>
 
       <v-list v-if="loggedIn">
