@@ -61,6 +61,24 @@ public class BookService {
 
 		return bookDTOList;
 	}
+
+	public List<GetBookRes> getBooksOrderByLoanCount(){
+		List<GetBookRes> bookDTOList = new ArrayList<>();
+
+		try {
+			List<Book> bookList = bookRepository.findAllOrderByLoanCountDesc();
+			// Book List -> BookDTO List
+			bookDTOList = bookList.stream().map(source -> {
+				GetBookRes bookDTO = modelMapper.map(source, GetBookRes.class);
+				return bookDTO;
+			}).collect(Collectors.toList());
+
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
+		return bookDTOList;
+	}
 	
 	public BookDTO getBookById(int id) {
 		try {
@@ -145,4 +163,5 @@ public class BookService {
 		
 		return target;
 	}
+
 }

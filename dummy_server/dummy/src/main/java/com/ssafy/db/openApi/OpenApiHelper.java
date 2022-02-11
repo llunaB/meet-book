@@ -1,14 +1,9 @@
 package com.ssafy.db.openApi;
 
-import java.io.BufferedInputStream;
-import java.net.URL;
 import java.util.*;
 
 import com.ssafy.db.entity.Genre;
 import com.ssafy.db.repository.GenreRepository;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.BasicJsonParser;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +24,20 @@ public class OpenApiHelper {
         this.genreRepository = genreRepository;
     }
 
-    public List<Book> loadBookData() {
+    public static String truncate(String str, int length) {
+        assert length >= 3 : length;
+        length = length - 3;
+        if (str.length() <= length)
+            return str;
+        else
+            return str.substring(0, length) + "...";
+    }
 
+    public List<Book> loadBookData() {
+        // kakao search - bookContent
+        OpenApiHelper2 opn = new OpenApiHelper2();
+
+        // rest infos
         String uriString = constructUriStringWithQueryParameter();
         List<Map<String, Map<String, Object>>> list = uriToJsonObjectToList(uriString);
 
@@ -39,13 +46,19 @@ public class OpenApiHelper {
         for (Map<String, Map<String, Object>> doc : list) {
             Map<String, Object> bookInfo = doc.get("doc");
 
-            int genreId = (int)Math.floor(Double.parseDouble((String) bookInfo.get("class_no")) / 100.0);
+            // get Genre
+            int genreId = (int)Math.floor(Double.parseDouble((String) bookInfo.get("class_no")) / 100.0) + 1;
             Genre genre = genreRepository.findById(genreId).orElseThrow(NullPointerException::new);
 
+            // get bookContent from Kakao API
+            String bookContent = OpenApiHelper2.getHttpEntityStringFinallyContents((String) bookInfo.get("bookname"));
+            bookContent = truncate(bookContent, 255);
+
+            // make Book entity
             Book book = Book.builder()
                     .bookName((String) bookInfo.getOrDefault("bookname", ""))
                     .bookAuthor((String) (bookInfo.getOrDefault("authors", "")))
-                    .bookContents("")
+                    .bookContents(bookContent)
                     .bookPublisher((String) bookInfo.getOrDefault("publisher", ""))
                     .isbn((String) bookInfo.getOrDefault("isbn13", ""))
                     .bookPubYear(Integer.parseInt(((String) bookInfo.get("publication_year")).isEmpty() ? "0000" : ((String) bookInfo.get("publication_year"))))
@@ -100,3 +113,5 @@ public class OpenApiHelper {
         return uriComponents.toString();
     }
 }
+
+
