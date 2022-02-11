@@ -1,19 +1,16 @@
 package com.ssafy.api.controller;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.ssafy.api.responseDto.GetConferencesRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,11 +19,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.JsonObject;
 import com.ssafy.DTO.ConferenceDTO;
 import com.ssafy.DTO.ConferenceHistoryDTO;
+import com.ssafy.api.responseDto.GetConferencesRes;
 import com.ssafy.api.service.ConferenceService;
 import com.ssafy.db.entity.User;
 
@@ -46,6 +45,7 @@ public class ConferenceController {
 	private OpenVidu openVidu;
 	private Map<String, Session> mapSessions = new ConcurrentHashMap<>();
 	private Map<String, Map<String, OpenViduRole>> mapSessionNamesTokens = new ConcurrentHashMap<>();
+	private Map<String, Map<String, Integer>> mapSessionNamesUsers = new ConcurrentHashMap<>();
 	
 	private String OPENVIDU_URL;
 	private String SECRET;
@@ -72,27 +72,29 @@ public class ConferenceController {
 		return new ResponseEntity<Map<String,String>>(map, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/list/{pageno}")
-	public ResponseEntity<List<ConferenceDTO>> getConferences(@PathVariable("pageno") String pageno){
-		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
+	@GetMapping("/list")
+	public ResponseEntity<Page<GetConferencesRes>> getConferences(@RequestParam("size") Integer size, @RequestParam("page") Integer page){
+		Page<GetConferencesRes> list = Page.empty();
+		PageRequest request = PageRequest.of(page, size);
+		
 		try {
-			list = conferenceService.getConferences();
+			list = conferenceService.getConferences(request);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		return new ResponseEntity<List<ConferenceDTO>>(list, HttpStatus.OK);
+		return new ResponseEntity<Page<GetConferencesRes>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<ConferenceDTO> getConferenceById(@PathVariable("id") String id){
-		ConferenceDTO response = null;
+	public ResponseEntity<GetConferencesRes> getConferenceById(@PathVariable("id") String id){
+		GetConferencesRes response = null;
 		try {
 			response = conferenceService.getConferenceById(Integer.parseInt(id));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		
-		return new ResponseEntity<ConferenceDTO>(response, HttpStatus.OK);
+		return new ResponseEntity<GetConferencesRes>(response, HttpStatus.OK);
 	}
 
 	
@@ -124,14 +126,14 @@ public class ConferenceController {
 	}
 	
 	@GetMapping("/{id}/detail")
-	public ResponseEntity<ConferenceDTO> getConferenceDetail(@PathVariable("id") String id){
-		ConferenceDTO response = null;
+	public ResponseEntity<GetConferencesRes> getConferenceDetail(@PathVariable("id") String id){
+		GetConferencesRes response = null;
 		try {
 			response = conferenceService.getConferenceById(Integer.parseInt(id));
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		return new ResponseEntity<ConferenceDTO>(response, HttpStatus.OK);
+		return new ResponseEntity<GetConferencesRes>(response, HttpStatus.OK);
 	}
 	
 	/*******************/
@@ -157,13 +159,13 @@ public class ConferenceController {
 		OpenViduRole role = OpenViduRole.PUBLISHER;
 		
 		//Checking valid of conference.
-		ConferenceDTO target = conferenceService.getConferenceById(Integer.parseInt(id));
+		GetConferencesRes target = conferenceService.getConferenceById(Integer.parseInt(id));
 		if(target == null) {
 			return new ResponseEntity<>("conference not found", HttpStatus.NOT_FOUND);
 		}
 		
 		//Give moderator role  if user make this conference.
-		if(target.getUserId() == user.getId()) {
+		if(target.getUser().getId() == user.getId()) {
 			role = OpenViduRole.MODERATOR;
 		}
 		
@@ -183,6 +185,7 @@ public class ConferenceController {
 
 				// Update our collection storing the new token
 				this.mapSessionNamesTokens.get(id).put(token, role);
+				this.mapSessionNamesUsers.get(id).put(token, user.getId());
 				conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), user.getId(), "JOIN"));
 				// Prepare the response with the token
 				responseJson.addProperty("token", token);
@@ -200,6 +203,7 @@ public class ConferenceController {
 					// anymore. Clean collections and continue as new session
 					this.mapSessions.remove(id);
 					this.mapSessionNamesTokens.remove(id);
+					this.mapSessionNamesUsers.remove(id);
 				}
 			}
 		}
@@ -219,6 +223,9 @@ public class ConferenceController {
 
 			this.mapSessionNamesTokens.put(id, new ConcurrentHashMap<>());
 			this.mapSessionNamesTokens.get(id).put(token, role);
+
+			this.mapSessionNamesUsers.put(id, new ConcurrentHashMap<>());
+			this.mapSessionNamesUsers.get(id).put(token, user.getId());
 			conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), user.getId(), "JOIN"));
 
 
@@ -235,22 +242,25 @@ public class ConferenceController {
 	}
 
 	@DeleteMapping("/{id}/leave")
-	public ResponseEntity<JsonObject> deleteUser(@PathVariable("id") String id , @RequestBody String token, @AuthenticationPrincipal final User user) throws Exception {
+	public ResponseEntity<JsonObject> deleteUser(@PathVariable("id") String id , @RequestBody String token) throws Exception {
 
 		System.out.println("Removing user | {sessionName, token}=" + id+", "+token);
-
+		
 		// If the session exists
 		if (this.mapSessions.get(id) != null && this.mapSessionNamesTokens.get(id) != null) {
-
+			int userId = this.mapSessionNamesUsers.get(id).get(token);
+			
+			
 			// If the token exists
 			if (this.mapSessionNamesTokens.get(id).remove(token) != null) {
 				// User left the session
-				conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), user.getId(), "EXIT"));
+
+				this.mapSessionNamesUsers.get(id).remove(token);
+				conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), userId, "EXIT"));
 
 				if (this.mapSessionNamesTokens.get(id).isEmpty()) {
 					// Last user left: session must be removed
 					this.mapSessions.remove(id);
-					conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), user.getId(), "CLOSE"));
 				}
 				return new ResponseEntity<>(HttpStatus.OK);
 			} else {
@@ -267,7 +277,7 @@ public class ConferenceController {
 	}
 
 	@DeleteMapping("/{id}/close")
-	public ResponseEntity<JsonObject> deleteSession(@PathVariable("id") String id, @AuthenticationPrincipal final User user) throws Exception {
+	public ResponseEntity<JsonObject> deleteSession(@PathVariable("id") String id) throws Exception {
 
 		System.out.println("Closing session | {sessionName}=" + id);
 
@@ -277,7 +287,6 @@ public class ConferenceController {
 			s.close();
 			this.mapSessions.remove(id);
 			this.mapSessionNamesTokens.remove(id);
-			conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), user.getId(), "CLOSE"));
 
 			return new ResponseEntity<>(HttpStatus.OK);
 		} else {

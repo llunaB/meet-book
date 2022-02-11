@@ -4,6 +4,7 @@ import com.ssafy.error.exception.securityException.CustomAccessDeniedHandler;
 import com.ssafy.error.exception.securityException.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -60,7 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .authorizeRequests() // 요청에 대한 사용권한 체크
                 .antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/profile","/email/**","/users/login/**","/exception/**","/users/signup/**","/users/**","/search/**","/users/findpwd/**", "/books/**").permitAll()
-
+                .antMatchers(HttpMethod.GET,"/conference/**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
 //                .antMatchers("/user/**").hasRole("USER")
                 .antMatchers("/h2-console/**").permitAll() // 누구나 h2-console 접속

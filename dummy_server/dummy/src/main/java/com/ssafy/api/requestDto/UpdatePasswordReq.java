@@ -1,7 +1,5 @@
 package com.ssafy.api.requestDto;
 
-import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateUserByDetailReq {
-    private int gender;
-    private Date age;
+public class UpdatePasswordReq {
+	 private String oldPassword;
+	   private String newPassword;
 }
