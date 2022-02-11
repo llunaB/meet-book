@@ -12,6 +12,8 @@
         required
       ></v-text-field>
 
+      <v-img :src="book.thumbnailUrl" max-height="540px" contain></v-img>
+
       <v-autocomplete
         v-model="book"
         clearable
@@ -100,7 +102,6 @@ import { mapState } from 'vuex'
 // import authheader from "@/services/auth-header"
 export default {
   name: 'CreateConference',
-
   data: () => ({
     valid: true,
     title: '',
@@ -136,7 +137,7 @@ export default {
     description: '',
     thumbnailUrl: '',
 
-    book: null,
+    book: {},
     bookSearch: null,
     bookLoading: false,
     nameLimit: 20,
@@ -268,8 +269,24 @@ export default {
       alert('로그인이 필요한 기능입니다.')
       this.$router.push({name: 'Home'})
     }
-  }
+  },
 
+  mounted: function () {
+    if (this.$route.query.bookId) {
+      axios({
+        method: 'GET',
+        baseURL: SERVER_URL,
+        url: `books/${this.$route.query.bookId}`,
+      })
+      .then(response => {
+        this.book = response.data
+        this.bookEntries = [ this.book ]
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    }
+  }
   
 }
 </script>

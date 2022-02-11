@@ -26,7 +26,7 @@
       <div v-if="conferences.length === 0">
         <div class="text-center">
           <p>아직 이 책에 관한 모임이 없어요!</p>
-          <router-link to="#">지금 이 책 모임 만들기</router-link>
+          <router-link :to="{name: 'CreateConference', query: {bookId: book.id}}">지금 이 책 모임 만들기</router-link>
         </div>
       </div>
 
