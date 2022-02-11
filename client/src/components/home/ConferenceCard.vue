@@ -3,7 +3,7 @@
     <div class="card-front" v-bind:class="{frontLocked: locked}">
       <v-img :src="conference.thumbnail" class="border" :eager="true" max-width="219">
       <div v-if="conference.isActive">
-        <v-btn color="red" dark>
+        <v-btn color="red livecast" dark>
           <v-icon dark left>mdi-broadcast</v-icon>
           LIVE
         </v-btn>
@@ -20,7 +20,7 @@
       </v-card-text>
       <v-btn class="mx-3 lock" @click="lockClick">
         <v-icon v-if="locked === false">mdi-lock-open-outline</v-icon>
-        <v-icon v-else>mdi-lock</v-icon>
+        <v-icon v-else >mdi-lock</v-icon>
       </v-btn>
       <v-btn class="mx-5 mb-2 enter" @click="goToMeeting(conference.id)" v-if="conference.isActive">
         참여하기        
@@ -104,4 +104,18 @@ export default {
   right: 0;
   bottom: 0;
 }
+
+.livecast {
+  animation: pulse 1500ms infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: red 0 0 0 0;
+  }
+  75% {
+    box-shadow: #ff000000 0 0 0 16px;
+  }
+}
+
 </style>
