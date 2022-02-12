@@ -34,7 +34,7 @@
           <span class="mr-2">모임 개설</span>
         </v-btn>
         <v-btn
-            to="#"
+            :to="{name: 'ConferenceSchedule'}"
             text
             plain
           >
@@ -125,7 +125,7 @@ export default {
       ],
       shortMenuItems: [
         { title: '모임 개설', to:'CreateConference', needLogin: true},
-        { title: '나의 일정', to:'#', needLogin: true},
+        { title: '나의 일정', to:'ConferenceSchedule', needLogin: true},
         { title: '로그인', to:'Login', needLogin: false},
         { title: '회원가입', to:'Signup', needLogin: false},
       ],

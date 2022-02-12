@@ -10,6 +10,7 @@ import Settings from "@/views/accounts/Settings";
 import ConferenceIndex from '@/views/conference/ConferenceIndex'
 import ConferenceMeeting from '@/views/conference/ConferenceMeeting'
 import CreateConference from '@/views/conference/CreateConference'
+import ConferenceSchedule from '@/views/conference/ConferenceSchedule'
 
 import Search from '@/views/Search'
 
@@ -51,6 +52,11 @@ const routes = [
     path: '/conference/new',
     name: 'CreateConference',
     component: CreateConference
+  },
+  {
+    path: '/conference/schedule',
+    name: 'ConferenceSchedule',
+    component: ConferenceSchedule,
   },
   {
     path: '/conference/:conferenceId',
