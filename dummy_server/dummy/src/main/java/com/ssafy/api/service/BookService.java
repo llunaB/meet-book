@@ -35,8 +35,11 @@ public class BookService {
 	// 도서데이터 생성
 	public boolean getBookData() {
 		try {
-			List<Book> list = openApiHelper.loadBookData();
-			bookRepository.saveAll(list);
+			for(int i = 0; i < 10; i++) {
+				List<Book> list = openApiHelper.loadBookDataWithKDC(i);
+				bookRepository.saveAll(list);
+			}
+			
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -49,6 +52,24 @@ public class BookService {
 
 		try {
 			List<Book> bookList = bookRepository.findAll();
+			// Book List -> BookDTO List
+			bookDTOList = bookList.stream().map(source -> {
+				GetBookRes bookDTO = modelMapper.map(source, GetBookRes.class);
+				return bookDTO;
+			}).collect(Collectors.toList());
+
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
+		return bookDTOList;
+	}
+
+	public List<GetBookRes> getBooksOrderByLoanCount(){
+		List<GetBookRes> bookDTOList = new ArrayList<>();
+
+		try {
+			List<Book> bookList = bookRepository.findAllOrderByLoanCountDesc();
 			// Book List -> BookDTO List
 			bookDTOList = bookList.stream().map(source -> {
 				GetBookRes bookDTO = modelMapper.map(source, GetBookRes.class);
@@ -145,4 +166,5 @@ public class BookService {
 		
 		return target;
 	}
+
 }

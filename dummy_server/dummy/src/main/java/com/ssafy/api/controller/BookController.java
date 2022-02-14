@@ -70,9 +70,30 @@ public class BookController {
     }
 
 
+/*
+    @GetMapping("/popular")
+    public ResponseEntity<List<GetBookRes>> getBooksOrderByLoanCount() {
+        List<GetBookRes> getBookResList = new ArrayList<>();
+        try {
+            List<GetBookRes> bookDTOList = this.bookService.getBooksOrderByLoanCount();
+            // BookDTOList -> GetBookResList
+            getBookResList = bookDTOList.stream().map(source -> {
+                GetBookRes getBookRes = modelMapper.map(source, GetBookRes.class);
+                return getBookRes;
+            }).collect(Collectors.toList());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<List<GetBookRes>>(getBookResList, HttpStatus.OK);
+    }
+*/
+
+
+
     @GetMapping("{id}/expecting_conf")
-    public ResponseEntity<Page<ConferenceDTO>> getConferencesExpectingByBookId(@PathVariable("id") String id, @RequestParam("page") Integer page , @RequestParam("size") Integer size) {
-            Page<ConferenceDTO> list = Page.empty();
+    public ResponseEntity<Page<GetConferencesRes>> getConferencesExpectingByBookId(@PathVariable("id") String id, @RequestParam("page") Integer page , @RequestParam("size") Integer size) {
+            Page<GetConferencesRes> list = Page.empty();
             PageRequest request = PageRequest.of(page, size);
 
             try {
@@ -81,13 +102,13 @@ public class BookController {
                 e.printStackTrace();
             }
 
-            return new ResponseEntity<Page<ConferenceDTO>>(list, HttpStatus.OK);
+            return new ResponseEntity<Page<GetConferencesRes>>(list, HttpStatus.OK);
         }
 
 
     @GetMapping("{id}/finished_conf")
-    public ResponseEntity<Page<ConferenceDTO>> getConferencesFinishedByBookId(@PathVariable("id") String id, @RequestParam("page") Integer page , @RequestParam("size") Integer size) {
-        Page<ConferenceDTO> list = Page.empty();
+    public ResponseEntity<Page<GetConferencesRes>> getConferencesFinishedByBookId(@PathVariable("id") String id, @RequestParam("page") Integer page , @RequestParam("size") Integer size) {
+        Page<GetConferencesRes> list = Page.empty();
         PageRequest request = PageRequest.of(page, size);
 
         try {
@@ -96,19 +117,6 @@ public class BookController {
             e.printStackTrace();
         }
 
-        return new ResponseEntity<Page<ConferenceDTO>>(list, HttpStatus.OK);
-    }
-
-
-
-    @GetMapping("/list/{pageno}")
-    public ResponseEntity<List<ConferenceDTO>> getConferences(@PathVariable("pageno") String pageno){
-        List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
-        try {
-            list = conferenceService.getConferences();
-        }catch(Exception e) {
-            e.printStackTrace();
-        }
-        return new ResponseEntity<List<ConferenceDTO>>(list, HttpStatus.OK);
+        return new ResponseEntity<Page<GetConferencesRes>>(list, HttpStatus.OK);
     }
 }
