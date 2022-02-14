@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import com.ssafy.db.entity.Book;
 import com.ssafy.db.entity.Conference;
 import com.ssafy.db.entity.User;
-import com.ssafy.db.entity.Genre;
 
 @Repository
 public interface ConferenceRepository extends JpaRepository<Conference, Integer> {
