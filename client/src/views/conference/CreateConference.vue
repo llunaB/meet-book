@@ -12,7 +12,7 @@
         required
       ></v-text-field>
 
-      <v-img :src="book.thumbnailUrl" max-height="540px" contain></v-img>
+      <v-img v-if="!!book" :src="book.thumbnailUrl" max-height="540px" contain></v-img>
 
       <v-autocomplete
         v-model="book"
@@ -113,7 +113,7 @@ export default {
     max_members: null,
     max_member_items: _.range(2, 31),
 
-    date_time: moment().format('YYYY-MM-DDTHH:00'),
+    date_time: moment().add(1, 'hours').format('YYYY-MM-DDTHH:00'),
     date_time_now: moment().format('YYYY-MM-DDTHH:mm'),
 
     // date_time: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 14) + "00",
