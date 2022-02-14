@@ -157,7 +157,7 @@ public class UserController {
 	
 	@GetMapping("/{id}/detail")
 	public ResponseEntity<GetUserByDetailRes> getUserDetail(@PathVariable("id") String id, @AuthenticationPrincipal User userEntity) {
-		if(Integer.parseInt(id) != userEntity.getId()) {
+		if(!checkUser(id, userEntity)) {
 			return new ResponseEntity<GetUserByDetailRes>(new GetUserByDetailRes(), HttpStatus.FORBIDDEN);
 		}
 		
@@ -166,9 +166,14 @@ public class UserController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Map<String,String>> updateUserByProfile(@PathVariable("id") String id, @RequestBody UpdateUserByProfileReq updateProfileRequestDto){
+	public ResponseEntity<Map<String,String>> updateUserByProfile(@PathVariable("id") String id, @RequestBody UpdateUserByProfileReq updateProfileRequestDto, @AuthenticationPrincipal User userEntity){
 		
 		HashMap<String, String> map = new HashMap<String, String>();
+		
+		if(!checkUser(id, userEntity)) {
+			map.put("message", "회원정보 수정 실패");
+			return new ResponseEntity<Map<String,String>>(map, HttpStatus.FORBIDDEN);
+		}
 
 		 if(userService.updateUserByProfile(updateProfileRequestDto, Integer.parseInt(id))){
             UserDTO user = userService.getUserById(Integer.parseInt(id));
@@ -181,9 +186,14 @@ public class UserController {
 	}
 	
 	@PutMapping("/{id}/detail")
-	public ResponseEntity<Map<String,String>> updateUserByDetail(@PathVariable("id") String id,@RequestBody UpdateUserByDetailReq updateUserByDetailReq){
+	public ResponseEntity<Map<String,String>> updateUserByDetail(@PathVariable("id") String id,@RequestBody UpdateUserByDetailReq updateUserByDetailReq, @AuthenticationPrincipal User userEntity){
 		
 		HashMap<String, String> map = new HashMap<String, String>();
+		
+		if(!checkUser(id, userEntity)) {
+			map.put("message", "회원정보 수정 실패");
+			return new ResponseEntity<Map<String,String>>(map, HttpStatus.FORBIDDEN);
+		}
 		
 		if(userService.updateUserByDetail(updateUserByDetailReq, Integer.parseInt(id))){
 			 UserDTO user = userService.getUserById(Integer.parseInt(id));
@@ -196,9 +206,14 @@ public class UserController {
 	}
 	
 	@PutMapping("/{id}/Password")
-	public ResponseEntity<Map<String,String>> updatePassword(@PathVariable("id") String id,@RequestBody UpdatePasswordReq updatePasswordReq){
+	public ResponseEntity<Map<String,String>> updatePassword(@PathVariable("id") String id,@RequestBody UpdatePasswordReq updatePasswordReq, @AuthenticationPrincipal User userEntity){
 		
 		HashMap<String, String> map = new HashMap<String, String>();
+		
+		if(!checkUser(id, userEntity)) {
+			map.put("message", "비밀번호 수정 실패");
+			return new ResponseEntity<Map<String,String>>(map, HttpStatus.FORBIDDEN);
+		}
 		
 		if(userService.updatePassword(updatePasswordReq, Integer.parseInt(id))){
 			 UserDTO user = userService.getUserById(Integer.parseInt(id));
@@ -211,9 +226,14 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Map<String,String>> deleteUser(@RequestBody DeleteUserReq deleteUserReq, @PathVariable("id") String id){
+	public ResponseEntity<Map<String,String>> deleteUser(@RequestBody DeleteUserReq deleteUserReq, @PathVariable("id") String id, @AuthenticationPrincipal User userEntity){
 		HashMap<String, String> map = new HashMap<String, String>();
-
+		
+		if(!checkUser(id, userEntity)) {
+			map.put("message", "삭제 실패");
+			return new ResponseEntity<Map<String,String>>(map, HttpStatus.FORBIDDEN);
+		}
+		
 		if (userService.deleteUser(deleteUserReq, Integer.parseInt(id))) {
 			map.put("message", "삭제 성공");
 			return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
@@ -270,6 +290,11 @@ public class UserController {
 		list.put("id", "-1");
 		return new ResponseEntity<Map<String, String>>(list, HttpStatus.NOT_FOUND);
 		
+	}
+	
+	boolean checkUser(String id, User user) {
+		if (user == null) return false;
+		return Integer.parseInt(id) == user.getId();
 	}
 	
 }
