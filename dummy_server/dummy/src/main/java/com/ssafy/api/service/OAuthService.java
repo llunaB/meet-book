@@ -133,17 +133,20 @@ public class OAuthService {
             String email = "";
             String nickname ="";
             String password ="";
+            String profileImage="";
             if(hasEmail){
                 email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
                 nickname = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("profile").getAsJsonObject().get("nickname").getAsString();
                 password = tempKey();
+                profileImage = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("profile").getAsJsonObject().get("thumbnail_image_url").getAsString();
             }
             //pwd, nick, email
-            SignUpReq signUpReq = SignUpReq.builder().password(password).nickname(nickname).email(email).build();
+            SignUpReq signUpReq = SignUpReq.builder().password(password).nickname(nickname).email(email).profileImage(profileImage).build();
             System.out.println(signUpReq.toString());
             System.out.println("id : " + id);
             System.out.println("email : " + email);
             System.out.println("nickname : "+nickname);
+            log.info("profileImage"+profileImage);
 
             br.close();
             return signUpReq;
@@ -299,7 +302,7 @@ public class OAuthService {
         //기존 가입이 아닐 때
         if(!user.isPresent()){
 
-            System.out.println("실행되면 안돼요"+signUpReq.toString());
+            log.info("회원정보가 없을 때"+signUpReq.toString());
             UserDTO userDTO = new UserDTO(signUpReq);
             User entitiy = modelMapper.map(userDTO, User.class);
             entitiy.setPassword(passwordEncoder.encode(entitiy.getPassword()));
