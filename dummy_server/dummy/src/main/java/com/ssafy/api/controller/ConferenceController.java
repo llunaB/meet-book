@@ -25,6 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.JsonObject;
 import com.ssafy.DTO.ConferenceDTO;
 import com.ssafy.DTO.ConferenceHistoryDTO;
+import com.ssafy.api.requestDto.conference.ForceDisconnectReq;
+import com.ssafy.api.requestDto.conference.ForceUnpublishReq;
+import com.ssafy.api.requestDto.conference.LeaveConferenceReq;
 import com.ssafy.api.responseDto.GetConferencesRes;
 import com.ssafy.api.service.ConferenceService;
 import com.ssafy.db.entity.User;
@@ -159,10 +162,19 @@ public class ConferenceController {
 		OpenViduRole role = OpenViduRole.PUBLISHER;
 		
 		//Checking valid of conference.
-		GetConferencesRes target = conferenceService.getConferenceById(Integer.parseInt(id));
-		if(target == null) {
+		GetConferencesRes target = null;
+		try {
+			target = conferenceService.getConferenceById(Integer.parseInt(id));
+			
+			if(target == null) {
+				return new ResponseEntity<>("conference not found", HttpStatus.NOT_FOUND);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<>("conference not found", HttpStatus.NOT_FOUND);
 		}
+		
+		
 		
 		//Give moderator role  if user make this conference.
 		if(target.getUser().getId() == user.getId()) {
@@ -242,8 +254,8 @@ public class ConferenceController {
 	}
 
 	@DeleteMapping("/{id}/leave")
-	public ResponseEntity<JsonObject> deleteUser(@PathVariable("id") String id , @RequestBody String token) throws Exception {
-
+	public ResponseEntity<JsonObject> deleteUser(@PathVariable("id") String id , @RequestBody LeaveConferenceReq req) throws Exception {
+		String token = req.getToken();
 		System.out.println("Removing user | {sessionName, token}=" + id+", "+token);
 		
 		// If the session exists
@@ -297,9 +309,11 @@ public class ConferenceController {
 	}
 
 	@RequestMapping(value = "/{id}/force-disconnect", method = RequestMethod.DELETE)
-	public ResponseEntity<JsonObject> forceDisconnect(@PathVariable("id") String id, @RequestBody String token, @RequestBody String connectionId) {
+	public ResponseEntity<JsonObject> forceDisconnect(@PathVariable("id") String id, @RequestBody ForceDisconnectReq req) {
 		try {
-
+			String token = req.getToken();
+			String connectionId = req.getConnectionId();
+			
 			// If the session exists
 			if (this.mapSessions.get(id) != null && this.mapSessionNamesTokens.get(id) != null) {
 				Session s = this.mapSessions.get(id);
@@ -318,7 +332,9 @@ public class ConferenceController {
 	}
 
 	@RequestMapping(value = "/{id}/force-unpublish", method = RequestMethod.DELETE)
-	public ResponseEntity<JsonObject> forceUnpublish(@PathVariable("id") String id, @RequestBody String streamId) {
+	public ResponseEntity<JsonObject> forceUnpublish(@PathVariable("id") String id, @RequestBody ForceUnpublishReq req) {
+		String streamId = req.getStreamId();
+		
 		try {
 			// If the session exists
 			if (this.mapSessions.get(id) != null && this.mapSessionNamesTokens.get(id) != null) {

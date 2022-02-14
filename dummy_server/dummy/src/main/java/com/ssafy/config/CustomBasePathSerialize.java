@@ -19,8 +19,7 @@ public class CustomBasePathSerialize extends JsonSerializer {
     // add basePath based on active profile, remove this.
     private final Environment env;
 
-    public CustomBasePathSerialize(List<JacksonModuleRegistrar> modules,
-                                   Environment env) {
+    public CustomBasePathSerialize(List<JacksonModuleRegistrar> modules, Environment env) {
         super(modules);
         this.env = env;
     }
