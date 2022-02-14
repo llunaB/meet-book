@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.ssafy.db.entity.Book;
 import com.ssafy.db.entity.Conference;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.entity.Genre;
 
 @Repository
 public interface ConferenceRepository extends JpaRepository<Conference, Integer> {
@@ -21,6 +22,8 @@ public interface ConferenceRepository extends JpaRepository<Conference, Integer>
 	@Query(value = "select * from conference where user_id in :types", nativeQuery = true)
 	Page<Conference> findConferencesByUser(@Param("types") List<User> users, Pageable pageable);
 	Page<Conference> findByTagsContaining(String tags, Pageable pageable);
+	Page<Conference> findConferenceByBookGenreGenre(String genre, Pageable pageable);
+
 
 	@Query(value = "select * from conference c where c.book_id = :id AND c.call_end_time < CURRENT_TIMESTAMP", nativeQuery = true)
 	Page<Conference> findFinishedConferencesByBookId(@Param("id") Integer id, Pageable pageable);

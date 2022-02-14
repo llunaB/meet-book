@@ -126,4 +126,17 @@ public class SearchController {
 		}
 		return new ResponseEntity<Page<GetConferencesRes>>(list, HttpStatus.OK);
 	}
+	
+	@GetMapping("/conference/genre")
+	public ResponseEntity<Page<GetConferencesRes>> getConferencesByGenre(@RequestParam("genre") String genre, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+		Page<GetConferencesRes> list = Page.empty();
+		PageRequest request = PageRequest.of(page, size);
+
+		try {
+			list = conferenceService.getConferencesByGenre(genre, request);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<Page<GetConferencesRes>>(list, HttpStatus.OK);
+	}
 }
