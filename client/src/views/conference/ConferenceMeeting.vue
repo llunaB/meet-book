@@ -33,23 +33,23 @@
       <label>
         <v-icon>mdi-chat</v-icon>
       </label>
-      <select v-model="talkTo">
+      <select v-model="connection">
         <option v-for="(connection,n) in connections" :key="n" :value="n">
-          {{n!==0 ? JSON.parse(connection.data.split('%')[0]).clientData : "모두에게"}}
+          {{n!==0 ? JSON.parse(connection.data).clientData : "모두에게"}}
         </option>
       </select>
       <input id="textInput" v-bind:value="inputText" v-on:input="updateInput">
       <v-btn @click="sendMessage">
         메세지 보내기
       </v-btn>
-      <select v-model="banTo">
+      <!-- <select v-model="connection">
         <option v-for="(connection,n) in connections" :key="n" :value="n">
-          {{n!==0 ? JSON.parse(connection.data.split('%')[0]).clientData : "강퇴하기"}}
+          {{n!==0 ? JSON.parse(connection.data).clientData : "모두에게"}}
         </option>
       </select>      
       <v-btn @click="kickUser">
         강퇴
-      </v-btn>      
+      </v-btn>       -->
     </div>
     <div id="chat">
     </div>
@@ -74,10 +74,10 @@ export default {
 			session: undefined,
 			mainStreamManager: undefined,
 			publisher: undefined,
-			subscribers: [],      
-      talkTo: 0,
+			subscribers: [],
+      users: [],
+      connection: 0,
       connections: [],
-      banTo: 0,
       videoMuted: false,
       audioMuted: false,
       mySessionId: null,
@@ -104,7 +104,8 @@ export default {
 
       this.session.on('streamCreated', ({ stream }) => {
         const subscriber = this.session.subscribe(stream)
-        this.subscribers.push(subscriber)             
+        this.subscribers.push(subscriber)
+        this.users.push(subscriber.clientData)        
       })
 
       this.session.on('streamDestroyed', ({ stream }) => {
@@ -121,29 +122,15 @@ export default {
       this.session.on('signal:my-chat', (event) => {
         const chat = document.getElementById("chat")
         const p = document.createElement("p")
-        p.innerText = `${JSON.parse(event.from.data.split('%')[0]).clientData}: ${event.data}`
-        chat.append(p)        
+        p.innerText = `${JSON.parse(event.from.data).clientData}: ${event.data}`
+        chat.append(p)
+        
       })
 
       this.session.on('connectionCreated', (event) => {
         this.connections.push(event.connection)        
         console.log("connections:", this.connections)
       })
-
-      this.session.on('connectionDestroyed', (event)=> {
-        console.log("disconnection:", event)
-        const index = this.connections.indexOf(event.connection, 0)
-        console.log("index:", index)
-        if (index >= 0) {
-          this.connections.splice(index, 1)
-        }
-      })
-
-      this.session.on('signal:kick-msg', () => {
-        alert("강퇴당했습니다.")
-        this.$router.push({ name: 'Home'})
-      })
-      
 
       //수정?
       this.session.on('publisherStartSpeaking', (event) => {
@@ -171,7 +158,8 @@ export default {
             })
 
             this.mainStreamManager = publisher
-            this.publisher = publisher            
+            this.publisher = publisher
+            this.users.push(this.pusblisher)
 
             this.session.publish(this.publisher)            
           })
@@ -289,7 +277,7 @@ export default {
       this.inputText = updatedText
     },
     sendMessage(){
-      if(this.talkTo === 0) {
+      if(this.connection === 0) {
         this.session.signal({
           data: this.inputText,
           to: [],
@@ -305,7 +293,7 @@ export default {
       } else {
         this.session.signal({
           data: this.inputText,
-          to: [this.connections[0],this.connections[this.talkTo]],
+          to: [this.connections[0],this.connections[this.connection]],
           type: 'my-chat'
         })
         .then(() => {          
@@ -318,17 +306,8 @@ export default {
       }
     },
     kickUser(){
-      console.log("connection:", this.connections[this.banTo])
-      if(this.banTo !== 0){
-        this.session.signal({
-          to: [this.connections[this.banTo]],
-          type: 'kick-msg'
-        })
-        .then(res => console.log(res))
-        .catch(err => console.error(err))
-        this.session.forceDisconnect(this.connections[this.banTo])
-        this.banTo = 0
-      }
+      console.log("connection:", this.connections[this.connection])
+      this.session.forceDisconnect(this.connections[this.connection])
     }
   }
 }
