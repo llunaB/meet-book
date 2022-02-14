@@ -19,6 +19,7 @@
       style="max-width: 450px;"
       v-model="keyword"
       @keyup.enter="searchKeyword(keyword)"
+      @click:append-outer="searchKeyword(keyword)"
       >
     </v-text-field>
 
