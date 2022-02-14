@@ -26,6 +26,8 @@ public class SignUpReq {
     @NotBlank(message = "이메일은 필수 입력 값입니다.")
     private String email;
 
+    private String profileImage;
+
     @Override
 	public String toString() {
 		return "SignUpUserDto [password=" + password + ", nickname=" + nickname + ", email=" + email + "]";
