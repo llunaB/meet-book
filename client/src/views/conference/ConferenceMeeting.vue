@@ -101,6 +101,7 @@ export default {
       mySessionId: null,
       myUserName: 'chan',
       inputText: '',
+      token: null,
     }
   },
   components:{
@@ -175,6 +176,7 @@ export default {
       // user token
       this.getToken(this.mySessionId).then(token => {
         console.log("token:",token)
+        this.token = token
         this.session.connect(token, { clientData: this.myUserName})
           .then(() => {
             let publisher = this.OV.initPublisher(undefined, {
@@ -203,7 +205,21 @@ export default {
     // 위까지가 joinSession
 
     leaveSession () {
-      if (this.session) {this.session.disconnect()}
+      if (this.session) {
+        axios({
+          baseURL: SERVER_URL,
+          method: 'delete',
+          url: `conference/${this.mySessionId}/leave`,
+          data: {
+            token: this.token
+          },
+          headers: {
+            'X-AUTH-TOKEN': this.$store.state.auth.user.token
+          },
+        })
+        .then(res => console.log(res))
+        .catch(err => console.error(err))
+        this.session.disconnect()}
 
       this.session = undefined;
 			this.mainStreamManager = undefined;
