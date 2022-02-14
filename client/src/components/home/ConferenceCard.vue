@@ -26,7 +26,7 @@
         <p>{{conference.id}}</p>
         <p>시작예정: {{formating(conference.callStartTime)}}</p>
         <p>종료예정: {{formating(conference.callEndTime)}}</p>
-        <p>참여인원 / 최대인원: 0 / {{conference.maxMembers}}</p>
+        <p>참여인원 / 최대인원: {{attendMembers}} / {{conference.maxMembers}}</p>
         <p>설명: {{conference.description}}</p>
       </v-card-text>
       <v-btn class="mx-3 lock" @click="lockClick">
@@ -55,6 +55,7 @@ export default {
       isActive: null,      
       bookmarkId: null,
       bookmarked: false,
+      attendMembers: 0,
     }
   },
   props: {
@@ -159,12 +160,22 @@ export default {
         this.bookmarked = true
       })
       .catch(err=>console.error(err))
+    },
+    checkAttends: function(){
+      axios({
+        baseURL: SERVER_URL,
+        method: 'get',
+        url: `/conference/${this.conference.id}/attend`
+      })
+      .then(res=>this.attendMembers = res.data.data)
+      .catch(err=>console.error(err))
     }
   },  
   mounted(){
     this.$nextTick(function(){      
       this.activeCheck()      
       this.isbookmarked()
+      this.checkAttends()
     })
   }
 }
