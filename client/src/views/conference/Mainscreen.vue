@@ -85,9 +85,9 @@
             </v-col>
             <v-col>
               <v-card>
-                <v-card-title>회의 정보</v-card-title>
-                <v-card-text>회의 내용</v-card-text>
-                <v-card-text>회의 진행 시간</v-card-text>
+                <v-card-title>{{ conference.title }}</v-card-title>
+                <v-card-text>{{ conference.book.bookName }}</v-card-text>
+                <v-card-text>{{ conference.description }}</v-card-text>
               </v-card>
             </v-col>
           </v-row>
@@ -285,7 +285,7 @@ export default {
     .then(response => {
       console.log(response)
       if (response.data) {
-        this.conference = response.data.conference
+        this.conference = response.data
       }
     })
     .catch(error => {
