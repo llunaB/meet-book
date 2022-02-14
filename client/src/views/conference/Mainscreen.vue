@@ -285,7 +285,7 @@ export default {
     .then(response => {
       console.log(response)
       if (response.data) {
-        this.conference = response.data.conference
+        this.conference = response.data
       }
     })
     .catch(error => {
