@@ -14,6 +14,8 @@ import ConferenceSchedule from '@/views/conference/ConferenceSchedule'
 
 import Search from '@/views/Search'
 
+import Mainscreen from '@/views/conference/Mainscreen'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -80,6 +82,12 @@ const routes = [
   },
 
   
+  {
+    path: '/test/mainscreen/:conferenceId',
+    name: 'Mainscreen',
+    component: Mainscreen
+  },
+
 ]
 
 const router = new VueRouter({
