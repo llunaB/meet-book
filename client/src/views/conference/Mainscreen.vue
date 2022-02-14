@@ -149,8 +149,8 @@
           <!-- 채팅창 -->
           <v-card outlined class="overflow-y-auto ma-1 chatlogbox align-end" min-height="560px" max-height="560px">
 
-            <div v-for="(log, idx) in chatlog" :key="idx" :class="log.user == myUserName ? 'text-start' : 'text-end'">
-              <v-card outlined :ripple="false" :color="log.user == myUserName ? 'green' : null" class="d-inline pa-1">
+            <div v-for="(log, idx) in chatlog" :key="idx" :class="log.user === auth.user.nickname ? 'text-start' : 'text-end'">
+              <v-card outlined :ripple="false" :color="log.user == auth.user.nickname ? 'green' : null" class="d-inline pa-1">
                 {{ log.content }}
               </v-card>
               <p class="caption">
@@ -239,7 +239,6 @@ export default {
       publisher: undefined,
       subscribers: [],
       mySessionId: null,
-      myUserName: 'Username',
 
       yetSession: true,
       yetPassword: true,
@@ -251,6 +250,9 @@ export default {
       // 회의 정보
       conference: {
       },
+
+      // 비밀번호 입력창
+      confPassword: '',
 
       audioEnabled: undefined,
       videoEnabled: undefined,
@@ -331,7 +333,7 @@ export default {
         console.log(event)
         const timestamp = new Date()
         this.chatlog.push({
-          user: `${JSON.parse(event.from.data).clientData}`,
+          user: `${JSON.parse(event.from.data.split('%')[0]).clientData}`,
           timestamp: `${timestamp.toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'})}`,
           content: `${event.data}`
         })
@@ -446,10 +448,6 @@ export default {
 
     onKick: function (userid) {
       console.log('kick' + userid)
-    },
-
-    onExit: function () {
-      console.log('exit')
     },
 
     // onInputChat: function () {
