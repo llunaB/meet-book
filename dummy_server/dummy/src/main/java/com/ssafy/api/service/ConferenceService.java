@@ -179,6 +179,18 @@ public class ConferenceService {
 		return list;
 	}
 	
+	public Page<GetConferencesRes> getConferencesByGenre(String genre, Pageable pageable){
+		Page<GetConferencesRes> list = Page.empty();
+		try {
+			Page<Conference> data = conferenceRepository.findConferenceByBookGenreGenre(genre, pageable);
+			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
 	public boolean updateConference(ConferenceDTO conferenceDTO) {
 		try {
 			Conference output = conferenceRepository.getById(conferenceDTO.getId());
