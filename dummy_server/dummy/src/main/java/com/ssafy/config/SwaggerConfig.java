@@ -3,6 +3,9 @@ package com.ssafy.config;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.ServletContext;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,7 +25,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-
+	
+	@Autowired
+    private ServletContext context;
+	
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)

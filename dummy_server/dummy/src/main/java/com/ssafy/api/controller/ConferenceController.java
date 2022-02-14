@@ -296,17 +296,16 @@ public class ConferenceController {
 		}
 	}
 
-	@RequestMapping(value = "/force-disconnect", method = RequestMethod.DELETE)
-	public ResponseEntity<JsonObject> forceDisconnect(@RequestBody Map<String, Object> params) {
+	@RequestMapping(value = "/{id}/force-disconnect", method = RequestMethod.DELETE)
+	public ResponseEntity<JsonObject> forceDisconnect(@PathVariable("id") String id, @RequestBody String token, @RequestBody String connectionId) {
 		try {
-			// Retrieve the param from BODY
-			String session = (String) params.get("sessionName");
-			String connectionId = (String) params.get("connectionId");
 
 			// If the session exists
-			if (this.mapSessions.get(session) != null && this.mapSessionNamesTokens.get(session) != null) {
-				Session s = this.mapSessions.get(session);
+			if (this.mapSessions.get(id) != null && this.mapSessionNamesTokens.get(id) != null) {
+				Session s = this.mapSessions.get(id);
+				int userId = this.mapSessionNamesUsers.get(id).get(token);
 				s.forceDisconnect(connectionId);
+				conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), userId, "EXIT"));
 				return new ResponseEntity<>(HttpStatus.OK);
 			} else {
 				// The SESSION does not exist
@@ -318,16 +317,12 @@ public class ConferenceController {
 		}
 	}
 
-	@RequestMapping(value = "/force-unpublish", method = RequestMethod.DELETE)
-	public ResponseEntity<JsonObject> forceUnpublish(@RequestBody Map<String, Object> params) {
+	@RequestMapping(value = "/{id}/force-unpublish", method = RequestMethod.DELETE)
+	public ResponseEntity<JsonObject> forceUnpublish(@PathVariable("id") String id, @RequestBody String streamId) {
 		try {
-			// Retrieve the param from BODY
-			String session = (String) params.get("sessionName");
-			String streamId = (String) params.get("streamId");
-
 			// If the session exists
-			if (this.mapSessions.get(session) != null && this.mapSessionNamesTokens.get(session) != null) {
-				Session s = this.mapSessions.get(session);
+			if (this.mapSessions.get(id) != null && this.mapSessionNamesTokens.get(id) != null) {
+				Session s = this.mapSessions.get(id);
 				s.forceUnpublish(streamId);
 				return new ResponseEntity<>(HttpStatus.OK);
 			} else {
@@ -337,6 +332,22 @@ public class ConferenceController {
 		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
 			e.printStackTrace();
 			return getErrorResponse(e);
+		}
+	}
+	
+	@GetMapping("/{id}/attend")
+	public ResponseEntity<Integer> getNumOfAttend(@PathVariable("id") String id){
+		try {
+			// If the session exists
+			if (this.mapSessions.get(id) != null && this.mapSessionNamesTokens.get(id) != null) {
+				return new ResponseEntity<>(mapSessionNamesTokens.get(id).size() ,HttpStatus.OK);
+			} else {
+				// The SESSION does not exist
+				return new ResponseEntity<>(-1,HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(-1,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
