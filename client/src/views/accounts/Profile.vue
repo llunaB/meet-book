@@ -1,10 +1,12 @@
 <template>
-  <v-container style="padding: 3rem" v-if="userProfile">
-    <v-row @load="userProfile">
+  <v-container style="padding: 3rem">
+    <v-row>
       <v-col class="text-center align-self-center justify-center text-center" cols="3">
-        <v-avatar v-if="this.user.profileImage" :src="this.user.profileImage" />
+        <v-avatar v-if="user.profileImage" :src="user.profileImage" />
         <div v-else class="img-upload">
-          <v-avatar size="150" color="primary">{{ user.nickname }}</v-avatar>
+          <v-avatar size="150">
+            <v-img src="@/assets/host_img/HostImg.png" />
+          </v-avatar>
           <input id="file-input" type="file" />
         </div>
 
@@ -23,7 +25,7 @@
       <v-item-group v-if="!this.conferences.length" style="text-align-last: center">
         <h2 style="color: #ff3170;">아직 함께 참여한 모임이 없어요 ㅠㅠ </h2>
         <br>
-        <v-btn v-if="searchUser === this.$store.state.auth.user.id" rounded class="primary" href="conference">참여하러가기</v-btn>
+        <v-btn v-if="searchUser === name" rounded class="primary" href="conference">참여하러가기</v-btn>
       </v-item-group>
       <div v-else>
         <h3>최근 모임에서 읽은 책</h3>
@@ -88,13 +90,17 @@
 
 <script>
 import axios from "axios";
+import User from "@/api/users"
 const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
-export default {name: 'Profile', data() {
+export default {
+  name: 'Profile',
+  data() {
     return {
-      user: {},
+      user: new User(),
       conference: '',
       conferences: [],
+      name: this.$store.state.auth.user.id,
       searchUser: this.$route.params.userId,
     }
   },
@@ -116,33 +122,29 @@ export default {name: 'Profile', data() {
     // 이후에 다른 유저가 들어올 경우에는 해당 부분을 수정하여 props한 값을 넣으면 됩니다.
     userProfile() {
       if (!this.searchUser) {
-        this.searchUser = this.$store.state.auth.user.id
+        this.searchUser = this.name
       }
       axios({
         baseURL: SERVER_URL,
-        url:`/users/${this.searchUser}/detail`,
-        method: 'GET'
+        url:`/users/${this.name}/detail`,
+        method: 'GET',
+        headers: {
+        "X-Auth-Token": this.$store.state.auth.user.token,
+        "content-type": "application/json"}
       })
-        .then(res => {
-          this.user = res.data
-          this.userBookmark()
-        })
-        .catch(e => console.log(e))
+        .then(res => this.user = res.data)
+        .catch(() => console.log('hhhhh'))
     },
     userBookmark() {
-      if (!this.searchUser) {
-        this.searchUser = this.$store.state.auth.user.id
-      }
       axios({
         baseURL: SERVER_URL,
         url:`/users/${this.searchUser}/bookmark`,
         method: 'GET'
       })
       .then(res => this.conferences = res.data)
-      .catch(e => console.log(e))
-    }
+      .catch(() => console.log('asdasdasd'))}
   },
-  mounted() {
+  beforeMount() {
     this.userProfile()
   }
 }
