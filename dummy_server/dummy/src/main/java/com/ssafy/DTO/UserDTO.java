@@ -36,7 +36,10 @@ public class UserDTO {
 		setAge(new Date());
 		setHostPoint(0);
 		setGuestPoint(0);
-		setProfileImage("");
+		if(data.getProfileImage()==null)
+			setProfileImage("");
+		else
+			setProfileImage(data.getProfileImage());
 		setProfileDescription("");
 		setRoles(new ArrayList<String>());
 		getRoles().add("ROLE_USER");
