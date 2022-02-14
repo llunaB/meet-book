@@ -11,6 +11,7 @@ import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,6 +24,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.Random;
 
+@Slf4j
 @Service
 public class OAuthService {
 
@@ -56,7 +58,7 @@ public class OAuthService {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id=d39e2d43d8597101bafa61c710e94295"); // TODO REST_API_KEY 입력
+            sb.append("&client_id=d30b984b4a023d995d0938bef6341dd0"); // TODO REST_API_KEY 입력
             sb.append("&redirect_uri=https://localhost:8080/oauth/kakao"); // TODO 인가코드 받은 redirect_uri 입력
             sb.append("&code=" + code);
             bw.write(sb.toString());
@@ -107,7 +109,7 @@ public class OAuthService {
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
             conn.setRequestProperty("Authorization", "Bearer " + token); //전송할 header 작성, access_token전송
-
+            System.out.println(conn.getResponseMessage());
             //결과 코드가 200이라면 성공
             int responseCode = conn.getResponseCode();
             System.out.println("responseCode : " + responseCode);
@@ -148,9 +150,11 @@ public class OAuthService {
 
         } catch (IOException e) {
             e.printStackTrace();
+            log.info("회원정보가 다 등록되어있지 않습니다.");
+            return null;
         }
 
-        return null;
+
     }
 
     public String getNaverAccessToken (String code) {
@@ -266,8 +270,10 @@ public class OAuthService {
             return signUpReq;
         } catch (IOException e) {
             e.printStackTrace();
+            log.info("계정정보가 올바르게 저장되지 않았습니다.");
+            return null;
         }
-        return null;
+
     }
 
     public String tempKey(){

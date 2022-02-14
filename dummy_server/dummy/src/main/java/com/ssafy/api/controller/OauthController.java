@@ -23,8 +23,8 @@ public class OauthController {
     private final UserRepository repository;
 
     @GetMapping("/kakao")
-    public ResponseEntity<Map<String, String>> kakao(@RequestParam String code) throws Exception {
-        log.info("Map : " + code);
+    public ResponseEntity<Map<String, String>> kakao(@RequestParam String accessToken) throws Exception {
+        log.info("Map : " + accessToken);
 //        log.info(map.get("code"));
 //        log.info(map.get("state"));
 //        log.info(map.get("error"));
@@ -32,60 +32,23 @@ public class OauthController {
         Map<String, String> map = new HashMap<>();
 
         try {
-            String accessToken = oAuthService.getKakaoAccessToken(code);
+//            String accessToken = oAuthService.getKakaoAccessToken(code);
             SignUpReq signUpReq = oAuthService.createKakaoUser(accessToken);
             System.out.println("Controller" + signUpReq);
             String token = oAuthService.getToken(signUpReq);
             map.put("token", token);
         } catch (Exception e) {
             e.printStackTrace();
+            map.put("msg","이메일,닉네임을 반드시 동의해주셔야 됩니다.");
+            return new ResponseEntity<Map<String, String>>(map, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<Map<String, String>>(map, HttpStatus.OK);
-//        oAuthService.getToken(email);
-
-
-//        try {
-//            String token = userService.login(loginReq);
-//            if(!token.equals("")) {
-//                map.put("message", "로그인 성공");
-//                map.put("token",token);
-//                return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
-//            }
-//            map.put("message", "로그인 실패");
-//        }catch(Exception e){
-//            e.printStackTrace();
-//            map.put("message", "로그인 실패");
-//            return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
-//        }
-//        map.put("message", "로그인 실패");
-//        return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
-
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<Map<String, String>> login(@RequestBody LoginReq loginReq){
-//        HashMap<String, String> map = new HashMap<String, String>();
-//
-//        try {
-//            String token = userService.login(loginReq);
-//            if(!token.equals("")) {
-//                map.put("message", "로그인 성공");
-//                map.put("token",token);
-//                return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
-//            }
-//            map.put("message", "로그인 실패");
-//        }catch(Exception e){
-//            e.printStackTrace();
-//            map.put("message", "로그인 실패");
-//            return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
-//        }
-//        map.put("message", "로그인 실패");
-//        return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
-//    }
 
     @GetMapping("/naver")
-    public ResponseEntity<Map<String, String>> naver(@RequestParam String code) throws Exception {
-        log.info("Map : " + code);
+    public ResponseEntity<Map<String, String>> naver(@RequestParam String accessToken) throws Exception {
+        log.info("Map : " + accessToken);
 //        log.info(map.get("code"));
 //        log.info(map.get("state"));
 //        log.info(map.get("error"));
@@ -93,13 +56,15 @@ public class OauthController {
         Map<String, String> map = new HashMap<>();
 
         try {
-            String accessToken = oAuthService.getNaverAccessToken(code);
+//            String accessToken = oAuthService.getNaverAccessToken(code);
             SignUpReq signUpReq = oAuthService.createNaverUser(accessToken);
             System.out.println("Controller" + signUpReq);
             String token = oAuthService.getToken(signUpReq);
             map.put("token", token);
         } catch (Exception e) {
             e.printStackTrace();
+            map.put("msg","이메일,닉네임을 반드시 동의해주셔야 됩니다.");
+            return new ResponseEntity<Map<String, String>>(map, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<Map<String, String>>(map, HttpStatus.OK);
     }
