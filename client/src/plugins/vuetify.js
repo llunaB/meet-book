@@ -11,4 +11,15 @@ library.add(fas) // Include needed icons
 
 Vue.use(Vuetify)
 
-export default new Vuetify()
+export default new Vuetify({
+  theme: {
+    themes:{
+      light: {
+        primary: '#798F88',
+        secondary: '#FAF6EA',
+        accent: '#2A261B',
+        error: '#F7DBCE',
+      }
+    }
+  }}
+)
