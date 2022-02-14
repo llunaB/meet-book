@@ -336,18 +336,22 @@ public class ConferenceController {
 	}
 	
 	@GetMapping("/{id}/attend")
-	public ResponseEntity<Integer> getNumOfAttend(@PathVariable("id") String id){
+	public ResponseEntity<Map<String, Integer>> getNumOfAttend(@PathVariable("id") String id){
+		Map<String, Integer> map = new HashMap<String, Integer>();
 		try {
 			// If the session exists
 			if (this.mapSessions.get(id) != null && this.mapSessionNamesTokens.get(id) != null) {
-				return new ResponseEntity<>(mapSessionNamesTokens.get(id).size() ,HttpStatus.OK);
+				map.put("data", mapSessionNamesTokens.get(id).size());
+				return new ResponseEntity<>(map ,HttpStatus.OK);
 			} else {
 				// The SESSION does not exist
-				return new ResponseEntity<>(-1,HttpStatus.NOT_FOUND);
+				map.put("data", 0);
+				return new ResponseEntity<>(map,HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<>(-1,HttpStatus.INTERNAL_SERVER_ERROR);
+			map.put("data", -1);
+			return new ResponseEntity<>(map,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
