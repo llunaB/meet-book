@@ -33,23 +33,39 @@
       <label>
         <v-icon>mdi-chat</v-icon>
       </label>
-      <select v-model="connection">
+      <select v-model="talkTo">
         <option v-for="(connection,n) in connections" :key="n" :value="n">
-          {{n!==0 ? JSON.parse(connection.data).clientData : "모두에게"}}
+          {{n!==0 ? JSON.parse(connection.data.split('%')[0]).clientData : "모두에게"}}
         </option>
       </select>
       <input id="textInput" v-bind:value="inputText" v-on:input="updateInput">
       <v-btn @click="sendMessage">
         메세지 보내기
       </v-btn>
-      <!-- <select v-model="connection">
+      <select v-model="banTo">
         <option v-for="(connection,n) in connections" :key="n" :value="n">
-          {{n!==0 ? JSON.parse(connection.data).clientData : "모두에게"}}
+          {{n!==0 ? JSON.parse(connection.data.split('%')[0]).clientData : "강퇴하기"}}
         </option>
       </select>      
       <v-btn @click="kickUser">
         강퇴
-      </v-btn>       -->
+      </v-btn>
+      <select v-model="silenceTo">
+        <option v-for="(subscriber,n) in subscribers" :key="n" :value="n">
+          {{JSON.parse(subscriber.stream.connection.data.split('%')[0]).clientData}}
+        </option>
+      </select>      
+      <v-btn @click="makeSilence">
+        침묵시키기
+      </v-btn>
+    </div>
+    <div>
+      <v-btn @click="republish">
+        republish
+      </v-btn>
+      <v-btn @click="unpublish">
+        unpublish
+      </v-btn>
     </div>
     <div id="chat">
     </div>
@@ -62,6 +78,7 @@ import axios from 'axios'
 import { OpenVidu } from 'openvidu-browser'
 import UserVideo from '@/components/conference/UserVideo'
 axios.defaults.headers.post['Content-Type'] = 'application/json';
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
 // const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
 // const OPENVIDU_SERVER_SECRET = "MY_SECRET";
@@ -74,10 +91,11 @@ export default {
 			session: undefined,
 			mainStreamManager: undefined,
 			publisher: undefined,
-			subscribers: [],
-      users: [],
-      connection: 0,
+			subscribers: [],      
+      talkTo: 0,
       connections: [],
+      banTo: 0,
+      silenceTo: 0,
       videoMuted: false,
       audioMuted: false,
       mySessionId: null,
@@ -104,8 +122,7 @@ export default {
 
       this.session.on('streamCreated', ({ stream }) => {
         const subscriber = this.session.subscribe(stream)
-        this.subscribers.push(subscriber)
-        this.users.push(subscriber.clientData)        
+        this.subscribers.push(subscriber)             
       })
 
       this.session.on('streamDestroyed', ({ stream }) => {
@@ -122,15 +139,29 @@ export default {
       this.session.on('signal:my-chat', (event) => {
         const chat = document.getElementById("chat")
         const p = document.createElement("p")
-        p.innerText = `${JSON.parse(event.from.data).clientData}: ${event.data}`
-        chat.append(p)
-        
+        p.innerText = `${JSON.parse(event.from.data.split('%')[0]).clientData}: ${event.data}`
+        chat.append(p)        
       })
 
       this.session.on('connectionCreated', (event) => {
         this.connections.push(event.connection)        
         console.log("connections:", this.connections)
       })
+
+      this.session.on('connectionDestroyed', (event)=> {
+        console.log("disconnection:", event)
+        const index = this.connections.indexOf(event.connection, 0)
+        console.log("index:", index)
+        if (index >= 0) {
+          this.connections.splice(index, 1)
+        }
+      })
+
+      this.session.on('signal:kick-msg', () => {        
+        alert("강퇴당했습니다.")
+        this.$router.push({ name: 'Home'})        
+      })
+      
 
       //수정?
       this.session.on('publisherStartSpeaking', (event) => {
@@ -158,8 +189,7 @@ export default {
             })
 
             this.mainStreamManager = publisher
-            this.publisher = publisher
-            this.users.push(this.pusblisher)
+            this.publisher = publisher            
 
             this.session.publish(this.publisher)            
           })
@@ -173,7 +203,7 @@ export default {
     // 위까지가 joinSession
 
     leaveSession () {
-      if (this.session) this.session.disconnect()
+      if (this.session) {this.session.disconnect()}
 
       this.session = undefined;
 			this.mainStreamManager = undefined;
@@ -234,7 +264,8 @@ export default {
 			return new Promise((resolve, reject) => {
 				axios({
           method:'get',
-          url: `https://localhost:8080/conference/${sessionId}/token`,
+          baseURL: SERVER_URL,
+          url: `/conference/${sessionId}/token`,
           headers: {
             'X-AUTH-TOKEN': this.$store.state.auth.user.token
           },
@@ -277,7 +308,7 @@ export default {
       this.inputText = updatedText
     },
     sendMessage(){
-      if(this.connection === 0) {
+      if(this.talkTo === 0) {
         this.session.signal({
           data: this.inputText,
           to: [],
@@ -293,7 +324,7 @@ export default {
       } else {
         this.session.signal({
           data: this.inputText,
-          to: [this.connections[0],this.connections[this.connection]],
+          to: [this.connections[0],this.connections[this.talkTo]],
           type: 'my-chat'
         })
         .then(() => {          
@@ -306,8 +337,32 @@ export default {
       }
     },
     kickUser(){
-      console.log("connection:", this.connections[this.connection])
-      this.session.forceDisconnect(this.connections[this.connection])
+      console.log("connection:", this.connections[this.banTo])
+      if(this.banTo !== 0){
+        this.session.signal({
+          to: [this.connections[this.banTo]],
+          type: 'kick-msg'
+        })
+        .then(res => console.log(res))
+        .catch(err => console.error(err))
+        // axios({
+        //   method:'get',
+          
+        // })
+        this.session.forceDisconnect(this.connections[this.banTo])
+        this.banTo = 0
+      }
+    },
+    republish(){
+      this.session.publish(this.publisher)
+    },
+    unpublish(){
+      this.session.unpublish(this.publisher)
+    },
+    makeSilence(){
+      console.log(this.subscribers[this.silenceTo].stream)
+      this.session.forceUnpublish(this.subscribers[this.silenceTo].stream)
+      this.silenceTo = 0
     }
   }
 }
