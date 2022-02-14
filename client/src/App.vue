@@ -1,5 +1,10 @@
 <template>
   <v-app>
+    <v-progress-circular
+   indeterminate
+   color="primary"
+   >
+    </v-progress-circular>
     <Navbar />
     <v-main>
       <v-container fluid>

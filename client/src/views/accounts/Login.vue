@@ -32,19 +32,23 @@
                   </template>
                   <ForgotPassword v-if="dialog" @close="dialog = false"/>
                 </v-dialog>
-
-
               </div>
             </form>
             <!-- 소셜 로그인 전체 Form Start-->
             <form class="social-form-group">
               <div class="hr-sect">SNS 로그인 하기</div>
-              <v-icon>mdi-facebook</v-icon>
-              <v-icon>mdi-google</v-icon>
+              <div class="container" style="text-align: -webkit-center;">
+                <v-img class="my-2" src="@/assets/login_logo/kakao_login_large_narrow.png" max-height="50%" max-width="50%"/>
+                <v-img class="my-2" src="@/assets/login_logo/btnG_완성형.png" max-height="50%" max-width="50%"/>
+              </div>
             </form>
             <!-- 소셜 로그인 전체 Form End -->
           </div>
             <!-- 로그인 전체 Form End -->
+        <!-- 스낵바 Form -->
+        <v-snackbar color="pink" v-model="loading">
+          <template>{{ snackMessage }}</template>
+        </v-snackbar>
         </div>
       </div>
   </div>
@@ -61,6 +65,7 @@ export default {
         "user": {},
         "loading": false,
         "dialog": false,
+        "snackMessage": '',
       }
     },
     "computed": {
@@ -73,15 +78,19 @@ export default {
     },
     "methods": {
       "handleLogin"() {
-        this.loading = true
         this.$store.dispatch('auth/login', this.user)
           .then(() => this.$router.push({"name": "Home"}))
           .catch(() => {
-            this.loading = false;
-            alert('Email 혹은 Password 잘못입력하셨습니다.')
+            this.loading = true
+            this.snackMessage = 'Email 혹은 Password 잘못입력하셨습니다.'
+            setTimeout(() => this.loading = false, 2000)
           })
+      },
+      LoginWithKakao() {
+        const params = {redirectUri: "http://localhost:8080/auth",};
+            window.Kakao.Auth.authorize(params);
       }
-    },
+      },
 }
 </script>
 

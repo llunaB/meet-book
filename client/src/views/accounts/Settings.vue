@@ -10,7 +10,6 @@
           type="password" label="현재 비밀번호" hide-details="auto"
           v-model="oldPassword" id="oldPasswordEditInput"
           oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )" />
-
         <v-text-field
           type="password" label="비밀번호 수정" hide-details="auto"
           v-model="newPassword" id="passwordEditInput"
@@ -20,8 +19,10 @@
           type="password" label="비밀번호 수정 확인" hide-details="auto"
           v-model="newPasswordConfirm" id="passwordConfirmEditInput" :rules="errorMessages"
           oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )" />
-
         <br>
+        <div style="text-align: end;">
+          <v-btn color="#00f234" @click="passwordEditChange">비밀번호 수정</v-btn>
+        </div>
         <!-- 나이 및 성별 값 입력 Form -->
         <div class="row align-self-center">
           <div class="col">
@@ -66,7 +67,7 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="userResign">탈퇴하기</v-btn>
+              <v-btn color="#00f234" text @click="userResign">탈퇴하기</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -119,23 +120,22 @@ export default {
             'profileDescription': this.user.profileDescription,
           }
         })
-          .then(() => {
-            this.submitMessage = '수정되었습니다'
-            setTimeout(() => this.snackbar = !this.snackbar, 2000);
-            this.passwordEditChange()
+        .then(() => {
+          this.submitMessage = '수정되었습니다'
+          setTimeout(() => this.snackbar = !this.snackbar, 2000);
           })
-        .catch(e => {
-          console.log(e.data)
+        .catch(() => {
           this.submitMessage = '입력 값을 수정해주세요'
           setTimeout(() => this.snackbar = !this.snackbar, 2000);
-          this.passwordEditChange()
         })
       }
-      this.passwordEditChange()
     },
     passwordEditChange() {
       if (this.oldPassword.length > 0) {
-        this.$store.dispatch('auth/login', {'email': this.userEmail.email, 'password':this.oldPassword})
+        this.$store.dispatch(
+          'auth/login',
+          {'email': this.userEmail.email, 'password':this.oldPassword}
+          )
           .then(() => {
             if ((this.newPassword === this.newPasswordConfirm) && (this.newPassword.length > 0)) {
               axios({
@@ -151,22 +151,26 @@ export default {
           })
           .catch(() => {
             this.submitMessage = '닉네임을 입력하셔야 합니다'
-            setTimeout(() => this.snackbar = !this.snackbar, 2000);
-            })
+            setTimeout(() => this.snackbar = !this.snackbar, 2000)
+          })
       }
     },
     userProfile() {
       axios({
         baseURL: SERVER_URL,
-        url:`/users/${this.$store.state.auth.user.id}/detail`,
+        url:`/users/${this.name}/detail`,
         method: 'GET',
+        headers: {
+        "X-Auth-Token": this.$store.state.auth.user.token,
+        "content-type": "application/json"}
       })
         .then(res => this.user = res.data)
+        .catch(() => console.log('hhhhh'))
     },
     userResign() {
       axios({
         baseURL: SERVER_URL,
-        url:`/users/${this.$store.state.auth.user.id}`,
+        url:`/users/${this.name}`,
         method: 'DELETE'
       })
         .then(() => {

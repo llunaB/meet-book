@@ -43,7 +43,12 @@ export default {
     // 나중에 지울 것
     methods: {
       goToMeeting: function(){
-        this.$router.push({ name: 'ConferenceMeeting', params:"4"})
+        if (this.$store.state.auth.user !== null) {
+          this.$router.push({ name: 'ConferenceMeeting', params:"4"})
+        }
+        else{
+          this.$router.push({ name: 'Login' })
+        }
       }
     }
   }

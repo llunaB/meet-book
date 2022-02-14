@@ -94,7 +94,12 @@ export default {
       }
     },
     goToMeeting: function(conferenceId){
-      this.$router.push({ name: 'ConferenceMeeting', params: {conferenceId: conferenceId}})
+      if (this.$store.state.auth.user !== null) {
+        this.$router.push({ name: 'ConferenceMeeting', params: {conferenceId: conferenceId}})
+      }
+      else{
+        this.$router.push({name: 'Login'})
+      }
     },
     formating: function(time){
       if(time){

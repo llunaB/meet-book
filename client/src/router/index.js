@@ -42,7 +42,7 @@ const routes = [
     component: ConferenceIndex
   },
   {
-    path: '/profile/:userId',
+    path: '/profile',
     name: 'Profile',
     component: Profile,
     props: true,
