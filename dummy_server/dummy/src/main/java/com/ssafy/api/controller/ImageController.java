@@ -3,10 +3,10 @@ package com.ssafy.api.controller;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
@@ -31,13 +31,13 @@ public class ImageController {
 	//private ConferenceService conferenceService;
 	private String attachPath;
 	private String nullImage;
+	
+	@Value("${image.root.path}")
 	private String rootPath;
 	
 	
 	@Autowired
 	public ImageController() {
-		//this.conferenceService = conferenceService;
-		rootPath = "C:/SSAFY/resources/upload/";
 		attachPath = "image/";
 		nullImage = "null.jpg";
 	}
@@ -46,7 +46,9 @@ public class ImageController {
 	public ResponseEntity<Map<String, String>> createImage(@RequestParam MultipartFile file){
 		HashMap<String, String> map = new HashMap<String, String>();
 		
-		String filename = file.getOriginalFilename();
+		//파일 이름 중복을 치하기 위해서, 랜덤한 UUID를 이름에 포함
+		UUID uuid = UUID.randomUUID();
+		String filename = uuid.toString() + file.getOriginalFilename();
 		File f = new File(rootPath + attachPath + filename);
 
 		
