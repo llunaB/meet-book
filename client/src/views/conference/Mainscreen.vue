@@ -168,7 +168,7 @@
             <select v-model="chatConnection">
               <option value="0">모두에게</option>
               <option v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :value="sub.stream.connection.connectionId">
-                {{sub.stream.connection.length !== 0 ? JSON.parse(sub.stream.connection.data).clientData : "모두에게"}}
+                {{sub.stream.connection.length !== 0 ? JSON.parse(sub.stream.connection.data.split('%')[0]).clientData : "모두에게"}}
               </option>
             </select>
           </div>
