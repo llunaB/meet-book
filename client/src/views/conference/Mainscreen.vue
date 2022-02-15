@@ -168,7 +168,7 @@
             <select v-model="chatConnection">
               <option value="0">모두에게</option>
               <option v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :value="sub.stream.connection.connectionId">
-                {{sub.stream.connection.length !== 0 ? JSON.parse(sub.stream.connection.data).clientData : "모두에게"}}
+                {{sub.stream.connection.length !== 0 ? JSON.parse(sub.stream.connection.data.split('%')[0]).clientData : "모두에게"}}
               </option>
             </select>
           </div>
@@ -246,7 +246,7 @@ export default {
       
       participants: null,
       showMenu: false,
-      
+      token: null,
       // 회의 정보
       conference: {
       },
@@ -342,6 +342,7 @@ export default {
       // user token
       this.getToken(this.mySessionId).then(token => {
         // clientData: 접속하는 사람의 정보 입력
+        this.token = token
         this.session.connect(token, { clientData: this.auth.user.nickname})
           .then(() => {
             let publisher = this.OV.initPublisher(undefined, {
@@ -374,7 +375,22 @@ export default {
     // 위까지가 joinSession
 
     leaveSession () {
-      if (this.session) this.session.disconnect()
+      if (this.session) {
+        axios({
+          baseURL: SERVER_URL,
+          method: 'delete',
+          url: `conference/${this.mySessionId}/leave`,
+          data: {
+            token: this.token
+          },
+          headers: {
+            'X-AUTH-TOKEN': this.$store.state.auth.user.token
+          },
+        })
+        .then(res=> console.log(res))
+        .catch(err => console.error(err))
+        this.session.disconnect()
+      }
 
       this.session = undefined;
 			this.mainStreamManager = undefined;

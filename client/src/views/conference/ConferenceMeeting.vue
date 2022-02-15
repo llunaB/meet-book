@@ -159,8 +159,7 @@ export default {
       })
 
       this.session.on('signal:kick-msg', () => {        
-        alert("강퇴당했습니다.")
-        this.$router.push({ name: 'Home'})        
+        this.leaveSession()      
       })
       
 
