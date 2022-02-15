@@ -69,7 +69,12 @@
       <template v-slot:activator="{ on, attrs }">
         <v-btn
           icon v-bind="attrs" v-on="on">
-          <v-avatar><v-img src='@/assets/host_img/HostImg.png' /></v-avatar>
+          <v-avatar v-if="this.$store.user.profileImage">
+            <v-img :src="user.profileImage" contain />
+          </v-avatar>
+          <v-avatar v-else>
+            <v-img src="@/assets/host_img/HostImg.png" />
+          </v-avatar>
         </v-btn>
       </template>
 
