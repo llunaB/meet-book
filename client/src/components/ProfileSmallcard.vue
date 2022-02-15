@@ -7,15 +7,11 @@
     params: { userId: person.id }
   }">
   <v-card-title>
-    <v-avatar
-    color="#F7DBCE"
-    size="48">
-      <img v-show="!!person.profile_image" :src="person.profile_image">
-      <span v-show="!person.profile_image">
-        <v-icon>
-          mdi-account-circle
-        </v-icon>
-      </span>
+    <v-avatar v-if="person.profileImage" size="48">
+      <v-img :src="person.profileImage" contain />
+    </v-avatar>
+    <v-avatar v-else size="48">
+      <v-img src="@/assets/host_img/HostImg.png" />
     </v-avatar>
     <p class="ml-3">
       {{ person.nickname }}

@@ -1,8 +1,6 @@
 <template>
   <div class="container">
     <h2 class="my-3">지금 가장 핫한 모임</h2>
-    <!-- <conference-slide :conferences="conferences">
-    </conference-slide> -->
     <h2 class="my-3">화상회의 test</h2>
     <div>
       <v-btn class="primary" @click="goToMeeting()">
@@ -13,9 +11,6 @@
 </template>
 
 <script>
-// import HelloWorld from '../components/HelloWorld'
-// import Carousel from '../components/home/Carousel'
-// import ConferenceSlide from '../components/home/ConferenceSlide'
 
 
 export default {
@@ -33,10 +28,6 @@ export default {
         {"id":9, "title":"정의란 무엇인가", "thumbnailUrl":"https://image.yes24.com/goods/15156691/XL", "description":"welcome2", "isActive":false},]
         
       }
-    },
-    components: {
-      // ConferenceSlide,
-      // Carousel,
     },
     // 나중에 지울 것
     methods: {

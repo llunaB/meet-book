@@ -7,7 +7,7 @@
         <p class="mr-2"><strong>모임 참가하기</strong></p>
       </v-btn>
     </div>
-    <v-main style="flex: 3 1 auto;">
+    <v-main class="v-main" style="flex: 3 1 auto;">
       <v-container fluid>
         <router-view />
       </v-container>
@@ -39,5 +39,12 @@ export default {
   background-image: url("assets/books-436513_1920.jpg");
   background-repeat : no-repeat;
   background-size : cover;
+}
+
+.v-main {
+  padding: 3rem;
+  background-color: #ffffff10;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(10px);
 }
 </style>

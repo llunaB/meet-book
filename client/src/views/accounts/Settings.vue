@@ -1,5 +1,5 @@
 <template>
-  <v-container style="padding-inline: 10%;">
+  <v-container class="settingForm" style="padding-inline: 10%;">
     <form>
       <div class="form-group">
         <v-text-field
@@ -131,29 +131,32 @@ export default {
       }
     },
     passwordEditChange() {
-      if (this.oldPassword.length > 0) {
-        this.$store.dispatch(
-          'auth/login',
-          {'email': this.userEmail.email, 'password':this.oldPassword}
-          )
-          .then(() => {
-            if ((this.newPassword === this.newPasswordConfirm) && (this.newPassword.length > 0)) {
-              axios({
-                baseURL: SERVER_URL,
-                url: `/users/${this.name}/detail`,
-                method: 'PUT',
-                data: {'newPassword': this.newPassword}
+      this.$store.dispatch(
+        'auth/login',
+        {'email': this.userEmail.email, 'password':this.oldPassword}
+        )
+        .then(() => {
+          if ((this.newPassword === this.newPasswordConfirm) && (this.newPassword.length > 0)) {
+            axios({
+              baseURL: SERVER_URL,
+              url: `/users/${this.name}/detail`,
+              method: 'PUT',
+              data: {'newPassword': this.newPassword}
+            })
+            .then(() => {
+              this.submitMessage = '비밀번호가 변경되었습니다.'
+              setTimeout(() => this.snackbar = !this.snackbar, 2000)
               })
-            }
-            else {
-              this.submitMessage = '비밀번호를 입력해주세요'
-            }
-          })
-          .catch(() => {
-            this.submitMessage = '닉네임을 입력하셔야 합니다'
+          }
+          else {
+            this.submitMessage = '비밀번호를 입력해주세요'
             setTimeout(() => this.snackbar = !this.snackbar, 2000)
-          })
-      }
+          }
+        })
+        .catch(() => {
+          this.submitMessage = '닉네임을 입력하셔야 합니다'
+          setTimeout(() => this.snackbar = !this.snackbar, 2000)
+      })
     },
     userProfile() {
       axios({
@@ -164,8 +167,8 @@ export default {
         "X-Auth-Token": this.$store.state.auth.user.token,
         "content-type": "application/json"}
       })
-        .then(res => this.user = res.data)
-        .catch(() => console.log('hhhhh'))
+      .then(res => this.user = res.data)
+      .catch(() => console.log('hhhhh'))
     },
     userResign() {
       axios({
@@ -176,16 +179,16 @@ export default {
           "password": this.resign,
         },
       })
-        .then(() => {
-          alert('탈퇴되었습니다.')
-          setTimeout(() => {
-            localStorage.removeItem('user')
-            this.$router.push({name: "Home"})}, 100)
-        })
-        .catch(() => {
-          this.submitMessage = '비밀번호를 확인해주세요'
-          setTimeout(() => this.snackbar = !this.snackbar, 2000)
-        })
+      .then(() => {
+        alert('탈퇴되었습니다.')
+        setTimeout(() => {
+          localStorage.removeItem('user')
+          this.$router.push({name: "Home"})}, 100)
+      })
+      .catch(() => {
+        this.submitMessage = '비밀번호를 확인해주세요'
+        setTimeout(() => this.snackbar = !this.snackbar, 2000)
+      })
     },
   },
   beforeMount() {
@@ -194,6 +197,14 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+.settingForm {
+  padding: 3rem;
+  border-radius: 10%;
+  /* glass effect */
+  background-color: #ffffff30;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
 
 </style>
