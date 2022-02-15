@@ -1,6 +1,5 @@
 <template>
 <div>
-
   <v-card>
     <v-tabs v-model="tab">      
       <v-tab v-for="genre in genres" :key="genre" @click="loging()">
