@@ -154,7 +154,6 @@ export default {
       }
     },
     reset () {
-      
       this.$refs.form.reset()
     },
     resetValidation () {
@@ -234,7 +233,7 @@ export default {
       .finally(() => (this.bookLoading = false))
         
       }, 500)
-    },
+      },
   },
 
   computed: {
@@ -285,6 +284,20 @@ export default {
       .catch(error => {
         console.log(error)
       })
+    } else {
+      axios({
+        method: 'GET',
+        baseURL: SERVER_URL,
+        url: `/search/book?book_name=&page=0&size=10`,
+      })
+      .then(response => {
+        console.log('searching')
+        this.bookEntries = response.data.content
+      })
+      .catch(error => {
+        console.log(error)
+      })
+      .finally(() => (this.bookLoading = false))
     }
   }
   
