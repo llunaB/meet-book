@@ -45,7 +45,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/users")
-@CrossOrigin("*")
 public class UserController {
 	private UserService userService;
 	private BookmarkService bookmarkService;

@@ -31,7 +31,6 @@ import java.util.Random;
 @Slf4j
 @Controller
 @RequestMapping("/email")
-@CrossOrigin("*")
 public class EmailController {
 
     @Autowired
