@@ -1,9 +1,12 @@
 package com.ssafy.api.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.swagger.models.auth.In;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -41,6 +44,7 @@ import io.openvidu.java.client.OpenViduJavaClientException;
 import io.openvidu.java.client.OpenViduRole;
 import io.openvidu.java.client.Session;
 
+@Slf4j
 @RestController
 @RequestMapping("/conference")
 public class ConferenceController {
@@ -88,6 +92,8 @@ public class ConferenceController {
 		}
 		return new ResponseEntity<Page<GetConferencesRes>>(list, HttpStatus.OK);
 	}
+
+
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<GetConferencesRes> getConferenceById(@PathVariable("id") String id){
@@ -99,6 +105,20 @@ public class ConferenceController {
 		}
 		
 		return new ResponseEntity<GetConferencesRes>(response, HttpStatus.OK);
+	}
+
+	@GetMapping("/{id}/list")
+	public ResponseEntity<Page<GetConferencesRes>> getConferencesById(@PathVariable("id") String id){
+		Page<GetConferencesRes> response = Page.empty();
+		PageRequest request =PageRequest.of(0, 5); //검색을 원하는 페이지, 개수
+		try {
+			response = conferenceService.getConferencesById(Integer.parseInt(id), request);
+			new ResponseEntity<Page<GetConferencesRes>>(response, HttpStatus.OK);
+		}catch (Exception e){
+			e.printStackTrace();
+			log.info("회의목록 에러");
+		}
+		return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
 	}
 
 	

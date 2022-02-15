@@ -3,8 +3,10 @@ package com.ssafy.api.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.ssafy.api.responseDto.GetSimpleBooksRes;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,8 @@ import com.ssafy.db.repository.ConferenceHistoryRepository;
 import com.ssafy.db.repository.ConferenceRepository;
 import com.ssafy.db.repository.UserConferenceRepository;
 import com.ssafy.db.repository.UserRepository;
+
+import javax.swing.text.html.Option;
 
 @Service
 public class ConferenceService {
@@ -77,6 +81,17 @@ public class ConferenceService {
 		
 		return list;
 	}
+
+	public Page<GetConferencesRes> getConferencesById(int userid, Pageable pageable) {
+		Page<GetConferencesRes> list =Page.empty();
+		try {
+			Page<Conference> data = conferenceRepository.findById(userid, pageable);
+			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return list;
+	}
 	
 	public boolean createConference(ConferenceDTO source) {
 		try {
@@ -94,7 +109,7 @@ public class ConferenceService {
 		}
 	}
 	
-	public GetConferencesRes getConferenceById(int id) {
+	public GetConferencesRes getConferenceById(Integer id) {
 		try {
 			Conference source = conferenceRepository.findById(id).get();
 			return modelMapper.map(source, GetConferencesRes.class); 
@@ -304,4 +319,6 @@ public class ConferenceService {
 		
 		return target;
 	}
+
+
 }
