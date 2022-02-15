@@ -1,5 +1,8 @@
 package com.ssafy.api.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.DTO.ConferenceDTO;
 import com.ssafy.api.responseDto.GetBookRes;
 import com.ssafy.api.responseDto.GetConferencesRes;
 import com.ssafy.api.responseDto.GetSimpleBooksRes;
@@ -138,5 +140,19 @@ public class SearchController {
 			e.printStackTrace();
 		}
 		return new ResponseEntity<Page<GetConferencesRes>>(list, HttpStatus.OK);
+	}
+	
+	@GetMapping("/conference/genre/count")
+	public ResponseEntity<Map<String, Long>> getConferencesByGenre(@RequestParam("genre") String genre){
+		Map<String, Long> map = new HashMap<String, Long>();
+
+		try {
+			Long data = conferenceService.countConferenceByGenre(genre);
+			map.put("data", data);
+		}catch(Exception e) {
+			e.printStackTrace();
+			map.put("data", -1L);
+		}
+		return new ResponseEntity<Map<String, Long>>(map, HttpStatus.OK);
 	}
 }

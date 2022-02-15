@@ -191,6 +191,18 @@ public class ConferenceService {
 		return list;
 	}
 	
+	public Long countConferenceByGenre(String genre) {
+		Long count = 0L;
+		
+		try {
+			count = conferenceRepository.countByBookGenreGenre(genre);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return count;
+	}
+	
 	public boolean updateConference(ConferenceDTO conferenceDTO) {
 		try {
 			Conference output = conferenceRepository.getById(conferenceDTO.getId());
