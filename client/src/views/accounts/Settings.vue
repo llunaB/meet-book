@@ -1,15 +1,15 @@
 <template>
-  <v-container style="padding-inline: 10%;">
+  <v-container class="settingForm" style="padding-inline: 10%;">
     <form>
       <div class="form-group">
+        <v-avatar v-if="user.profileImage" size="150" style="align-self:center;">
+          <v-img :src="user.profileImage" contain></v-img>
+        </v-avatar>
+
         <v-text-field
           type="text" label="닉네임" hide-details="auto"
-          v-model="user.nickname" id="nicknameInput" required/>
+          v-model="user.nickname" id="nicknameInput" />
         <br>
-        <v-text-field
-          type="password" label="현재 비밀번호" hide-details="auto"
-          v-model="oldPassword" id="oldPasswordEditInput"
-          oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )" />
         <v-text-field
           type="password" label="비밀번호 수정" hide-details="auto"
           v-model="newPassword" id="passwordEditInput"
@@ -21,7 +21,7 @@
           oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )" />
         <br>
         <div style="text-align: end;">
-          <v-btn color="primary" @click="passwordEditChange">비밀번호 수정</v-btn>
+          <v-btn color="primary" text @click="passwordEditChange">비밀번호 수정</v-btn>
         </div>
         <!-- 나이 및 성별 값 입력 Form -->
         <div class="row align-self-center">
@@ -52,7 +52,7 @@
           v-model="resignBtn" max-width="290"
         >
           <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark v-bind="attrs" v-on="on"
+            <v-btn color="secondary" text dark v-bind="attrs" v-on="on"
             >탈퇴하기</v-btn>
           </template>
           <v-card>
@@ -67,7 +67,7 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="#00f234" text @click="userResign">탈퇴하기</v-btn>
+              <v-btn color="secondary" text @click="userResign">탈퇴하기</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -96,7 +96,6 @@ export default {
       genderGroup: ['', '남자', '여자'],
       name: this.$store.state.auth.user.id,
       userEmail: this.$store.state.auth.user,
-      oldPassword: '',
       newPassword: '',
       newPasswordConfirm: '',
       snackbar: false,
@@ -110,7 +109,7 @@ export default {
   },
   methods: {
     informationChange() {
-      if (this.user.nickname.length > 0) {
+      if (this.user.nickname.length) {
         axios({
           baseURL: SERVER_URL,
           url: `/users/${this.name}`,
@@ -118,41 +117,39 @@ export default {
           data: {
             'nickname': this.user.nickname,
             'profileDescription': this.user.profileDescription,
+            'profileImage': this.user.profileImage,
+          },
+          headers: {
+            'X-AUTH-TOKEN': this.$store.state.auth.user.token
           }
         })
-        .then(() => {
-          this.submitMessage = '수정되었습니다'
-          setTimeout(() => this.snackbar = !this.snackbar, 2000);
-          })
+        .then(() => setTimeout(() => this.$router.push({name:'Profile'}), 1000))
         .catch(() => {
-          this.submitMessage = '입력 값을 수정해주세요'
+          this.submitMessage = '값을 입력해주세요'
           setTimeout(() => this.snackbar = !this.snackbar, 2000);
         })
       }
+      else {
+        this.submitMessage = '닉네임을 입력해주세요'
+        setTimeout(() => this.snackbar = !this.snackbar, 2000);
+      }
     },
     passwordEditChange() {
-      if (this.oldPassword.length > 0) {
-        this.$store.dispatch(
-          'auth/login',
-          {'email': this.userEmail.email, 'password':this.oldPassword}
-          )
-          .then(() => {
-            if ((this.newPassword === this.newPasswordConfirm) && (this.newPassword.length > 0)) {
-              axios({
-                baseURL: SERVER_URL,
-                url: `/users/${this.name}/detail`,
-                method: 'PUT',
-                data: {'newPassword': this.newPassword}
-              })
-            }
-            else {
-              this.submitMessage = '비밀번호를 입력해주세요'
-            }
+      if ((this.newPassword === this.newPasswordConfirm) && (this.newPassword.length > 0)) {
+        axios({
+          baseURL: SERVER_URL,
+          url: `/users/${this.name}/detail`,
+          method: 'PUT',
+          data: {'newPassword': this.newPassword}
+        })
+        .then(() => {
+          this.submitMessage = '비밀번호가 변경되었습니다.'
+          setTimeout(() => this.snackbar = !this.snackbar, 2000)
           })
-          .catch(() => {
-            this.submitMessage = '닉네임을 입력하셔야 합니다'
-            setTimeout(() => this.snackbar = !this.snackbar, 2000)
-          })
+      }
+      else {
+        this.submitMessage = '비밀번호를 입력해주세요'
+        setTimeout(() => this.snackbar = !this.snackbar, 2000)
       }
     },
     userProfile() {
@@ -164,8 +161,8 @@ export default {
         "X-Auth-Token": this.$store.state.auth.user.token,
         "content-type": "application/json"}
       })
-        .then(res => this.user = res.data)
-        .catch(() => console.log('hhhhh'))
+      .then(res => this.user = res.data)
+      .catch(() => console.log('hhhhh'))
     },
     userResign() {
       axios({
@@ -176,16 +173,16 @@ export default {
           "password": this.resign,
         },
       })
-        .then(() => {
-          alert('탈퇴되었습니다.')
-          setTimeout(() => {
-            localStorage.removeItem('user')
-            this.$router.push({name: "Home"})}, 100)
-        })
-        .catch(() => {
-          this.submitMessage = '비밀번호를 확인해주세요'
-          setTimeout(() => this.snackbar = !this.snackbar, 2000)
-        })
+      .then(() => {
+        alert('탈퇴되었습니다.')
+        setTimeout(() => {
+          localStorage.removeItem('user')
+          this.$router.push({name: "Home"})}, 100)
+      })
+      .catch(() => {
+        this.submitMessage = '비밀번호를 확인해주세요'
+        setTimeout(() => this.snackbar = !this.snackbar, 2000)
+      })
     },
   },
   beforeMount() {
@@ -194,6 +191,14 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+.settingForm {
+  padding: 3rem;
+  border-radius: 10%;
+  /* glass effect */
+  background-color: #ffffff30;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
 
 </style>
