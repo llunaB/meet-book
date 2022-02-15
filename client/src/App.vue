@@ -1,8 +1,14 @@
 <template>
   <v-app >
     <Navbar />
-    <v-main>
-      <v-container fluid >
+    <div style="align-self: center; align-items: flex-end; padding-top: 150px; text-align: center;">
+      <SearchBar />
+      <v-btn text plain to="/conference" class="hidden-sm-and-down mt-5">
+        <p class="mr-2"><strong>모임 참가하기</strong></p>
+      </v-btn>
+    </div>
+    <v-main style="flex: 3 1 auto;">
+      <v-container fluid>
         <router-view />
       </v-container>
     </v-main>
@@ -11,12 +17,14 @@
 
 <script>
 import Navbar from '@/components/TheNavbar'
+import SearchBar from '@/components/SearchBar'
 
 
 export default {
   name: 'App',
   components: {
     Navbar,
+    SearchBar,
   },
   data: () => ({
     //
@@ -31,8 +39,5 @@ export default {
   background-image: url("assets/books-436513_1920.jpg");
   background-repeat : no-repeat;
   background-size : cover;
-}
-.v-main__wrap {
-  align-self: center;
 }
 </style>
