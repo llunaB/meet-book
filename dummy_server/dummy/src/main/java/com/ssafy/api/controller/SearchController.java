@@ -142,6 +142,32 @@ public class SearchController {
 		return new ResponseEntity<Page<GetConferencesRes>>(list, HttpStatus.OK);
 	}
 	
+	@GetMapping("/conference/genre/finished")
+	public ResponseEntity<Page<GetConferencesRes>> getFinishedConferencesByGenre(@RequestParam("genre") String genre, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+		Page<GetConferencesRes> list = Page.empty();
+		PageRequest request = PageRequest.of(page, size);
+
+		try {
+			list = conferenceService.getFinishedConferencesByGenre(genre, request);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<Page<GetConferencesRes>>(list, HttpStatus.OK);
+	}
+	
+	@GetMapping("/conference/genre/Reserved")
+	public ResponseEntity<Page<GetConferencesRes>> getReservedConferencesByGenre(@RequestParam("genre") String genre, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+		Page<GetConferencesRes> list = Page.empty();
+		PageRequest request = PageRequest.of(page, size);
+
+		try {
+			list = conferenceService.getReservedConferencesByGenre(genre, request);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<Page<GetConferencesRes>>(list, HttpStatus.OK);
+	}
+	
 	@GetMapping("/conference/genre/count")
 	public ResponseEntity<Map<String, Long>> getConferencesByGenre(@RequestParam("genre") String genre){
 		Map<String, Long> map = new HashMap<String, Long>();
