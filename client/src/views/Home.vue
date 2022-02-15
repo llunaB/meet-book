@@ -7,7 +7,7 @@
     </conference-slide> -->
     <h2 class="my-3">화상회의 test</h2>
     <div>
-      <v-btn @click="goToMeeting()">
+      <v-btn class="primary" @click="goToMeeting()">
         입장하기
       </v-btn>
     </div>

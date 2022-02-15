@@ -15,10 +15,11 @@ export default new Vuetify({
   theme: {
     themes:{
       light: {
-        primary: '#798F88',
-        secondary: '#FAF6EA',
-        accent: '#2A261B',
+        primary: '#568D6C', // 녹색
+        secondary: '#1E1E1E', // 검정
+        accent: '#FFB61D', // 골드
         error: '#F7DBCE',
+        
       }
     }
   },
