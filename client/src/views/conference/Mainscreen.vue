@@ -215,11 +215,12 @@ import UserVideo from '@/components/conference/UserVideo'
 import Chat from '@/components/conference/Chat'
 import { mapState } from 'vuex'
 
+axios.defaults.headers.post['Content-Type'] = 'application/json'
+
 // OpenVidu 접속 설정
 // 추후에 따로 빼어서 모듈화, 환경변수화해야 할 부분입니다.
 const SERVER_URL = process.env.VUE_APP_SERVER_URL
-const OPENVIDU_SERVER_URL = process.env.VUE_APP_OPENVIDU_SERVER_URL
-const OPENVIDU_SERVER_SECRET = 'MY_SECRET'
+
 
 export default {
   name: 'Mainscreen',
@@ -228,7 +229,6 @@ export default {
   },
 
   props: {
-  
   },
 
   data: function () {
@@ -246,6 +246,8 @@ export default {
       
       participants: null,
       showMenu: false,
+
+      token: null,
       
       // 회의 정보
       conference: {
@@ -264,17 +266,21 @@ export default {
       chatConnection: 0,
       chatlog: [],
 
+      // ConferenceMeeting 신규 기능 관련 변수
+      banTo: 0,
+      silenceTo: 0,
+
     }
   },
 
   created: function () {
     this.mySessionId = String(this.$route.params.conferenceId)
     
-    // 테스트용 데이터 탑재
+    // conference init
     this.conference = {
-      title: '회의 제목',
-      question: '1이라고 입력하세요',
-      password: '1',
+      title: '',
+      question: '',
+      password: '',
     }
 
     // 회의 내용 불러오기
@@ -295,7 +301,7 @@ export default {
     })
 
 
-    if (this.conference.password) {
+    if (this.conference.password !== null && this.conference.password !== '' ) {
       this.yetPassword = true
     } else {
       this.yetPassword = false
@@ -316,7 +322,6 @@ export default {
         const subscriber = this.session.subscribe(stream)
         this.subscribers.push(subscriber)
       })
-
       this.session.on('streamDestroyed', ({ stream }) => {
         const index = this.subscribers.indexOf(stream.streamManager, 0)
         if (index >= 0) {
@@ -339,8 +344,41 @@ export default {
         })
       })
 
+      // this.session.on('connectionCreated', (event) => {
+      //   this.connections.push(event.connection)        
+      //   console.log("connections:", this.connections)
+      // })
+
+      // this.session.on('connectionDestroyed', (event)=> {
+      //   console.log("disconnection:", event)
+      //   const index = this.connections.indexOf(event.connection, 0)
+      //   console.log("index:", index)
+      //   if (index >= 0) {
+      //     this.connections.splice(index, 1)
+      //   }
+      // })
+
+      this.session.on('signal:kick-msg', () => {        
+        alert("강퇴당했습니다.")
+        this.$router.push({ name: 'Home'})        
+      })
+
+
+      //수정?
+      this.session.on('publisherStartSpeaking', (event) => {
+          console.log('User ' + event.connection.connectionId + ' start speaking');
+      });
+
+      this.session.on('publisherStopSpeaking', (event) => {
+          console.log('User ' + event.connection.connectionId + ' stop speaking');
+      });
+
+
+
       // user token
       this.getToken(this.mySessionId).then(token => {
+        console.log('token: ', token)
+        this.token = token
         // clientData: 접속하는 사람의 정보 입력
         this.session.connect(token, { clientData: this.auth.user.nickname})
           .then(() => {
@@ -374,8 +412,27 @@ export default {
     // 위까지가 joinSession
 
     leaveSession () {
-      if (this.session) this.session.disconnect()
-
+      if (this.session) {
+        axios({
+          baseURL: SERVER_URL,
+          method: 'delete',
+          url: `conference/${this.mySessionId}/leave`,
+          headers: {
+            'X-AUTH-TOKEN': this.auth.user.token
+          },
+          data: {
+            token: this.token
+          },
+        })
+        .then(response => {
+          console.log(response)
+        })
+        .catch(error => console.log(error))
+        .finally(
+          this.session.disconnect()
+        )
+      }
+      
       this.session = undefined;
 			this.mainStreamManager = undefined;
 			this.publisher = undefined;
@@ -383,10 +440,10 @@ export default {
 			this.OV = undefined;
 
       window.removeEventListener('beforeunload', this.leaveSession);
+
+      // 세션 종료 후 이동
       this.$router.push({ name: 'Home'})
     },
-
-    // 여기까지 leaveSession
 
     updateMainVideoStreamManager (stream) {
       if (this.mainStreamManager === stream) return;
@@ -394,36 +451,36 @@ export default {
     },
 
     // 여기서부터 server와 상호작용
-    getToken (mySessionId) {      
-      return this.createSession(mySessionId).then(sessionId => this.createToken(sessionId))
+    getToken (mySessionId) {
+      return this.createToken(mySessionId)
     },
 
-    createSession (sessionId) {
-      return new Promise((resolve, reject) => {
-        axios
-          .post(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions`, JSON.stringify({
-            customSessionId: sessionId,
-          }), {
-            auth: {
-              username: 'OPENVIDUAPP',
-              password: OPENVIDU_SERVER_SECRET,
-            },
-          })
-          .then(response => response.data)
-          .then(data => resolve(data.id))
-          .catch(error => {
-            if(error.response.status === 409) {
-              resolve(sessionId)
-            } else {
-              console.warn(`No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}`);
-							if (window.confirm(`No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}\n\nClick OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${OPENVIDU_SERVER_URL}"`)) {
-								location.assign(`${OPENVIDU_SERVER_URL}/accept-certificate`);
-              }
-							reject(error.response);
-            }
-          })
-      })
-    },
+    // createSession (sessionId) {
+    //   return new Promise((resolve, reject) => {
+    //     axios
+    //       .post(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions`, JSON.stringify({
+    //         customSessionId: sessionId,
+    //       }), {
+    //         auth: {
+    //           username: 'OPENVIDUAPP',
+    //           password: OPENVIDU_SERVER_SECRET,
+    //         },
+    //       })
+    //       .then(response => response.data)
+    //       .then(data => resolve(data.id))
+    //       .catch(error => {
+    //         if(error.response.status === 409) {
+    //           resolve(sessionId)
+    //         } else {
+    //           console.warn(`No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}`);
+		// 					if (window.confirm(`No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}\n\nClick OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${OPENVIDU_SERVER_URL}"`)) {
+		// 						location.assign(`${OPENVIDU_SERVER_URL}/accept-certificate`);
+    //           }
+		// 					reject(error.response);
+    //         }
+    //       })
+    //   })
+    // },
 
     //여기까지 createSession
 
@@ -432,13 +489,16 @@ export default {
         axios({
           method: 'GET',
           baseURL: SERVER_URL,
-          url: `conference/${sessionId}/token`,
+          url: `/conference/${sessionId}/token`,
           headers: {
             'X-AUTH-TOKEN': this.auth.user.token
           },
         })
         .then(response => {
+          
+          console.log('ok: ', response.data)
           return response.data
+          
         })
         .then(data => resolve(data))
         .catch(error => reject(error.response))
@@ -493,7 +553,42 @@ export default {
       if (str === this.conference.password) {
         this.yetPassword = false
       }
-    }
+    },
+
+    // ConferenceMeeting 신규 기능
+    kickUser(){
+      console.log("connection:", this.connections[this.banTo])
+      if(this.banTo !== 0){
+        this.session.signal({
+          to: [this.connections[this.banTo]],
+          type: 'kick-msg'
+        })
+        .then(res => console.log(res))
+        .catch(err => console.error(err))
+        // axios({
+        //   method:'get',
+          
+        // })
+        this.session.forceDisconnect(this.connections[this.banTo])
+        this.banTo = 0
+      }
+    },
+    republish(){
+      this.session.publish(this.publisher)
+    },
+    unpublish(){
+      this.session.unpublish(this.publisher)
+    },
+    makeSilence(){
+      console.log(this.subscribers[this.silenceTo].stream)
+      this.session.forceUnpublish(this.subscribers[this.silenceTo].stream)
+      this.silenceTo = 0
+    },
+
+    ////
+
+
+
 
   },
   computed: {
