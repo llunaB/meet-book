@@ -1,5 +1,5 @@
 <template>
-  <div class="row mt-5 pa-1">
+  <div class="row pa-1">
     <div class="col-12 col-lg-6">
       <!-- 도서 정보 탑재 부분 -->
       <div class="row">

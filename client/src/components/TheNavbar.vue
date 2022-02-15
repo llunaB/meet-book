@@ -7,27 +7,10 @@
     </v-toolbar-title>
     
     <v-spacer></v-spacer>
-
-    <!-- 검색 -->
-    <v-text-field
-      dense flat
-      placeholder="검색"
-      append-outer-icon="mdi-magnify"
-      hide-details="true"
-      style="width: 500px; font-weight: bold;"
-      v-model="keyword"
-      @keyup.enter="searchKeyword(keyword)"
-      @click:append-outer="searchKeyword(keyword)"
-      >
-    </v-text-field>
-    <v-spacer></v-spacer>
-    <v-spacer></v-spacer>
-    <v-btn text plain to="/conference" class="hidden-sm-and-down ms-3">
-      <span class="mr-2">모임</span>
-    </v-btn>
+    
     <v-spacer></v-spacer>
     <div class="hidden-sm-and-down">
-      <div v-if="loggedIn" class="navbar-menu-loggedin">
+      <div v-if="loggedIn" class="navbar-menu-loggedin d-flex">
         <v-btn
             :to="{name: 'CreateConference'}"
             text
@@ -44,7 +27,8 @@
         </v-btn>
 
       </div>
-      <div v-else class="navbar-menu-not-loggedin">
+      <div v-else class="navbar-menu-not-loggedin d-flex">
+        <v-spacer></v-spacer>
         <v-btn
             :to="{name: 'Login'}"
             text
@@ -69,7 +53,7 @@
       <template v-slot:activator="{ on, attrs }">
         <v-btn
           icon v-bind="attrs" v-on="on">
-          <v-avatar v-if="this.$store.user.profileImage">
+          <v-avatar v-if="user.profileImage">
             <v-img :src="user.profileImage" contain />
           </v-avatar>
           <v-avatar v-else>
@@ -125,6 +109,7 @@ export default {
   name: "navbar",
   data: function () {
     return {
+      user: this.$store.state.auth.user,
       login: this.$store.state.login,
       profileMenuItems: [
         { title: '내 프로필', to: '/profile' },
@@ -147,13 +132,7 @@ export default {
       this.$router.push('/')
     },
 
-    // 검색
-    // Navbar에서의 검색은 실제 검색을 수행하는 것이 아니라,
-    // 검색 페이지에 검색 키워드로 전달하는 방식으로 수행됩니다.
-    searchKeyword: function (keyword) {
-      console.log(keyword)
-      this.$router.push({name: 'Search', params: {'type': 'conference'}, query: {'keyword': String(keyword), 'page': parseInt(1)}})
-    },
+    
   },
 
   computed: {
