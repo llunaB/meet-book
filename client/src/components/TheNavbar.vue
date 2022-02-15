@@ -1,30 +1,31 @@
 <template>
-  <v-app-bar app color="#FAF6EA">
-    <v-toolbar-title>
+  <v-app-bar app elevate-on-scroll color='transparent' width="100%">
+    <v-toolbar-title style="align-items: flex-end;">
       <router-link :to="{name: 'Home'}" class="text-decoration-none">
         <v-img src='@/assets/Logo2.gif'/>
       </router-link>
     </v-toolbar-title>
-    <v-btn text plain to="/conference" class="hidden-sm-and-down">
-      <span class="mr-2">모임</span>
-    </v-btn>
+    
     <v-spacer></v-spacer>
 
     <!-- 검색 -->
     <v-text-field
-      solo dense flat
+      dense flat
       placeholder="검색"
       append-outer-icon="mdi-magnify"
       hide-details="true"
-      style="max-width: 450px;"
+      style="width: 500px; font-weight: bold;"
       v-model="keyword"
       @keyup.enter="searchKeyword(keyword)"
       @click:append-outer="searchKeyword(keyword)"
       >
     </v-text-field>
-
     <v-spacer></v-spacer>
-
+    <v-spacer></v-spacer>
+    <v-btn text plain to="/conference" class="hidden-sm-and-down ms-3">
+      <span class="mr-2">모임</span>
+    </v-btn>
+    <v-spacer></v-spacer>
     <div class="hidden-sm-and-down">
       <div v-if="loggedIn" class="navbar-menu-loggedin">
         <v-btn
@@ -49,14 +50,14 @@
             text
             plain
           >
-          <span class="mr-2">로그인</span>
+          <span class="mr-2"><strong>로그인</strong></span>
         </v-btn>
         <v-btn
             :to="{name: 'Signup'}"
             text
             plain
           >
-          <span class="mr-2">회원가입</span>
+          <span class="mr-2"><strong>회원가입</strong></span>
         </v-btn>
       </div>
 
@@ -64,7 +65,7 @@
     </div>
 
     <!-- 계정 아이콘 -->
-    <v-menu offset-y>
+    <v-menu v-if="loggedIn" offset-y>
       <template v-slot:activator="{ on, attrs }">
         <v-btn
           icon v-bind="attrs" v-on="on">
@@ -160,5 +161,10 @@ export default {
 </script>
 
 <style>
+
+span {
+  font-size: 20px;
+  font-weight: bolder;
+}
 
 </style>

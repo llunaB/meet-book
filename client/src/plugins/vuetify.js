@@ -21,5 +21,7 @@ export default new Vuetify({
         error: '#F7DBCE',
       }
     }
-  }}
+  },
+  customVariables: ['~/assets/scss/variables.scss'],
+}
 )

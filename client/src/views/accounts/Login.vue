@@ -38,8 +38,8 @@
             <form class="social-form-group">
               <div class="hr-sect">SNS 로그인 하기</div>
               <div class="container" style="text-align: -webkit-center;">
-                <v-img class="my-2" src="@/assets/login_logo/kakao_login_large_narrow.png" max-height="50%" max-width="50%"/>
-                <v-img class="my-2" src="@/assets/login_logo/btnG_완성형.png" max-height="50%" max-width="50%"/>
+                <v-img class="my-2" src="@/assets/login_logo/kakao_login_large_narrow.png" max-height="50%" max-width="50%" @click="LoginWithKakao"/>
+                <!-- <div id="naver_id_login"></div>                 -->
               </div>
             </form>
             <!-- 소셜 로그인 전체 Form End -->
@@ -56,41 +56,83 @@
 
 <script>
 import ForgotPassword from "@/components/ForgotPassword";
+import axios from 'axios';
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
+
 
 export default {
-    "name": 'Login',
+  "name": 'Login',
   "components": {ForgotPassword},
   "data"() {
-      return {
-        "user": {},
-        "loading": false,
-        "dialog": false,
-        "snackMessage": '',
-      }
+    return {
+      "user": {},
+      "loading": false,
+      "dialog": false,
+      "snackMessage": '',
+    }
+  },
+  "computed": {
+    "loggedIn"() {
+      return this.$store.state.auth.status.loggedIn
+    }
+  },
+  "mounted"() {
+    if (this.loggedIn) {this.$router.push({"name": 'Home'})}
+
+    // const naver_id_login = new window.naver_id_login("G2XB0Eee8zQpMoh70APX", SERVER_URL + "/oauth/naver")
+    // const state = naver_id_login.getUniqState()
+    // naver_id_login.setButton("green", 3,44); // 버튼 설정
+    // naver_id_login.setDomain("http://localhost:8080/login")
+    // naver_id_login.setState(state)
+    // naver_id_login.setPopup()
+    // naver_id_login.init_naver_id_login()
+    // naver_id_login.get_naver_userprofile(naverSignInCallback())
+    // function naverSignInCallback() {
+    //   alert(naver_id_login.getProfileData('email'))
+    // }
+    // console.log(naver_id_login)
+    // console.log("Access token", naver_id_login.getAccessToken())
+  },
+  "methods": {
+    
+    handleLogin() {
+      this.$store.dispatch('auth/login', this.user)
+        .then(() => this.$router.push({"name": "Home"}))
+        .catch(() => {
+          this.loading = true
+          this.snackMessage = 'Email 혹은 Password 잘못입력하셨습니다.'
+          setTimeout(() => this.loading = false, 2000)
+        })
     },
-    "computed": {
-      "loggedIn"() {
-        return this.$store.state.auth.status.loggedIn
-      }
-    },
-    "mounted"() {
-      if (this.loggedIn) {this.$router.push({"name": 'Home'})}
-    },
-    "methods": {
-      "handleLogin"() {
-        this.$store.dispatch('auth/login', this.user)
-          .then(() => this.$router.push({"name": "Home"}))
-          .catch(() => {
-            this.loading = true
-            this.snackMessage = 'Email 혹은 Password 잘못입력하셨습니다.'
-            setTimeout(() => this.loading = false, 2000)
+    LoginWithKakao() {
+      window.Kakao.isInitialized()
+      window.Kakao.Auth.login({
+        success: res => {
+          axios({
+            baseURL: SERVER_URL,
+            url: 'oauth/kakao',
+            method: "GET",
+            params: {"accessToken": res.access_token},
           })
-      },
-      LoginWithKakao() {
-        const params = {redirectUri: "http://localhost:8080/auth",};
-            window.Kakao.Auth.authorize(params);
-      }
-      },
+          .then(res => {
+            const userId = JSON.parse(Buffer.from(res.data.token.split('.')[1], 'base64').toString())['sub']
+            axios.get(SERVER_URL + '/users/' + userId + '/detail', {
+              headers: {"X-AUTH-TOKEN": res.data.token}
+            })
+            .then(response => {
+              response.data['token'] = res.data.token
+              this.$store.dispatch('auth/snslogin', response.data)
+              this.$router.push({"name": "Home"})
+            })
+          })
+          .catch((e) => {console.log(e)})
+        },
+        fail(error) {
+          console.log(error);
+        },
+      })
+    },
+  }
 }
 </script>
 
