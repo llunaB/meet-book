@@ -103,7 +103,9 @@ public class UserService {
 		if(!source.isPresent()){
 			return null;
 		}
-		return modelMapper.map(source, UserDTO.class);
+		log.info("gutUserByEmail" + source.toString());
+
+		return modelMapper.map(source.get(), UserDTO.class);
 	}
 
 

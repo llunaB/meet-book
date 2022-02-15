@@ -88,6 +88,7 @@ public class EmailController {
     @ResponseBody  //AJAX후 값을 리턴하기위해 작성
     public ResponseEntity<Map<String,String>> updatePwdByMail(@PathVariable("id") String id,@PathVariable("email") String email) {
         UpdatePasswordReq updatePasswordReq = new UpdatePasswordReq();
+        log.info("id: "+id);
         Map<String,String> map = new HashMap<>();
         MessageRes messageRes = new MessageRes();
         Random random=new Random();  //난수 생성을 위한 랜덤 클래스
