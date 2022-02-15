@@ -1,14 +1,11 @@
 <template>
-  <v-app-bar app elevate-on-scroll color='#ffffff98' width="100%">
+  <v-app-bar app elevate-on-scroll color='#568D6C' width="100%">
     <v-toolbar-title style="align-items: flex-end;">
       <router-link :to="{name: 'Home'}" class="text-decoration-none">
         <v-img src='@/assets/Logo2.gif'/>
       </router-link>
     </v-toolbar-title>
-    
-    <v-spacer></v-spacer>
-    
-    <v-spacer></v-spacer>
+      
     <div class="hidden-sm-and-down">
       <div v-if="loggedIn" class="navbar-menu-loggedin d-flex">
         <v-btn
@@ -99,8 +96,6 @@
         </div>
       </v-list>
     </v-menu>
-
-
   </v-app-bar>
 </template>
 
@@ -145,7 +140,6 @@ export default {
 </script>
 
 <style>
-
 span {
   font-size: 20px;
   font-weight: bolder;
