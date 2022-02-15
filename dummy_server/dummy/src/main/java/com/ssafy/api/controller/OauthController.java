@@ -17,6 +17,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/oauth")
+@CrossOrigin("*")
 public class OauthController {
 
     private final OAuthService oAuthService;

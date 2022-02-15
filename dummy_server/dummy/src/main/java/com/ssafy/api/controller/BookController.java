@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping("/books")
+@CrossOrigin("*")
 public class BookController {
 
     private BookService bookService;
