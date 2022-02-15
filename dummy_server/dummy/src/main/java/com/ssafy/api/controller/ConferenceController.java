@@ -156,10 +156,9 @@ public class ConferenceController {
 	}
 	
 	@GetMapping("/{id}/token")
-	public ResponseEntity<Map<String, String>> getToken(@PathVariable("id") String id, @AuthenticationPrincipal final User user) {
+	public ResponseEntity<String> getToken(@PathVariable("id") String id, @AuthenticationPrincipal final User user) {
 
 		System.out.println("Getting sessionId and token | {sessionName}=" + id);
-		Map<String, String> map = new HashMap<String, String>();
 		
 		
 		// Role associated to this user
@@ -171,13 +170,11 @@ public class ConferenceController {
 			target = conferenceService.getConferenceById(Integer.parseInt(id));
 			
 			if(target == null) {
-				map.put("token", "conference not found");
-				return new ResponseEntity<Map<String, String>>(map, HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>("conference not found", HttpStatus.NOT_FOUND);
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
-			map.put("token", "conference not found");
-			return new ResponseEntity<Map<String, String>>(map, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>("conference not found", HttpStatus.NOT_FOUND);
 		}
 		
 		
@@ -207,14 +204,12 @@ public class ConferenceController {
 				conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), user.getId(), "JOIN"));
 
 				// Return the response to the client
-				map.put("token", token);
-				return new ResponseEntity<Map<String, String>>(map, HttpStatus.OK);
+				return new ResponseEntity<>(token, HttpStatus.OK);
 
 			} catch (OpenViduJavaClientException e1) {
 				// If internal error generate an error message and return it to client
 				e1.printStackTrace();
-				map.put("token", e1.toString());
-				return new ResponseEntity<Map<String, String>>(map, HttpStatus.OK);
+				return new ResponseEntity<>(e1.toString(), HttpStatus.OK);
 			} catch (OpenViduHttpException e2) {
 				if (404 == e2.getStatus()) {
 					// Invalid sessionId (user left unexpectedly). Session object is not valid
@@ -247,14 +242,11 @@ public class ConferenceController {
 			conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), user.getId(), "JOIN"));
 
 			// Return the response to the client
-			map.put("token", token);
-			return new ResponseEntity<Map<String, String>>(map, HttpStatus.OK);
+			return new ResponseEntity<>(token, HttpStatus.OK);
 
 		} catch (Exception e) {
 			// If error generate an error message and return it to client
-
-			map.put("token", e.toString());
-			return new ResponseEntity<Map<String, String>>(map, HttpStatus.OK);
+			return new ResponseEntity<>(e.toString(), HttpStatus.OK);
 		}
 	}
 
