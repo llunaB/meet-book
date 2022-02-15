@@ -10,6 +10,11 @@ export const auth = {
     namespaced: true,
     state: initialState,
     actions: {
+        snslogin({ commit }, user) {
+            console.log(user)
+            commit('loginSuccess', user)
+            return Promise.resolve(user)
+        },
         login({ commit }, user) {
             return AuthService.login(user).then(
                 user => {
@@ -17,11 +22,11 @@ export const auth = {
                     axios.get(SERVER_URL + '/users/' + result["sub"])
                       .then(res => {
                           res.data['token'] = user.token
+                          console.log(res.data)
                           commit('loginSuccess', res.data)
                           return Promise.resolve(user)
                         })
                       .catch(e => console.log(e))
-
                 }).catch(e => {
                     commit('loginFailure')
                     return Promise.reject(e.response.data)})

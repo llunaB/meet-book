@@ -47,18 +47,10 @@
                 <a role="link" :href="'Login'">계정이 이미 있으신가요?</a>
               </div>
             </form>
-            <!-- 소셜 회원가입 전체 Form Start-->
-            <form class="social-form-group">
-              <div class="hr-sect">SNS로 로그인 하기</div>
-              <div class="container">
-                <v-icon> mdi-facebook </v-icon>
-                <v-icon> mdi-google </v-icon>
-              </div>
-              <!-- 스낵바 Form -->
-              <v-snackbar color="pink" v-model="submitted">
-                <template>{{ snackMessage }}</template>
-              </v-snackbar>
-            </form>
+            <!-- 스낵바 Form -->
+            <v-snackbar color="pink" v-model="submitted">
+              <template>{{ snackMessage }}</template>
+            </v-snackbar>
           </div>
             <!-- 회원가입 전체 Form End -->
         </div>
@@ -175,10 +167,6 @@ p {
 .card {
   padding: 3rem;
   border-radius: 10%;
-  /* glass effect */
-  background-color: #ffffff10;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
 }
 
 .form-group > input {
@@ -220,10 +208,5 @@ p {
 	margin: 0 16px;
 }
 
-.loginClass {
-  background-color: #ffffff10;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
 
 </style>
