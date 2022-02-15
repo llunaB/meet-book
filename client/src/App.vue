@@ -2,7 +2,7 @@
   <v-app>
     <Navbar />
 
-    <v-main style="flex: 3 1 auto; background-color:#ff000090;">
+    <v-main style="flex: 3 1 auto; background-color:#fff;">
       <router-view />
       <!-- <v-container fluid style="background-color:blue;">
       </v-container> -->
