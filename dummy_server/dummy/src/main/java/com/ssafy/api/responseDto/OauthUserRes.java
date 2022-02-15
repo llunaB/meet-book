@@ -16,4 +16,5 @@ public class OauthUserRes {
 
     private String token;
     private boolean sns;
+    private String msg;
 }
