@@ -21,7 +21,7 @@
           oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )" />
         <br>
         <div style="text-align: end;">
-          <v-btn color="#00f234" @click="passwordEditChange">비밀번호 수정</v-btn>
+          <v-btn color="primary" @click="passwordEditChange">비밀번호 수정</v-btn>
         </div>
         <!-- 나이 및 성별 값 입력 Form -->
         <div class="row align-self-center">
@@ -171,11 +171,20 @@ export default {
       axios({
         baseURL: SERVER_URL,
         url:`/users/${this.name}`,
-        method: 'DELETE'
+        method: 'DELETE',
+        data: {
+          "password": this.resign,
+        },
       })
         .then(() => {
           alert('탈퇴되었습니다.')
-          setTimeout(() => this.$router.push({name: "Home"}), 1000)
+          setTimeout(() => {
+            localStorage.removeItem('user')
+            this.$router.push({name: "Home"})}, 100)
+        })
+        .catch(() => {
+          this.submitMessage = '비밀번호를 확인해주세요'
+          setTimeout(() => this.snackbar = !this.snackbar, 2000)
         })
     },
   },

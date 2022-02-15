@@ -6,13 +6,13 @@
         <v-tabs-slider color="#798F88"></v-tabs-slider>
         <v-tab
           @click="function() {search('conference', $route.query.keyword, parseInt($route.query.page))}"
-          :to="{name: 'Search', params: {type: 'conference'}, query: {keyword: $route.query.keyword, page: parseInt($route.query.page)}}">회의</v-tab>
+          :to="{name: 'Search', params: {type: 'conference'}, query: {keyword: $route.query.keyword, page: parseInt($route.query.page)}}"><span>회의</span></v-tab>
         <v-tab
           @click="function() {search('book', $route.query.keyword, parseInt($route.query.page))}"
-          :to="{name: 'Search', params: {type: 'book'}, query: {keyword: $route.query.keyword, page: parseInt($route.query.page)}}">도서</v-tab>
+          :to="{name: 'Search', params: {type: 'book'}, query: {keyword: $route.query.keyword, page: parseInt($route.query.page)}}"><span>도서</span></v-tab>
         <v-tab
           @click="function() {search('users', $route.query.keyword, parseInt($route.query.page))}"
-          :to="{name: 'Search', params: {type: 'users'}, query: {keyword: $route.query.keyword, page: parseInt($route.query.page)}}">사용자</v-tab>
+          :to="{name: 'Search', params: {type: 'users'}, query: {keyword: $route.query.keyword, page: parseInt($route.query.page)}}"><span>사용자</span></v-tab>
       </v-tabs>
     </v-row>
     <v-row>
@@ -26,6 +26,13 @@
         <div v-else-if="searchType === 'book'">
           <p>"{{$route.query.keyword}}"의 도서 검색 결과입니다.</p>
           <TheBookcard v-for="(book, idx) in searchResult.content" :key="idx" :book="book" class="my-3 mx-auto" />
+          <!-- <v-row>
+            <template v-for="(book, idx) in searchResult.content">
+              <v-col :key="idx" cols="12" sm="6" align-self="">
+                <TheBookcard tile :book="book" class="my-3" />
+              </v-col>
+            </template>
+          </v-row> -->
           <v-pagination v-model="page" :length="searchResult.totalPages"></v-pagination>
         </div>
         <div v-else>
@@ -33,7 +40,6 @@
           <v-row>
             <ProfileSmallcard v-for="(user, idx) in searchResult.content" :key="idx" :person="user" class="my-3 mx-auto" />
           </v-row>
-
           <v-pagination v-model="page" :length="searchResult.totalPages" @input="onPageChange" ></v-pagination>
         </div>
 

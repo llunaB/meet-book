@@ -9,12 +9,10 @@ class AuthService {
             email: user.email,
             password: user.password
         })
-            .then(res => {
-                if (res.data.accessToken) {
-                    localStorage.setItem('user', JSON.stringify(res.data))
-                }
-                return res.data
-            })
+        .then(res => {
+            if (res.data.accessToken) localStorage.setItem('user', JSON.stringify(res.data))
+            return res.data
+        })
     }
     logout (){
         localStorage.removeItem('user')

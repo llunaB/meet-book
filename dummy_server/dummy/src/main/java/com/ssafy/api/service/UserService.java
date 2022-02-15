@@ -100,6 +100,11 @@ public class UserService {
 
 	public UserDTO getUserByEmail(String email) throws Exception {
 		Optional<User> source = userRepository.findByEmail(email);
+		if(!source.isPresent()){
+			return null;
+		}
+		log.info("gutUserByEmail" + source.toString());
+
 		return modelMapper.map(source.get(), UserDTO.class);
 	}
 

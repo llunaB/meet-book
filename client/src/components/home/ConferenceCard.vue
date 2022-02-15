@@ -33,8 +33,15 @@
         <v-icon v-if="locked === false">mdi-lock-open-outline</v-icon>
         <v-icon v-else>mdi-lock</v-icon>
       </v-btn>
-      <v-btn class="mx-5 mb-2 enter" @click="goToMeeting(conference.id)" v-if="isActive">
+      <v-btn class="mx-5 mb-2 enter" @click="goToMeeting(conference.id)" v-if="isActive && (attendMembers < conference.maxMembers)">
         참여하기        
+      </v-btn>
+      <v-btn class="mx-5 mb-2 enter" v-else-if="attendMembers >= conference.maxMembers">
+        최대인원        
+      </v-btn>
+      <v-btn class="mx-5 mb-2 enter" @click="goToMeeting(conference.id)" v-else-if="(userId===conference.user.id) 
+      && canOpen()">
+        개설하기
       </v-btn>
       <v-btn class="mx-5 mb-2 enter" v-else @click="bookmarking">
           <v-icon v-if="bookmarked">mdi-bookmark-check</v-icon>
@@ -56,6 +63,7 @@ export default {
       bookmarkId: null,
       bookmarked: false,
       attendMembers: 0,
+      userId: null,
     }
   },
   props: {
@@ -65,33 +73,38 @@ export default {
     lockClick: function() {      
       this.locked = !this.locked
     },
-    bookmarking: function() {      
-      if(this.bookmarked) {
-        axios({
-          baseURL: SERVER_URL,
-          method: 'delete',
-          url:`/users/${this.$store.state.auth.user.id}/bookmark/${this.bookmarkId}`,
-          headers: {
-          'X-AUTH-TOKEN': this.$store.state.auth.user.token
-          }
-        })
-        .then(res=>{
-          this.bookmarked = false
-          console.log(res)})
-        .catch(err => console.error(err))
+    bookmarking: function() {
+      if(this.$store.state.auth.user){
+        if(this.bookmarked) {
+          axios({
+            baseURL: SERVER_URL,
+            method: 'delete',
+            url:`/users/${this.$store.state.auth.user.id}/bookmark/${this.bookmarkId}`,
+            headers: {
+            'X-AUTH-TOKEN': this.$store.state.auth.user.token
+            }
+          })
+          .then(res=>{
+            this.bookmarked = false
+            console.log(res)})
+          .catch(err => console.error(err))
+        } else {
+          axios({
+            baseURL: SERVER_URL,
+            method: 'post',
+            url:`/users/${this.$store.state.auth.user.id}/bookmark/${this.conference.id}`,
+            headers: {
+            'X-AUTH-TOKEN': this.$store.state.auth.user.token
+            }
+          })
+          .then(res=>{
+            this.bookmarked = true
+            this.bookmarkId = res.data.bookmarkId})
+          .catch(err => console.error(err))
+
+        }      
       } else {
-        axios({
-          baseURL: SERVER_URL,
-          method: 'post',
-          url:`/users/${this.$store.state.auth.user.id}/bookmark/${this.conference.id}`,
-          headers: {
-          'X-AUTH-TOKEN': this.$store.state.auth.user.token
-          }
-        })
-        .then(res=>{
-          this.bookmarked = true
-          this.bookmarkId = res.data.bookmarkId})
-        .catch(err => console.error(err))
+        this.$router.push({name: 'Login'})
       }
     },
     goToMeeting: function(conferenceId){
@@ -131,9 +144,9 @@ export default {
         baseURL: SERVER_URL,
         method: 'get',
         url: `/conference/${this.conference.id}/live`,
-        headers: {
-          'X-AUTH-TOKEN': this.$store.state.auth.user.token
-        }
+        // headers: {
+        //   'X-AUTH-TOKEN': this.$store.state.auth.user.token
+        // }
       })
       .then(res=>this.isActive=res.data)
       .catch(err=>console.error(err))
@@ -150,16 +163,18 @@ export default {
     //   .catch(err=>console.error(err))
     // },
     isbookmarked: function(){
-      axios({
-        baseURL: SERVER_URL,
-        method: 'get',
-        url: `/users/${this.$store.state.auth.user.id}/bookmark/${this.conference.id}`
-      })
-      .then(res=>{
-        this.bookmarkId = res.data.id
-        this.bookmarked = true
-      })
-      .catch(err=>console.error(err))
+      if(this.$store.state.auth.user){
+        axios({
+          baseURL: SERVER_URL,
+          method: 'get',
+          url: `/users/${this.$store.state.auth.user.id}/bookmark/${this.conference.id}`
+        })
+        .then(res=>{
+          this.bookmarkId = res.data.id
+          this.bookmarked = true
+        })
+        .catch(err=>console.error(err))
+      }
     },
     checkAttends: function(){
       axios({
@@ -169,6 +184,15 @@ export default {
       })
       .then(res=>this.attendMembers = res.data.data)
       .catch(err=>console.error(err))
+    },
+    canOpen: function(){
+      const startTime = new Date(this.conference.callStartTime)
+      const startval = startTime.valueOf() - 32400000
+      const endTime = new Date(this.conference.callEndTime)
+      const endval = endTime.valueOf() - 32400000
+      const now = new Date()
+      const nowval = now.valueOf()
+      return (startval < nowval) && (nowval < endval)
     }
   },  
   mounted(){
@@ -176,6 +200,7 @@ export default {
       this.activeCheck()      
       this.isbookmarked()
       this.checkAttends()
+      if(this.$store.state.auth.user) this.userId = this.$store.state.auth.user.id
     })
   }
 }

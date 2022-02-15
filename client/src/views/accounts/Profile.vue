@@ -2,7 +2,9 @@
   <v-container style="padding: 3rem">
     <v-row>
       <v-col class="text-center align-self-center justify-center text-center" cols="3">
-        <v-avatar v-if="user.profileImage" :src="user.profileImage" />
+        <v-avatar v-if="user.profileImage" size="150">
+          <v-img :src="user.profileImage" contain></v-img>
+        </v-avatar>
         <div v-else class="img-upload">
           <v-avatar size="150">
             <v-img src="@/assets/host_img/HostImg.png" />
@@ -76,14 +78,6 @@
           </v-col>
         </v-footer>
       </v-card>
-    </v-col>
-    <v-col>
-      <h3>등급</h3>
-      <br>
-      <v-row>
-        <v-img :src="getImg(user.host_point)" contain aspect-ratio="3" />
-        <v-img :src="getImg(user.guest_point)" contain aspect-ratio="3" />
-      </v-row>
     </v-col>
   </v-container>
 </template>
