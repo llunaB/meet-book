@@ -1,5 +1,6 @@
 package com.ssafy.db.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -21,7 +22,9 @@ public interface ConferenceRepository extends JpaRepository<Conference, Integer>
 	@Query(value = "select * from conference where user_id in :types", nativeQuery = true)
 	Page<Conference> findConferencesByUser(@Param("types") List<User> users, Pageable pageable);
 	Page<Conference> findByTagsContaining(String tags, Pageable pageable);
-	Page<Conference> findConferenceByBookGenreGenre(String genre, Pageable pageable);
+	Page<Conference> findConferenceByBookGenreGenreOrderByCallStartTime(String genre, Pageable pageable);
+	Page<Conference> findConferenceByBookGenreGenreAndCallEndTimeAfterOrderByCallStartTime(String genre, Date current, Pageable pageable);
+	Page<Conference> findConferenceByBookGenreGenreAndCallEndTimeBeforeOrderByCallStartTime(String genre, Date current, Pageable pageable);
 	Long countByBookGenreGenre(String genre);
 
 

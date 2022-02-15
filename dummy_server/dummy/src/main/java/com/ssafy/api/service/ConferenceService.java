@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -182,7 +183,31 @@ public class ConferenceService {
 	public Page<GetConferencesRes> getConferencesByGenre(String genre, Pageable pageable){
 		Page<GetConferencesRes> list = Page.empty();
 		try {
-			Page<Conference> data = conferenceRepository.findConferenceByBookGenreGenre(genre, pageable);
+			Page<Conference> data = conferenceRepository.findConferenceByBookGenreGenreOrderByCallStartTime(genre, pageable);
+			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	public Page<GetConferencesRes> getFinishedConferencesByGenre(String genre, Pageable pageable){
+		Page<GetConferencesRes> list = Page.empty();
+		try {
+			Page<Conference> data = conferenceRepository.findConferenceByBookGenreGenreAndCallEndTimeBeforeOrderByCallStartTime(genre, new Date(), pageable);
+			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	public Page<GetConferencesRes> getReservedConferencesByGenre(String genre, Pageable pageable){
+		Page<GetConferencesRes> list = Page.empty();
+		try {
+			Page<Conference> data = conferenceRepository.findConferenceByBookGenreGenreAndCallEndTimeAfterOrderByCallStartTime(genre, new Date(), pageable);
 			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
 		}catch(Exception e){
 			e.printStackTrace();
