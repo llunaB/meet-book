@@ -1,7 +1,5 @@
 <template>
   <div class="container">
-    <carousel>
-    </carousel>
     <h2 class="my-3">지금 가장 핫한 모임</h2>
     <!-- <conference-slide :conferences="conferences">
     </conference-slide> -->
@@ -16,7 +14,7 @@
 
 <script>
 // import HelloWorld from '../components/HelloWorld'
-import Carousel from '../components/home/Carousel'
+// import Carousel from '../components/home/Carousel'
 // import ConferenceSlide from '../components/home/ConferenceSlide'
 
 
@@ -38,7 +36,7 @@ export default {
     },
     components: {
       // ConferenceSlide,
-      Carousel,      
+      // Carousel,
     },
     // 나중에 지울 것
     methods: {

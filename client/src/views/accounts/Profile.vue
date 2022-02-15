@@ -1,5 +1,5 @@
 <template>
-  <v-container style="padding: 3rem">
+  <v-container>
     <v-row>
       <v-col class="text-center align-self-center justify-center text-center" cols="3">
         <v-avatar v-if="user.profileImage" size="150">
@@ -26,6 +26,8 @@
     <v-col style="padding-top:2rem">
       <v-item-group v-if="!this.conferences.length" style="text-align-last: center">
         <h2 style="color: #ff3170;">아직 함께 참여한 모임이 없어요 ㅠㅠ </h2>
+        <p>{{ name.token }}</p>
+
         <br>
         <v-btn v-if="searchUser === name" rounded class="primary" href="conference">참여하러가기</v-btn>
       </v-item-group>
@@ -84,17 +86,16 @@
 
 <script>
 import axios from "axios";
-import User from "@/api/users"
 const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
 export default {
   name: 'Profile',
   data() {
     return {
-      user: new User(),
+      user: {},
       conference: '',
       conferences: [],
-      name: this.$store.state.auth.user.id,
+      name: this.$store.state.auth.user,
       searchUser: this.$route.params.userId,
     }
   },
@@ -115,19 +116,15 @@ export default {
     // 일단은 본인 프로필로 입장이여서 this.$store.state.auth.user.id를 사용 했습니다.
     // 이후에 다른 유저가 들어올 경우에는 해당 부분을 수정하여 props한 값을 넣으면 됩니다.
     userProfile() {
-      if (!this.searchUser) {
-        this.searchUser = this.name
-      }
       axios({
         baseURL: SERVER_URL,
-        url:`/users/${this.name}/detail`,
+        url: '/users/' + this.searchUser + '/detail',
         method: 'GET',
         headers: {
-        "X-Auth-Token": this.$store.state.auth.user.token,
-        "content-type": "application/json"}
+        "X-AUTH-TOKEN": this.name.token}
       })
         .then(res => this.user = res.data)
-        .catch(() => console.log('hhhhh'))
+        .catch(e => console.log(e))
     },
     userBookmark() {
       axios({
