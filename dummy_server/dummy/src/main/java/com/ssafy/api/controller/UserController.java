@@ -135,9 +135,12 @@ public class UserController {
 	public ResponseEntity<MessageRes> getUserByEmail(@RequestBody FindPwdReq findPwdReq, HttpServletResponse response){
 		HashMap<String, String> map = new HashMap<String, String>();
 		MessageRes messageRes = new MessageRes();
+		log.info(findPwdReq.toString());
 		UserDTO user = null;
 		try {
 			user = userService.getUserByEmail(findPwdReq.getEmail());
+			log.info(user.toString());
+			log.info("id:" + String.valueOf(user.getId()));
 			response.sendRedirect("/email/pwdcheck/"+user.getId()+"/"+user.getEmail());
 		}catch(Exception e){
 			e.printStackTrace();
