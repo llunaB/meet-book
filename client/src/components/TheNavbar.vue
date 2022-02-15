@@ -5,7 +5,7 @@
         <v-img src='@/assets/Logo2.gif'/>
       </router-link>
     </v-toolbar-title>
-      
+    <v-spacer></v-spacer>
     <div class="hidden-sm-and-down">
       <div v-if="loggedIn" class="navbar-menu-loggedin d-flex">
         <v-btn
@@ -25,7 +25,6 @@
 
       </div>
       <div v-else class="navbar-menu-not-loggedin d-flex">
-        <v-spacer></v-spacer>
         <v-btn
             :to="{name: 'Login'}"
             text

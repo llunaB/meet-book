@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="profileForm" style="padding-top:5rem;">
     <v-row>
       <v-col class="text-center align-self-center justify-center text-center" cols="3">
         <v-avatar v-if="user.profileImage" size="150">
@@ -17,17 +17,18 @@
         <h2>{{ user.nickname }}님의 개인 프로필</h2>
         <br>
         <v-card>
-          <strong>한마디</strong>
-          <p>{{ user.profileDescription }}</p>
+          <v-card-title><strong>한마디</strong></v-card-title>
+          <v-spacer></v-spacer>
+          <v-card-subtitle v-if="user.profileDescription.length > 0">{{ user.profileDescription }}</v-card-subtitle>
+          <v-card-subtitle v-else>아직 한마디가 없어요..</v-card-subtitle>
         </v-card>
-        <span>{{ conferences.length }}개의 모임이 예약되어 있어요!!</span>
+        <span v-if="conferences.length > 0">{{ conferences.length }}개의 책을 읽었어요!!</span>
+        
       </v-col>
     </v-row>
     <v-col style="padding-top:2rem">
-      <v-item-group v-if="!this.conferences.length" style="text-align-last: center">
+      <v-item-group v-if="!conferences.length" style="text-align-last: center">
         <h2 style="color: #ff3170;">아직 함께 참여한 모임이 없어요 ㅠㅠ </h2>
-        <p>{{ name.token }}</p>
-
         <br>
         <v-btn v-if="searchUser === name" rounded class="primary" href="conference">참여하러가기</v-btn>
       </v-item-group>
@@ -36,17 +37,33 @@
         <v-item-group>
           <v-container>
             <v-row>
-              <v-col v-for="(item, idx) in conferences.slice(0, 5)" :key="idx" md="2.2">
+              <v-col cols="6" v-for="(item, idx) in conferences.slice(0, 5)" :key="idx">
                 <v-item>
                   <v-card
-                    class="d-flex align-center"
-                    width="10%"
-                  >
-                    <v-img
-                      max-width="128px"
-                      @click="onclick(item)"
-                      :src="item.thumbnail_url"
-                    />
+                    class="bookcard"
+                    max-width="0"
+                    :to="{name: 'Bookinfo', params: {id: item.book.id}}"
+                      >
+                      <template>
+                        <div class="book">
+                          <div class="back"></div>
+                          <div class="page6">
+                            <v-card-text style="padding:0;">
+                              <v-card-title style="font-size:15px; font-weight:bold;">{{ item.book.bookName }}</v-card-title>
+                              <v-card-subtitle >{{ item.book.bookAuthor }}<hr>{{ item.book.bookPubYear }}</v-card-subtitle>
+                            </v-card-text>
+                          </div>
+                          <div class="page5">
+                            <v-card-text>
+                              <p>{{ item.book.bookContents.slice(0, 160) }}...</p>
+                            </v-card-text>
+                          </div>
+                          <div class="page4"></div><div class="page3"></div><div class="page2"></div><div class="page1"></div>
+                          <div class="front">
+                            <v-img :src="item.book.bookThumbnailUrl" contain />
+                          </div>
+                        </div>
+                      </template>
                   </v-card>
                 </v-item>
               </v-col>
@@ -87,7 +104,6 @@
 <script>
 import axios from "axios";
 const SERVER_URL = process.env.VUE_APP_SERVER_URL
-
 export default {
   name: 'Profile',
   data() {
@@ -95,8 +111,9 @@ export default {
       user: {},
       conference: '',
       conferences: [],
-      name: this.$store.state.auth.user,
-      searchUser: this.$route.params.userId,
+      searchUser : this.$route.params.userId,
+      name: this.$store.state.auth.user.id,
+
     }
   },
   methods: {
@@ -116,27 +133,56 @@ export default {
     // 일단은 본인 프로필로 입장이여서 this.$store.state.auth.user.id를 사용 했습니다.
     // 이후에 다른 유저가 들어올 경우에는 해당 부분을 수정하여 props한 값을 넣으면 됩니다.
     userProfile() {
+      if (this.searchUser === undefined) {
+        this.searchUser = this.name
+      }
       axios({
         baseURL: SERVER_URL,
-        url: '/users/' + this.searchUser + '/detail',
-        method: 'GET',
-        headers: {
-        "X-AUTH-TOKEN": this.name.token}
+        url: '/users/' + this.searchUser,
+        method: 'GET'
       })
         .then(res => this.user = res.data)
         .catch(e => console.log(e))
     },
     userBookmark() {
+      console.log(this.searchUser)
       axios({
         baseURL: SERVER_URL,
         url:`/users/${this.searchUser}/bookmark`,
-        method: 'GET'
+        method: 'GET',
+        headers: {
+          'X-AUTH-TOKEN': this.$store.state.auth.user.token
+        }
       })
-      .then(res => this.conferences = res.data)
-      .catch(() => console.log('asdasdasd'))}
+      .then(res => {
+        console.log(res)
+        // res.data.forEach(element => {
+        //   axios({
+        //     baseURL: SERVER_URL,
+        //     url: `/conference/${element.conferenceId}`,
+        //     method: 'GET',
+        //   })
+        //   .then(res => {
+        //     this.conferences.push(res.data)
+        //   })
+        // });
+        // for (let index = 0; index < res.data.length; index++) {
+        //   axios({
+        //     baseURL: SERVER_URL,
+        //     url: `/conference/${res.data[index].conferenceId}`,
+        //     method: 'GET',
+        //   })
+        //   .then(res => {
+        //     this.conferences.push(res.data)
+        //   })
+        // }
+      })
+      .catch(e => console.log(e))
+    },
   },
   beforeMount() {
     this.userProfile()
+    this.userBookmark()
   }
 }
 </script>
@@ -147,5 +193,97 @@ export default {
   display: none;
 }
 
+.book {
+  transform-style: preserve-3d;
+  position: relative;
+  width: 170px;
+  height: 247px;
+  margin: 1rem;
+  cursor: pointer;
+  backface-visibility: visible;
+}
 
+.front, .back, .page1, .page2, .page3, .page4, .page5, .page6 {
+  transform-style: preserve-3d;
+  position: absolute;
+  width: 170px;
+  height: 247px;
+  transform-origin: right center;
+  transition: transform .5s ease-in-out, box-shadow .35s ease-in-out;
+}
+
+.front, .page1, .page3, .page5 {
+  border-bottom-right-radius: .5em;
+  border-top-right-radius: .5em;
+}
+
+.back, .page2, .page4, .page6 {
+  border-bottom-right-radius: .5em;
+  border-top-right-radius: .5em;
+}
+
+.page1 { 
+  background: #efefef;
+}
+
+.page2 {
+  background: #efefef;
+}
+
+.page3 {
+  background: #f5f5f5;
+}
+
+.page4 {
+  background: #f5f5f5;
+}
+
+.page5 {
+  background: #fafafa;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.page6 {
+  background: #fdfdfd;
+}
+
+.book:hover .front {
+  transform: rotateY(160deg) scale(1.1);
+  box-shadow: 0 1em 3em 0 rgba(0, 0, 0, .2);
+}
+
+.book:hover .page1 {
+  transform: rotateY(150deg) scale(1.1);
+  box-shadow: 0 1em 3em 0 rgba(0, 0, 0, .2);
+}
+
+.book:hover .page2 {
+  transform: rotateY(30deg) scale(1.1);
+  box-shadow: 0 1em 3em 0 rgba(0, 0, 0, .2);
+}
+
+.book:hover .page3 {
+  transform: rotateY(140deg) scale(1.1);
+  box-shadow: 0 1em 3em 0 rgba(0, 0, 0, .2);
+}
+
+.book:hover .page4 {
+  transform: rotateY(40deg) scale(1.1);
+  box-shadow: 0 1em 3em 0 rgba(0, 0, 0, .2);
+}
+
+.book:hover .page5 {
+  transform: rotateY(130deg) scale(1.1);
+  box-shadow: 0 1em 3em 0 rgba(0, 0, 0, .2);
+}
+
+.book:hover .page6 {
+  transform: rotateY(45deg) scale(1.1);
+  box-shadow: 0 1em 3em 0 rgba(0, 0, 0, .2);
+}
+
+.book:hover .back {
+  transform: rotateY(20deg) scale(1.1);
+}
 </style>
