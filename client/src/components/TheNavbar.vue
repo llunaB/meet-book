@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar app elevate-on-scroll color='transparent' width="100%">
+  <v-app-bar app elevate-on-scroll color='#ffffff98' width="100%">
     <v-toolbar-title style="align-items: flex-end;">
       <router-link :to="{name: 'Home'}" class="text-decoration-none">
         <v-img src='@/assets/Logo2.gif'/>

@@ -1,13 +1,22 @@
 <template>
-  <div class="container">
-    <h2 class="my-3">지금 가장 핫한 모임</h2>
+  <div class="container" >
+    <div class="row align-items-start">
+    <div class="font-white mx-10 block col">
+      <h2 class="main-title">
+      함께하는 독서모임<br>
+      MEETBOOK</h2>
+    </div>
+    <div class="col">
+      <img src="../assets/girl.svg" alt="">
+    </div>
+    </div>
     <!-- <conference-slide :conferences="conferences">
     </conference-slide> -->
-    <h2 class="my-3">화상회의 test</h2>
+    <!-- <h2 class="my-3">화상회의 test</h2> -->
     <div>
-      <v-btn class="primary" @click="goToMeeting()">
+      <!-- <v-btn class="primary" @click="goToMeeting()">
         입장하기
-      </v-btn>
+      </v-btn> -->
     </div>
   </div>  
 </template>
@@ -51,3 +60,30 @@ export default {
     }
   }
 </script>
+
+<style>
+.bg {
+  background-color: #568D6C;
+}
+.block {
+  margin-top:0;
+  height: 300px;
+}
+
+.font-black {
+  color : #1E1E1E;
+}
+.font-white {
+ color: #fff;
+}
+
+.main-title {
+  font-size: 3rem;
+}
+
+/* .btn-outline {
+  color: $primary;
+  border-color: $primary;
+} */
+</style>
+
