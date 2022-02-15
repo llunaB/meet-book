@@ -3,10 +3,11 @@
     <div>
         <v-text-field
         dense flat
-        placeholder="검색"
-        append-outer-icon="mdi-magnify"
+        placeholder="아몬드"
         hide-details="true"
-        style="width: 500px; font-weight: bold;"
+        label="Prepend"
+        prepend-inner-icon="mdi-magnify"
+        style=""
         v-model="keyword"
         @keyup.enter="searchKeyword(keyword)"
         @click:append-outer="searchKeyword(keyword)" />
