@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/image")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ImageController {
 	
 	//private ConferenceService conferenceService;

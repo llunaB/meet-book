@@ -19,6 +19,7 @@ import com.ssafy.db.entity.Bookmark;
 import com.ssafy.db.entity.Conference;
 import com.ssafy.db.entity.ConferenceHistory;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.mapping.ConferenceOnly;
 import com.ssafy.db.repository.BookRepository;
 import com.ssafy.db.repository.BookmarkRepository;
 import com.ssafy.db.repository.ConferenceHistoryRepository;
@@ -155,10 +156,23 @@ public class ConferenceService {
 		return page;
 	}
 	
+	public Page<GetConferencesRes> getConferencesByNicknameContaining(String nickname, Pageable pageable){
+		Page<GetConferencesRes> list = Page.empty();
+		try {
+			Page<Conference> data = conferenceRepository.findConferencesByUserNicknameContaining(nickname, pageable);
+			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
+
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
 	public Page<GetConferencesRes> getConferencesByNickname(String nickname, Pageable pageable){
 		Page<GetConferencesRes> list = Page.empty();
 		try {
-			Page<User> data = userRepository.findByNicknameContaining(nickname, pageable);
+			Page<Conference> data = conferenceRepository.findConferencesByUserNickname(nickname, pageable);
 			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
 
 		}catch(Exception e){
@@ -209,6 +223,18 @@ public class ConferenceService {
 		try {
 			Page<Conference> data = conferenceRepository.findConferenceByBookGenreGenreAndCallEndTimeAfterOrderByCallStartTime(genre, new Date(), pageable);
 			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	public Page<GetConferencesRes> getJoinedConferencesByUser(int id, Pageable pageable){
+		Page<GetConferencesRes> list = Page.empty();
+		try {
+			Page<ConferenceOnly> data = conferenceHistoryRepository.findDistinctConferenceByUserIdAndActionOrderByConferenceCallStartTimeDesc(id, "JOIN", pageable);
+			list = data.map(source -> modelMapper.map(source.getConference(), GetConferencesRes.class));
 		}catch(Exception e){
 			e.printStackTrace();
 		}

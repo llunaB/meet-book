@@ -8,7 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -109,6 +111,19 @@ public class SearchController {
 		PageRequest request = PageRequest.of(page, size);
 
 		try {
+			list = conferenceService.getConferencesByNicknameContaining(nickname, request);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<Page<GetConferencesRes>>(list, HttpStatus.OK);
+	}
+	
+	@GetMapping("/conference/{nickname}")
+	public ResponseEntity<Page<GetConferencesRes>> getConferencesByNickname(@PathVariable("nickname") String nickname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+		Page<GetConferencesRes> list = Page.empty();
+		PageRequest request = PageRequest.of(page, size);
+
+		try {
 			list = conferenceService.getConferencesByNickname(nickname, request);
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -180,5 +195,18 @@ public class SearchController {
 			map.put("data", -1L);
 		}
 		return new ResponseEntity<Map<String, Long>>(map, HttpStatus.OK);
+	}
+	
+	@GetMapping("/conference/join/{userId}")
+	public ResponseEntity<Page<GetConferencesRes>> getJoinedConferencesByUser(@RequestParam("userId") String id, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+		Page<GetConferencesRes> list = Page.empty();
+		PageRequest request = PageRequest.of(page, size);
+
+		try {
+			list = conferenceService.getJoinedConferencesByUser(Integer.parseInt(id), request);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<Page<GetConferencesRes>>(list, HttpStatus.OK);
 	}
 }
