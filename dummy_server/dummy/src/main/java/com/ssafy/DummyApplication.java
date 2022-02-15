@@ -7,6 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import javax.annotation.PostConstruct;
+import java.util.Date;
+import java.util.TimeZone;
+
 @EnableSwagger2
 @EnableScheduling
 @SpringBootApplication
@@ -20,7 +24,11 @@ public class DummyApplication {
 //		this.bookService = bookService;
 //	}
 
-
+	@PostConstruct
+	public void started(){
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+		System.out.println("현재시각 : "+new Date());
+	}
 	public static void main(String[] args) {
 		SpringApplication.run(DummyApplication.class, args);
 
