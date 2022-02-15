@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -157,7 +158,8 @@ public class ConferenceController {
 	public ResponseEntity<String> getToken(@PathVariable("id") String id, @AuthenticationPrincipal final User user) {
 
 		System.out.println("Getting sessionId and token | {sessionName}=" + id);
-
+		
+		
 		// Role associated to this user
 		OpenViduRole role = OpenViduRole.PUBLISHER;
 		
@@ -199,8 +201,6 @@ public class ConferenceController {
 				this.mapSessionNamesTokens.get(id).put(token, role);
 				this.mapSessionNamesUsers.get(id).put(token, user.getId());
 				conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), user.getId(), "JOIN"));
-				// Prepare the response with the token
-				responseJson.addProperty("token", token);
 
 				// Return the response to the client
 				return new ResponseEntity<>(token, HttpStatus.OK);
@@ -239,10 +239,6 @@ public class ConferenceController {
 			this.mapSessionNamesUsers.put(id, new ConcurrentHashMap<>());
 			this.mapSessionNamesUsers.get(id).put(token, user.getId());
 			conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), user.getId(), "JOIN"));
-
-
-			// Prepare the response with the sessionId and the token
-			responseJson.addProperty("token", token);
 
 			// Return the response to the client
 			return new ResponseEntity<>(token, HttpStatus.OK);

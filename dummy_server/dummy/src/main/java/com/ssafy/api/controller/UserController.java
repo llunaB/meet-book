@@ -1,5 +1,6 @@
 package com.ssafy.api.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -247,9 +249,15 @@ public class UserController {
 	}
 	
 	@PostMapping("/{user}/bookmark/{conference}")
-	public ResponseEntity<Map<String,String>> createBookmark(@PathVariable("user") String userId, @PathVariable("conference") String conferenceId){
+	public ResponseEntity<Map<String,String>> createBookmark(@PathVariable("user") String userId, @PathVariable("conference") String conferenceId, @AuthenticationPrincipal User userEntity){
 		
 		HashMap<String, String> map = new HashMap<String, String>();
+		
+		if(!checkUser(userId, userEntity)) {
+			map.put("message", "삭제 실패");
+			return new ResponseEntity<Map<String,String>>(map, HttpStatus.FORBIDDEN);
+		}
+		
 		int bookmarkId = bookmarkService.createBookmark(Integer.parseInt(userId), Integer.parseInt(conferenceId));
 		if (bookmarkId > -1) {
 			map.put("bookmarkId",Integer.toString(bookmarkId));
@@ -261,9 +269,14 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/{user}/bookmark/{bookmark}")
-	public ResponseEntity<Map<String,String>> deleteBookmark(@PathVariable("user") String userId, @PathVariable("bookmark") String bookmarkId){
+	public ResponseEntity<Map<String,String>> deleteBookmark(@PathVariable("user") String userId, @PathVariable("bookmark") String bookmarkId, @AuthenticationPrincipal User userEntity){
 		
 		HashMap<String, String> map = new HashMap<String, String>();
+		
+		if(!checkUser(userId, userEntity)) {
+			map.put("message", "삭제 실패");
+			return new ResponseEntity<Map<String,String>>(map, HttpStatus.FORBIDDEN);
+		}
 		
 		if(bookmarkService.deleteBookmark(Integer.parseInt(bookmarkId))) {
 			map.put("message", "북마크 삭제 성공");
@@ -274,7 +287,11 @@ public class UserController {
 	}
 	
 	@GetMapping("/{user}/bookmark")
-	public ResponseEntity<List<GetBookmarksRes>> getBookmarks(@PathVariable("user") String userId){
+	public ResponseEntity<List<GetBookmarksRes>> getBookmarks(@PathVariable("user") String userId, @AuthenticationPrincipal User userEntity){
+		
+		if(!checkUser(userId, userEntity)) {
+			return new ResponseEntity<>(new ArrayList<GetBookmarksRes>(), HttpStatus.FORBIDDEN);
+		}
 		
 		List<GetBookmarksRes> list = bookmarkService.getBookmarks(Integer.parseInt(userId));
 		
@@ -282,16 +299,22 @@ public class UserController {
 	}
 	
 	@GetMapping("/{user}/bookmark/{conference}")
-	public ResponseEntity<Map<String, String>> getBookmark(@PathVariable("user") String userId, @PathVariable("conference") String conferenceId){
+	public ResponseEntity<Map<String, String>> getBookmark(@PathVariable("user") String userId, @PathVariable("conference") String conferenceId, @AuthenticationPrincipal User userEntity){
 		
-		Map<String, String>list = new HashMap<String, String>();
+		Map<String, String>map = new HashMap<String, String>();
+		if(!checkUser(userId, userEntity)) {
+			map.put("id", "-1");
+			return new ResponseEntity<>(map, HttpStatus.FORBIDDEN);
+		}
+		
+		
 		int bookmarkId = bookmarkService.checkUserHaveBookmark(Integer.parseInt(userId), Integer.parseInt(conferenceId));
 		if(bookmarkId > -1) {
-			list.put("id", Integer.toString(bookmarkId));
-			return new ResponseEntity<Map<String, String>>(list, HttpStatus.OK);
+			map.put("id", Integer.toString(bookmarkId));
+			return new ResponseEntity<Map<String, String>>(map, HttpStatus.OK);
 		}
-		list.put("id", "-1");
-		return new ResponseEntity<Map<String, String>>(list, HttpStatus.NOT_FOUND);
+		map.put("id", "-1");
+		return new ResponseEntity<Map<String, String>>(map, HttpStatus.NOT_FOUND);
 		
 	}
 	

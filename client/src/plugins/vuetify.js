@@ -5,6 +5,7 @@ import Vuetify from 'vuetify/lib'
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import {fas} from '@fortawesome/free-solid-svg-icons'
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
 Vue.component('font-awesome-icon', FontAwesomeIcon) // Register component globally
 library.add(fas) // Include needed icons
@@ -22,6 +23,9 @@ export default new Vuetify({
         
       }
     }
+  },
+  icons: {
+    iconfont: 'mdi', // default - only for display purposes
   },
   customVariables: ['~/assets/scss/variables.scss'],
 }

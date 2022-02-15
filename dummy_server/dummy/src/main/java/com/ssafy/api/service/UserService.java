@@ -98,7 +98,7 @@ public class UserService {
 //		return modelMapper.map(source, UserDTO.class);
 //	}
 
-	public UserDTO getUserByEmail(String email) {
+	public UserDTO getUserByEmail(String email) throws Exception {
 		Optional<User> source = userRepository.findByEmail(email);
 		if(!source.isPresent()){
 			return null;
