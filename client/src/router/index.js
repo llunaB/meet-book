@@ -61,6 +61,11 @@ const routes = [
     component: ConferenceSchedule,
   },
   {
+    path: '/conference/:conferenceId/main',
+    name: 'Mainscreen',
+    component: Mainscreen
+  },
+  {
     path: '/conference/:conferenceId',
     name: 'ConferenceMeeting',
     component: ConferenceMeeting
@@ -82,11 +87,6 @@ const routes = [
   },
 
   
-  {
-    path: '/test/mainscreen/:conferenceId',
-    name: 'Mainscreen',
-    component: Mainscreen
-  },
 
 ]
 
