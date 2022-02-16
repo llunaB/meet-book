@@ -2,7 +2,7 @@
   <v-app-bar app elevate-on-scroll color='#568D6C' width="100%">
     <v-toolbar-title style="align-items: flex-end;">
       <router-link :to="{name: 'Home'}" class="text-decoration-none">
-        <v-img src='@/assets/Logo2.gif'/>
+        <v-img src='@/assets/📚 MEETBOOK.svg'/>
       </router-link>
     </v-toolbar-title>
     <v-spacer></v-spacer>
