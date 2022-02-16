@@ -8,7 +8,7 @@
             <a href="#"><i class="v-icon mdi mdi-twitter"></i></a>
             <a href="#"><i class="v-icon mdi mdi-facebook"></i></a>
           </div> -->
-          <div class="item">
+          <!-- <div class="item">
            <ul class="d-flex justify-center">
             <li class=""><a href="#">Services</a></li>
             <li class=""><a href="#">Home</a></li>
@@ -16,10 +16,9 @@
             <li class=""><a href="#">Terms</a></li>
             <li class=""><a href="#">Privacy Policy</a></li>
           </ul>
-          </div>
+          </div> -->
           <div class="item d-flex justify-center">
-          <p class="">Company Name © 2018</p>
-
+            <p class="">Meetbook © 2022</p>
           </div>
 
         </div>
@@ -30,7 +29,7 @@
 <style scoped>
 
   .footer-basic {
-    padding: 40px 0;
+    padding: 24px 0;
     background-color: #ffffff;
     color: #4b4c4d;
   }
