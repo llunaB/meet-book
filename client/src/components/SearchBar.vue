@@ -43,5 +43,12 @@ export default {
 </script>
 
 <style>
+.v-text-field.v-text-field--solo .v-input__control {
+  min-height: 42px !important;
+}
+.v-input .v-input--hide-details {
+  width: 2rem !important;
+
+}
 
 </style>
