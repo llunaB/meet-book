@@ -1,5 +1,6 @@
 <template>
   <div class="card-container">
+    <v-container>
       <div class="login-form-group row">
         <div class="col-lg-4 col-md-6 col-sm-8 mx-auto">
           <!-- 로그인 전체 Form Start-->
@@ -51,6 +52,7 @@
         </v-snackbar>
         </div>
       </div>
+      </v-container>
   </div>
 </template>
 
@@ -131,12 +133,12 @@ p {
 }
 
 .card {
-  padding: 3rem;
-  border-radius: 10%;
+  /* padding: 3rem; */
+  /* border-radius: 10%; */
   /* glass effect */
-  background-color: #ffffff10;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  /* background-color: #ffffff10; */
+  /* backdrop-filter: blur(12px); */
+  /* -webkit-backdrop-filter: blur(12px); */
 }
 
 .form-group > input {

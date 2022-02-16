@@ -5,7 +5,7 @@
       flat solo rounded
       prepend-inner-icon="mdi-magnify"
       hide-details="true"
-      label="검색"
+      label="달러구트"
       v-model="keyword"
       @keyup.enter="searchKeyword(keyword)"
     />  
