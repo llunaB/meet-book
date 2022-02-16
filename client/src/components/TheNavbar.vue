@@ -135,6 +135,11 @@ export default {
       return this.$store.state.auth.status.loggedIn
     },
   },
+  beforeMount() {
+    if (this.loggedIn()) {
+      this.user = this.$store.state.auth.user
+    }
+  }
 }
 </script>
 
