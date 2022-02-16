@@ -28,8 +28,9 @@
 
 <style scoped>
 
+
   .footer-basic {
-    padding: 24px 0;
+    padding: 12px 0;
     background-color: #ffffff;
     color: #4b4c4d;
   }
