@@ -98,10 +98,6 @@ public class SearchController {
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 		
-		if(userEntity == null) {
-			userEntity = new User();
-		}
-		
 		try {
 			list = conferenceService.getConferencesByBook(bookname, userEntity, request);
 		}catch(Exception e) {
@@ -115,10 +111,6 @@ public class SearchController {
 	public ResponseEntity<Page<GetConferencesRes>> getConferencesByUser(@RequestParam("user") String nickname, @RequestParam("page") Integer page , @RequestParam("size") Integer size, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
-
-		if(userEntity == null) {
-			userEntity = new User();
-		}
 		
 		try {
 			list = conferenceService.getConferencesByNicknameContaining(nickname, userEntity, request);
@@ -132,10 +124,6 @@ public class SearchController {
 	public ResponseEntity<Page<GetConferencesRes>> getConferencesByNickname(@PathVariable("nickname") String nickname, @RequestParam("page") Integer page , @RequestParam("size") Integer size, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
-
-		if(userEntity == null) {
-			userEntity = new User();
-		}
 		
 		try {
 			list = conferenceService.getConferencesByNickname(nickname, userEntity, request);
@@ -149,10 +137,6 @@ public class SearchController {
 	public ResponseEntity<Page<GetConferencesRes>> getConferencesByTags(@RequestParam("tag") String tag, @RequestParam("page") Integer page , @RequestParam("size") Integer size, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
-
-		if(userEntity == null) {
-			userEntity = new User();
-		}
 		
 		try {
 			list = conferenceService.getConferencesByTags(tag, userEntity, request);
@@ -166,10 +150,6 @@ public class SearchController {
 	public ResponseEntity<Page<GetConferencesRes>> getConferencesByGenre(@RequestParam("genre") String genre, @RequestParam("page") Integer page , @RequestParam("size") Integer size, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
-
-		if(userEntity == null) {
-			userEntity = new User();
-		}
 		
 		try {
 			list = conferenceService.getConferencesByGenre(genre, userEntity, request);
@@ -183,10 +163,6 @@ public class SearchController {
 	public ResponseEntity<Page<GetConferencesRes>> getFinishedConferencesByGenre(@RequestParam("genre") String genre, @RequestParam("page") Integer page , @RequestParam("size") Integer size, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
-
-		if(userEntity == null) {
-			userEntity = new User();
-		}
 		
 		try {
 			list = conferenceService.getFinishedConferencesByGenre(genre, userEntity, request);
@@ -200,10 +176,6 @@ public class SearchController {
 	public ResponseEntity<Page<GetConferencesRes>> getReservedConferencesByGenre(@RequestParam("genre") String genre, @RequestParam("page") Integer page , @RequestParam("size") Integer size, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
-
-		if(userEntity == null) {
-			userEntity = new User();
-		}
 		
 		try {
 			list = conferenceService.getReservedConferencesByGenre(genre, userEntity, request);
@@ -231,10 +203,6 @@ public class SearchController {
 	public ResponseEntity<Page<GetConferencesRes>> getJoinedConferencesByUser(@RequestParam("userId") String id, @RequestParam("page") Integer page , @RequestParam("size") Integer size, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
-
-		if(userEntity == null) {
-			userEntity = new User();
-		}
 		
 		try {
 			list = conferenceService.getJoinedConferencesByUser(Integer.parseInt(id), userEntity, request);

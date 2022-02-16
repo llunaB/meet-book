@@ -73,7 +73,7 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findAll(pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
 				return result;});
 		}catch(Exception e){
 			e.printStackTrace();
@@ -88,7 +88,7 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findById(userid, pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
 				return result;});
 		}catch (Exception e){
 			e.printStackTrace();
@@ -129,7 +129,7 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findByTitleContaining(title, pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
 				return result;});
 		}catch(Exception e){
 			e.printStackTrace();
@@ -144,7 +144,7 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findConferencesByBookBookNameContaining(bookname, pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
 				return result;});
 
 		}catch(Exception e){
@@ -160,7 +160,7 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findFinishedConferencesByBookId(book_id, pageable);
 			page = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
 				return result;});
 
 		}catch(Exception e){
@@ -176,7 +176,7 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findExpectingConferencesByBookId(book_id, pageable);
 			page = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
 				return result;});
 
 		}catch(Exception e){
@@ -192,7 +192,7 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findConferencesByUserNicknameContaining(nickname, pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
 				return result;});
 
 		}catch(Exception e){
@@ -208,7 +208,7 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findConferencesByUserNickname(nickname, pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
 				return result;});
 
 		}catch(Exception e){
@@ -224,7 +224,7 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findByTagsContaining(tags, pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
 				return result;});
 		}catch(Exception e){
 			e.printStackTrace();
@@ -239,7 +239,7 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findConferenceByBookGenreGenreOrderByCallStartTime(genre, pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
 				return result;});
 		}catch(Exception e){
 			e.printStackTrace();
@@ -254,7 +254,7 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findConferenceByBookGenreGenreAndCallEndTimeBeforeOrderByCallStartTime(genre, new Date(), pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
 				return result;});
 		}catch(Exception e){
 			e.printStackTrace();
@@ -269,7 +269,7 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findConferenceByBookGenreGenreAndCallEndTimeAfterOrderByCallStartTime(genre, new Date(), pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
 				return result;});
 		}catch(Exception e){
 			e.printStackTrace();
@@ -284,7 +284,7 @@ public class ConferenceService {
 			Page<ConferenceOnly> data = conferenceHistoryRepository.findDistinctConferenceByUserIdAndActionOrderByConferenceCallStartTimeDesc(id, "JOIN", pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source.getConference(), GetConferencesRes.class);
-				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source.getConference()).size() > 0);
+				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source.getConference()).size() > 0);
 				return result;});
 		}catch(Exception e){
 			e.printStackTrace();
