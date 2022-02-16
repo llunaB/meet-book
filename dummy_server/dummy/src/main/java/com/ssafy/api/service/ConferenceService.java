@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.ssafy.api.responseDto.GetSimpleBooksRes;
+import com.ssafy.api.responseDto.GetUserByProfileRes;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -59,6 +61,19 @@ public class ConferenceService {
 		
 		try {
 			list = conferenceRepository.findAll().stream().map(source -> modelMapper.map(source, ConferenceDTO.class)).collect(Collectors.toList());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	public List<GetUserByProfileRes> getUsersByBookmarkConference(int conferenceId){
+		List<GetUserByProfileRes> list = new ArrayList<GetUserByProfileRes>();
+		
+		try {
+			List<Bookmark> data = bookmarkRepository.findByConferenceId(conferenceId);
+			list = data.stream().map(source -> modelMapper.map(source.getUser(), GetUserByProfileRes.class)).collect(Collectors.toList());
 		}catch(Exception e){
 			e.printStackTrace();
 		}

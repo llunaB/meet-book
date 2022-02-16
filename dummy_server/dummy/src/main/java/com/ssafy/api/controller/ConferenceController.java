@@ -1,5 +1,6 @@
 package com.ssafy.api.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,7 @@ import com.ssafy.api.requestDto.conference.ForceDisconnectReq;
 import com.ssafy.api.requestDto.conference.ForceUnpublishReq;
 import com.ssafy.api.requestDto.conference.LeaveConferenceReq;
 import com.ssafy.api.responseDto.GetConferencesRes;
+import com.ssafy.api.responseDto.GetUserByProfileRes;
 import com.ssafy.api.service.ConferenceService;
 import com.ssafy.db.entity.User;
 
@@ -119,6 +121,20 @@ public class ConferenceController {
 		try {
 			response = conferenceService.getConferencesById(Integer.parseInt(id), userEntity, request);
 			new ResponseEntity<Page<GetConferencesRes>>(response, HttpStatus.OK);
+		}catch (Exception e){
+			e.printStackTrace();
+			log.info("회의목록 에러");
+		}
+		return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
+	}
+	
+	@GetMapping("/{id}/bookmark")
+	public ResponseEntity<List<GetUserByProfileRes>> getUserById(@PathVariable("id") String id){
+		List<GetUserByProfileRes> response = new ArrayList<GetUserByProfileRes>();
+		
+		try {
+			response = conferenceService.getUsersByBookmarkConference(Integer.parseInt(id));
+			new ResponseEntity<List<GetUserByProfileRes>>(response, HttpStatus.OK);
 		}catch (Exception e){
 			e.printStackTrace();
 			log.info("회의목록 에러");

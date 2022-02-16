@@ -18,5 +18,6 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Integer> {
 	@Query(value="select b.* from bookmark b, conference c where b.alarm =1 and c.call_start_time Like concat(:reserve,'%') and c.id = b.conference_id", nativeQuery = true)
 	List<Bookmark> findByDate(@Param("reserve") String date);
 	List<Bookmark> findByUserAndConference(User user, Conference conference);
+	List<Bookmark> findByConferenceId(int conferenceId);
 
 }
