@@ -5,11 +5,13 @@
       <div class="col-12">
         <!-- 도서 정보 탑재 부분 -->
         <div class="row">
-          <div class="d-flex col-12 col-sm-4 col-lg-12 text-center justify-center">
+          <div class="d-flex col-12 col-sm-4 text-center justify-center">
+          <!-- <div class="d-flex col-12 col-sm-4 col-lg-12 text-center justify-center"> -->
             <v-img v-if="book.thumbnailUrl" :src="book.thumbnailUrl" max-width="240px"></v-img>
             <span v-else>썸네일 이미지가 없습니다.</span>
           </div>
-          <div class="col-12 col-sm-8 col-lg-12">
+          <div class="col-12 col-sm-8">
+          <!-- <div class="col-12 col-sm-8 col-lg-12"> -->
             <h1>{{ book.nameFront ? book.nameFront : book.name }}</h1>
             <h2>{{ book.nameBack ? book.nameBack : '' }}</h2>
             <h3 class="text-right">{{ book.author }}</h3>
