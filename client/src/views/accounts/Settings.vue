@@ -2,26 +2,34 @@
   <v-container class="settingForm" style="padding-inline: 10%;">
     <form>
       <div class="form-group">
-        <v-avatar v-if="user.profileImage" size="150" style="align-self:center;">
-          <v-img :src="user.profileImage" contain></v-img>
-        </v-avatar>
+        <div class="img-upload">
+          <v-avatar v-if="user.profileImage" size="150">
+            <v-img :src="user.profileImage" contain />
+          </v-avatar>
+          <v-avatar v-else size="150">
+            <v-img src="@/assets/host_img/HostImg.png" />
+          </v-avatar>
+          <input id="file-input" type="file" />
+        </div>
 
         <v-text-field
           type="text" label="닉네임" hide-details="auto"
           v-model="user.nickname" id="nicknameInput" />
         <br>
-        <v-text-field
-          type="password" label="비밀번호 수정" hide-details="auto"
-          v-model="newPassword" id="passwordEditInput"
-          oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )" />
+        <div v-if="!snsLogin">
+          <v-text-field
+            type="password" label="비밀번호 수정" hide-details="auto"
+            v-model="newPassword" id="passwordEditInput"
+            oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )" />
 
-        <v-text-field
-          type="password" label="비밀번호 수정 확인" hide-details="auto"
-          v-model="newPasswordConfirm" id="passwordConfirmEditInput" :rules="errorMessages"
-          oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )" />
-        <br>
-        <div style="text-align: end;">
-          <v-btn color="primary" text @click="passwordEditChange">비밀번호 수정</v-btn>
+          <v-text-field
+            type="password" label="비밀번호 수정 확인" hide-details="auto"
+            v-model="newPasswordConfirm" id="passwordConfirmEditInput" :rules="errorMessages"
+            oninput="this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' )" />
+          <br>
+          <div style="text-align: end;">
+            <v-btn color="primary" text @click="passwordEditChange">비밀번호 수정</v-btn>
+          </div>
         </div>
         <!-- 나이 및 성별 값 입력 Form -->
         <div class="row align-self-center">
@@ -100,6 +108,7 @@ export default {
       newPasswordConfirm: '',
       snackbar: false,
       resign: '',
+      snsLogin: this.$store.state.auth.user.SNS,
       resignBtn: false,
       errorMessages: [
         value => !!value || 'Required.',
@@ -161,8 +170,9 @@ export default {
         "X-Auth-Token": this.$store.state.auth.user.token,
         "content-type": "application/json"}
       })
-      .then(res => this.user = res.data)
-      .catch(() => console.log('hhhhh'))
+      .then(res => {this.user = res.data
+      console.log(this.user)})
+      .catch(() => {})
     },
     userResign() {
       axios({

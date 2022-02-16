@@ -69,6 +69,7 @@ export default {
       "loading": false,
       "dialog": false,
       "snackMessage": '',
+      "sns": false,
     }
   },
   "computed": {
@@ -78,20 +79,6 @@ export default {
   },
   "mounted"() {
     if (this.loggedIn) {this.$router.push({"name": 'Home'})}
-
-    // const naver_id_login = new window.naver_id_login("G2XB0Eee8zQpMoh70APX", SERVER_URL + "/oauth/naver")
-    // const state = naver_id_login.getUniqState()
-    // naver_id_login.setButton("green", 3,44); // 버튼 설정
-    // naver_id_login.setDomain("http://localhost:8080/login")
-    // naver_id_login.setState(state)
-    // naver_id_login.setPopup()
-    // naver_id_login.init_naver_id_login()
-    // naver_id_login.get_naver_userprofile(naverSignInCallback())
-    // function naverSignInCallback() {
-    //   alert(naver_id_login.getProfileData('email'))
-    // }
-    // console.log(naver_id_login)
-    // console.log("Access token", naver_id_login.getAccessToken())
   },
   "methods": {
     
@@ -115,12 +102,14 @@ export default {
             params: {"accessToken": res.access_token},
           })
           .then(res => {
+            this.sns = res.data.sns
             const userId = JSON.parse(Buffer.from(res.data.token.split('.')[1], 'base64').toString())['sub']
             axios.get(SERVER_URL + '/users/' + userId + '/detail', {
               headers: {"X-AUTH-TOKEN": res.data.token}
             })
             .then(response => {
               response.data['token'] = res.data.token
+              response.data['SNS'] = this.sns
               this.$store.dispatch('auth/snslogin', response.data)
               this.$router.push({"name": "Home"})
             })
