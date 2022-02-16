@@ -161,14 +161,11 @@ export default {
 
 }
 </script>
-
-<<<<<<< HEAD
-<style>
-.v-input__prepend-inner {
-  margin-right: 5px !important;
-}
-=======
 <style scoped>
+  .v-input__prepend-inner {
+    margin-right: 5px !important;
+  }
+
   .card-container {
     margin: 1rem;
   }
@@ -178,7 +175,6 @@ export default {
     min-width: 320px;
     max-width: 320px;
   }
->>>>>>> feature/fe_fix_search
 
   .conference-card {
     min-width: 220px;
