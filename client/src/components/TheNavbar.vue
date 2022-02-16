@@ -2,7 +2,7 @@
   <v-app-bar app elevate-on-scroll color='#568D6C' width="100%">
     <v-toolbar-title style="align-items: flex-end;">
       <router-link :to="{name: 'Home'}" class="text-decoration-none">
-        <v-img src='@/assets/meetbookLogo2.svg'/>
+        <v-img class="logo" src='@/assets/MEETBOOK.svg'/>
       </router-link>
     </v-toolbar-title>
     <v-spacer></v-spacer>
@@ -28,16 +28,14 @@
         <v-btn
             :to="{name: 'Login'}"
             text
-            plain
           >
-          <span class="mr-2"><strong>로그인</strong></span>
+          <span class="mr-2 font-white">로그인</span>
         </v-btn>
         <v-btn
             :to="{name: 'Signup'}"
-            text
-            plain
+            raised=0
           >
-          <span class="mr-2"><strong>회원가입</strong></span>
+          <span class="mr-2 font-green">회원가입</span>
         </v-btn>
       </div>
 
@@ -139,9 +137,25 @@ export default {
 </script>
 
 <style>
+
+.logo {
+  margin-left: 1rem;
+}
+.v-application--wrap > .v-app-bar--hide-shadow {
+  height: 65px !important;
+}
+.v-toolbar__content {
+  padding: 1rem !important;
+}
+.v-btn--is-elevated {
+  box-shadow: none;
+}
+.v-app-bar--hide-shadow {
+  border-bottom: 1px solid #C8DBCF !important;
+  
+}
 span {
   font-size: 20px;
-  font-weight: bolder;
 }
 
 </style>

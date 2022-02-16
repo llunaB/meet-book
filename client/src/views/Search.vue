@@ -141,5 +141,8 @@ export default {
 </script>
 
 <style>
+.v-input__prepend-inner {
+  margin-right: 5px !important;
+}
 
 </style>
