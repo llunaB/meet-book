@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ import com.ssafy.api.responseDto.GetUserByProfileRes;
 import com.ssafy.api.service.BookService;
 import com.ssafy.api.service.ConferenceService;
 import com.ssafy.api.service.UserService;
+import com.ssafy.db.entity.User;
 
 @RestController
 @RequestMapping("/search")
@@ -79,12 +81,12 @@ public class SearchController {
 	}
 	
 	@GetMapping("/conference")
-	public ResponseEntity<Page<GetConferencesRes>> getConferencesByTitle(@RequestParam("title") String title, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+	public ResponseEntity<Page<GetConferencesRes>> getConferencesByTitle(@RequestParam("title") String title, @RequestParam("page") Integer page , @RequestParam("size") Integer size, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 
 		try {
-			list = conferenceService.getConferencesByTitle(title, request);
+			list = conferenceService.getConferencesByTitle(title, userEntity, request);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -92,12 +94,16 @@ public class SearchController {
 	}
 	
 	@GetMapping("/conference/book")
-	public ResponseEntity<Page<GetConferencesRes>> getConferencesByBook(@RequestParam("book") String bookname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+	public ResponseEntity<Page<GetConferencesRes>> getConferencesByBook(@RequestParam("book") String bookname, @RequestParam("page") Integer page , @RequestParam("size") Integer size, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
-
+		
+		if(userEntity == null) {
+			userEntity = new User();
+		}
+		
 		try {
-			list = conferenceService.getConferencesByBook(bookname, request);
+			list = conferenceService.getConferencesByBook(bookname, userEntity, request);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -106,12 +112,16 @@ public class SearchController {
 	}
 	
 	@GetMapping("/conference/user")
-	public ResponseEntity<Page<GetConferencesRes>> getConferencesByUser(@RequestParam("user") String nickname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+	public ResponseEntity<Page<GetConferencesRes>> getConferencesByUser(@RequestParam("user") String nickname, @RequestParam("page") Integer page , @RequestParam("size") Integer size, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 
+		if(userEntity == null) {
+			userEntity = new User();
+		}
+		
 		try {
-			list = conferenceService.getConferencesByNicknameContaining(nickname, request);
+			list = conferenceService.getConferencesByNicknameContaining(nickname, userEntity, request);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -119,12 +129,16 @@ public class SearchController {
 	}
 	
 	@GetMapping("/conference/{nickname}")
-	public ResponseEntity<Page<GetConferencesRes>> getConferencesByNickname(@PathVariable("nickname") String nickname, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+	public ResponseEntity<Page<GetConferencesRes>> getConferencesByNickname(@PathVariable("nickname") String nickname, @RequestParam("page") Integer page , @RequestParam("size") Integer size, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 
+		if(userEntity == null) {
+			userEntity = new User();
+		}
+		
 		try {
-			list = conferenceService.getConferencesByNickname(nickname, request);
+			list = conferenceService.getConferencesByNickname(nickname, userEntity, request);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -132,12 +146,16 @@ public class SearchController {
 	}
 	
 	@GetMapping("/conference/tag")
-	public ResponseEntity<Page<GetConferencesRes>> getConferencesByTags(@RequestParam("tag") String tag, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+	public ResponseEntity<Page<GetConferencesRes>> getConferencesByTags(@RequestParam("tag") String tag, @RequestParam("page") Integer page , @RequestParam("size") Integer size, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 
+		if(userEntity == null) {
+			userEntity = new User();
+		}
+		
 		try {
-			list = conferenceService.getConferencesByTags(tag, request);
+			list = conferenceService.getConferencesByTags(tag, userEntity, request);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -145,12 +163,16 @@ public class SearchController {
 	}
 	
 	@GetMapping("/conference/genre")
-	public ResponseEntity<Page<GetConferencesRes>> getConferencesByGenre(@RequestParam("genre") String genre, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+	public ResponseEntity<Page<GetConferencesRes>> getConferencesByGenre(@RequestParam("genre") String genre, @RequestParam("page") Integer page , @RequestParam("size") Integer size, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 
+		if(userEntity == null) {
+			userEntity = new User();
+		}
+		
 		try {
-			list = conferenceService.getConferencesByGenre(genre, request);
+			list = conferenceService.getConferencesByGenre(genre, userEntity, request);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -158,12 +180,16 @@ public class SearchController {
 	}
 	
 	@GetMapping("/conference/genre/finished")
-	public ResponseEntity<Page<GetConferencesRes>> getFinishedConferencesByGenre(@RequestParam("genre") String genre, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+	public ResponseEntity<Page<GetConferencesRes>> getFinishedConferencesByGenre(@RequestParam("genre") String genre, @RequestParam("page") Integer page , @RequestParam("size") Integer size, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 
+		if(userEntity == null) {
+			userEntity = new User();
+		}
+		
 		try {
-			list = conferenceService.getFinishedConferencesByGenre(genre, request);
+			list = conferenceService.getFinishedConferencesByGenre(genre, userEntity, request);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -171,12 +197,16 @@ public class SearchController {
 	}
 	
 	@GetMapping("/conference/genre/Reserved")
-	public ResponseEntity<Page<GetConferencesRes>> getReservedConferencesByGenre(@RequestParam("genre") String genre, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+	public ResponseEntity<Page<GetConferencesRes>> getReservedConferencesByGenre(@RequestParam("genre") String genre, @RequestParam("page") Integer page , @RequestParam("size") Integer size, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 
+		if(userEntity == null) {
+			userEntity = new User();
+		}
+		
 		try {
-			list = conferenceService.getReservedConferencesByGenre(genre, request);
+			list = conferenceService.getReservedConferencesByGenre(genre, userEntity, request);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -198,12 +228,16 @@ public class SearchController {
 	}
 	
 	@GetMapping("/conference/join/{userId}")
-	public ResponseEntity<Page<GetConferencesRes>> getJoinedConferencesByUser(@RequestParam("userId") String id, @RequestParam("page") Integer page , @RequestParam("size") Integer size){
+	public ResponseEntity<Page<GetConferencesRes>> getJoinedConferencesByUser(@RequestParam("userId") String id, @RequestParam("page") Integer page , @RequestParam("size") Integer size, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 
+		if(userEntity == null) {
+			userEntity = new User();
+		}
+		
 		try {
-			list = conferenceService.getJoinedConferencesByUser(Integer.parseInt(id), request);
+			list = conferenceService.getJoinedConferencesByUser(Integer.parseInt(id), userEntity, request);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

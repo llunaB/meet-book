@@ -58,10 +58,7 @@ public class ConferenceService {
 		List<ConferenceDTO> list = new ArrayList<ConferenceDTO>();
 		
 		try {
-			list = conferenceRepository.findAll().stream().map(source -> {
-				ConferenceDTO res = modelMapper.map(source, ConferenceDTO.class);
-			    return res;
-			}).collect(Collectors.toList());
+			list = conferenceRepository.findAll().stream().map(source -> modelMapper.map(source, ConferenceDTO.class)).collect(Collectors.toList());
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -69,12 +66,15 @@ public class ConferenceService {
 		return list;
 	}
 	
-	public Page<GetConferencesRes> getConferences(Pageable pageable){
+	public Page<GetConferencesRes> getConferences(Pageable pageable, User user){
 		Page<GetConferencesRes> list = Page.empty();
 		
 		try {
 			Page<Conference> data = conferenceRepository.findAll(pageable);
-			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
+			list = data.map(source ->{ 
+				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
+				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				return result;});
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -82,11 +82,14 @@ public class ConferenceService {
 		return list;
 	}
 
-	public Page<GetConferencesRes> getConferencesById(int userid, Pageable pageable) {
+	public Page<GetConferencesRes> getConferencesById(int userid, User user, Pageable pageable) {
 		Page<GetConferencesRes> list =Page.empty();
 		try {
 			Page<Conference> data = conferenceRepository.findById(userid, pageable);
-			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
+			list = data.map(source ->{ 
+				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
+				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				return result;});
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -120,11 +123,14 @@ public class ConferenceService {
 		return null;
 	}
 	
-	public Page<GetConferencesRes> getConferencesByTitle(String title, Pageable pageable){
+	public Page<GetConferencesRes> getConferencesByTitle(String title, User user, Pageable pageable){
 		Page<GetConferencesRes> list = Page.empty();
 		try {
 			Page<Conference> data = conferenceRepository.findByTitleContaining(title, pageable);
-			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
+			list = data.map(source ->{ 
+				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
+				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				return result;});
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -132,11 +138,14 @@ public class ConferenceService {
 		return list;
 	}
 	
-	public Page<GetConferencesRes> getConferencesByBook(String bookname, Pageable pageable){
+	public Page<GetConferencesRes> getConferencesByBook(String bookname, User user, Pageable pageable){
 		Page<GetConferencesRes> list = Page.empty();
 		try {
-			Page<Book> data = bookRepository.findByBookNameContaining(bookname, pageable);
-			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
+			Page<Conference> data = conferenceRepository.findConferencesByBookBookNameContaining(bookname, pageable);
+			list = data.map(source ->{ 
+				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
+				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				return result;});
 
 		}catch(Exception e){
 			e.printStackTrace();
@@ -145,11 +154,14 @@ public class ConferenceService {
 		return list;
 	}
 
-	public Page<GetConferencesRes> getFinishedConferencesByBookId(Integer book_id, Pageable pageable){
+	public Page<GetConferencesRes> getFinishedConferencesByBookId(Integer book_id, User user, Pageable pageable){
 		Page<GetConferencesRes> page = Page.empty();
 		try {
 			Page<Conference> data = conferenceRepository.findFinishedConferencesByBookId(book_id, pageable);
-			page = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
+			page = data.map(source ->{ 
+				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
+				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				return result;});
 
 		}catch(Exception e){
 			e.printStackTrace();
@@ -158,11 +170,14 @@ public class ConferenceService {
 		return page;
 	}
 
-	public Page<GetConferencesRes> getExpectingConferencesByBookId(Integer book_id, Pageable pageable){
+	public Page<GetConferencesRes> getExpectingConferencesByBookId(Integer book_id, User user, Pageable pageable){
 		Page<GetConferencesRes> page = Page.empty();
 		try {
 			Page<Conference> data = conferenceRepository.findExpectingConferencesByBookId(book_id, pageable);
-			page = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
+			page = data.map(source ->{ 
+				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
+				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				return result;});
 
 		}catch(Exception e){
 			e.printStackTrace();
@@ -171,11 +186,14 @@ public class ConferenceService {
 		return page;
 	}
 	
-	public Page<GetConferencesRes> getConferencesByNicknameContaining(String nickname, Pageable pageable){
+	public Page<GetConferencesRes> getConferencesByNicknameContaining(String nickname, User user, Pageable pageable){
 		Page<GetConferencesRes> list = Page.empty();
 		try {
 			Page<Conference> data = conferenceRepository.findConferencesByUserNicknameContaining(nickname, pageable);
-			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
+			list = data.map(source ->{ 
+				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
+				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				return result;});
 
 		}catch(Exception e){
 			e.printStackTrace();
@@ -184,11 +202,14 @@ public class ConferenceService {
 		return list;
 	}
 	
-	public Page<GetConferencesRes> getConferencesByNickname(String nickname, Pageable pageable){
+	public Page<GetConferencesRes> getConferencesByNickname(String nickname, User user, Pageable pageable){
 		Page<GetConferencesRes> list = Page.empty();
 		try {
 			Page<Conference> data = conferenceRepository.findConferencesByUserNickname(nickname, pageable);
-			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
+			list = data.map(source ->{ 
+				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
+				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				return result;});
 
 		}catch(Exception e){
 			e.printStackTrace();
@@ -197,11 +218,14 @@ public class ConferenceService {
 		return list;
 	}
 	
-	public Page<GetConferencesRes> getConferencesByTags(String tags, Pageable pageable){
+	public Page<GetConferencesRes> getConferencesByTags(String tags, User user, Pageable pageable){
 		Page<GetConferencesRes> list = Page.empty();
 		try {
 			Page<Conference> data = conferenceRepository.findByTagsContaining(tags, pageable);
-			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
+			list = data.map(source ->{ 
+				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
+				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				return result;});
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -209,11 +233,14 @@ public class ConferenceService {
 		return list;
 	}
 	
-	public Page<GetConferencesRes> getConferencesByGenre(String genre, Pageable pageable){
+	public Page<GetConferencesRes> getConferencesByGenre(String genre, User user, Pageable pageable){
 		Page<GetConferencesRes> list = Page.empty();
 		try {
 			Page<Conference> data = conferenceRepository.findConferenceByBookGenreGenreOrderByCallStartTime(genre, pageable);
-			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
+			list = data.map(source ->{ 
+				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
+				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				return result;});
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -221,11 +248,14 @@ public class ConferenceService {
 		return list;
 	}
 	
-	public Page<GetConferencesRes> getFinishedConferencesByGenre(String genre, Pageable pageable){
+	public Page<GetConferencesRes> getFinishedConferencesByGenre(String genre, User user, Pageable pageable){
 		Page<GetConferencesRes> list = Page.empty();
 		try {
 			Page<Conference> data = conferenceRepository.findConferenceByBookGenreGenreAndCallEndTimeBeforeOrderByCallStartTime(genre, new Date(), pageable);
-			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
+			list = data.map(source ->{ 
+				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
+				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				return result;});
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -233,11 +263,14 @@ public class ConferenceService {
 		return list;
 	}
 	
-	public Page<GetConferencesRes> getReservedConferencesByGenre(String genre, Pageable pageable){
+	public Page<GetConferencesRes> getReservedConferencesByGenre(String genre, User user, Pageable pageable){
 		Page<GetConferencesRes> list = Page.empty();
 		try {
 			Page<Conference> data = conferenceRepository.findConferenceByBookGenreGenreAndCallEndTimeAfterOrderByCallStartTime(genre, new Date(), pageable);
-			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
+			list = data.map(source ->{ 
+				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
+				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				return result;});
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -245,11 +278,14 @@ public class ConferenceService {
 		return list;
 	}
 	
-	public Page<GetConferencesRes> getJoinedConferencesByUser(int id, Pageable pageable){
+	public Page<GetConferencesRes> getJoinedConferencesByUser(int id, User user, Pageable pageable){
 		Page<GetConferencesRes> list = Page.empty();
 		try {
 			Page<ConferenceOnly> data = conferenceHistoryRepository.findDistinctConferenceByUserIdAndActionOrderByConferenceCallStartTimeDesc(id, "JOIN", pageable);
-			list = data.map(source -> modelMapper.map(source.getConference(), GetConferencesRes.class));
+			list = data.map(source ->{ 
+				GetConferencesRes result = modelMapper.map(source.getConference(), GetConferencesRes.class);
+				result.setBookmark(bookmarkRepository.findByUserAndConference(user, source.getConference()).size() > 0);
+				return result;});
 		}catch(Exception e){
 			e.printStackTrace();
 		}
