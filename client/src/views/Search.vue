@@ -1,5 +1,6 @@
 <template>
   <div>
+    <v-container>
     <v-row class="searchtabs">
       <v-tabs
       color="#798F88">
@@ -53,6 +54,7 @@
         <p>{{ $route.query.title }}</p>
       </v-col> -->
     </v-row>
+    </v-container>
   </div>
 </template>
 
