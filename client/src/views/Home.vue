@@ -10,19 +10,18 @@
       </div>
 
       <div class="mx-5">
-        <div class="main-sub font-white" style="text-align:center">모임을 찾으시나요?<br>책 제목을 입력해보세요.</div>
-
-        <div style="">
+        <div class="main-sub font-white main-text" style="text-align:center">모임을 찾으시나요?<br>책 제목을 입력해보세요.</div>
+        <div class="my-3">
           <SearchBar />
         </div>  
       </div>
       <div>
-      <div class="main-sub font-white" style="text-align:center">어떤 모임이 있는지 궁금하신가요?<br>모임을 확인해보세요.</div>
+      <div class="main-sub font-white main-text" style="text-align:center">어떤 모임이 있는지 궁금하신가요?<br>모임을 확인해보세요.</div>
           <div class="text-center">
             <v-btn
               rounded
               text plain to="/conference"
-              class="button-white"
+              class="button-white my-5"
             >
               도서별 모임 확인하기
             </v-btn>
@@ -179,6 +178,10 @@ import SearchBar from '@/components/SearchBar'
 
   .main-sub {
     font-size: 1rem;
+  }
+
+  .main-text {
+    line-height: 2rem;
   }
 
   /* .btn-outline {
