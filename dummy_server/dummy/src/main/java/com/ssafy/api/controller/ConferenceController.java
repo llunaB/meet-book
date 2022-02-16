@@ -81,12 +81,16 @@ public class ConferenceController {
 	}
 	
 	@GetMapping("/list")
-	public ResponseEntity<Page<GetConferencesRes>> getConferences(@RequestParam("size") Integer size, @RequestParam("page") Integer page){
+	public ResponseEntity<Page<GetConferencesRes>> getConferences(@RequestParam("size") Integer size, @RequestParam("page") Integer page, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 		
+		if(userEntity == null) {
+			userEntity = new User();
+		}
+		
 		try {
-			list = conferenceService.getConferences(request);
+			list = conferenceService.getConferences(request, userEntity);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -108,11 +112,16 @@ public class ConferenceController {
 	}
 
 	@GetMapping("/{id}/list")
-	public ResponseEntity<Page<GetConferencesRes>> getConferencesById(@PathVariable("id") String id){
+	public ResponseEntity<Page<GetConferencesRes>> getConferencesById(@PathVariable("id") String id, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> response = Page.empty();
 		PageRequest request =PageRequest.of(0, 5); //검색을 원하는 페이지, 개수
+		
+		if(userEntity == null) {
+			userEntity = new User();
+		}
+		
 		try {
-			response = conferenceService.getConferencesById(Integer.parseInt(id), request);
+			response = conferenceService.getConferencesById(Integer.parseInt(id), userEntity, request);
 			new ResponseEntity<Page<GetConferencesRes>>(response, HttpStatus.OK);
 		}catch (Exception e){
 			e.printStackTrace();

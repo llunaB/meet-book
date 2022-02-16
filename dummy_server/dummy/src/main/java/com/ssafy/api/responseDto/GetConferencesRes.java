@@ -1,8 +1,10 @@
 package com.ssafy.api.responseDto;
 
 import java.util.Date;
+import java.util.List;
 
 import com.ssafy.DTO.BookDTO;
+import com.ssafy.db.entity.Bookmark;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,4 +28,5 @@ public class GetConferencesRes {
 	private String tags;
 	private String question;
 	private String password;
+	private boolean bookmark;
 }
