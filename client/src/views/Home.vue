@@ -5,12 +5,12 @@
 
         <div class="d-flex flex-column justify-center align-center">
 
-          <div class="font-white mt-10 mb-7">
-            <div class="main-sub mt-5" style="text-align:center;">책으로 나누는 우리 이야기</div>
+          <div class="font-white mt-7 mb-6">
+            <div class="main-sub mt-3" style="text-align:center;">책으로 나누는 우리 이야기</div>
             <h2 class="main-title">MEETBOOK</h2>
           </div>
 
-          <div class="mx-5 my-3">
+          <div class="my-1">
             <div class="main-sub font-white main-text text-center">
               모임을 찾으시나요?
               책 제목을 입력해보세요.</div>
@@ -30,7 +30,7 @@
               </v-btn>
             </div>
           </div>
-          <div class="home-image my-8" style="text-align:center;">
+          <div class="home-image my-5" style="text-align:center;">
             <img class="main_img" src="../assets/girl.svg" alt="">
           </div>
         </div>
@@ -197,11 +197,12 @@
   }
 
   .main-title {
-    font-size: 3rem;
+    font-size: 4rem;
   }
 
   .main-sub {
     font-size: 1rem;
+    margin-bottom: -0.5rem;
   }
 
   .main-text {
