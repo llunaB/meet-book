@@ -19,20 +19,25 @@
       <v-col class="col-12">
         <div v-if="searchType === 'conference'">
           <p>"{{$route.query.keyword}}"의 회의 검색 결과입니다.</p>
-          <ConferenceCard v-for="(conference, idx) in searchResult.content" :key="idx" :conference="conference" />
+          <v-row>
+            <template v-for="(conference, idx) in searchResult.content">
+              <v-col :key="idx" cols="12" sm="4" md="3">
+                <ConferenceCard :conference="conference" />
+              </v-col>
+            </template>
+          </v-row>
           <v-pagination v-model="page" :length="searchResult.totalPages"></v-pagination>
 
         </div>
         <div v-else-if="searchType === 'book'">
           <p>"{{$route.query.keyword}}"의 도서 검색 결과입니다.</p>
-          <TheBookcard v-for="(book, idx) in searchResult.content" :key="idx" :book="book" class="my-3 mx-auto" />
-          <!-- <v-row>
-            <template v-for="(book, idx) in searchResult.content">
-              <v-col :key="idx" cols="12" sm="6" align-self="">
+          <v-row>
+            <template v-for="(book, idx) in searchResult.content" >
+              <v-col :key="idx" cols="12" sm="6" md="4">
                 <TheBookcard tile :book="book" class="my-3" />
               </v-col>
             </template>
-          </v-row> -->
+          </v-row>
           <v-pagination v-model="page" :length="searchResult.totalPages"></v-pagination>
         </div>
         <div v-else>
@@ -46,12 +51,7 @@
         <div v-show="searchResult.content.length === 0">
           <p>검색 결과가 없습니다.</p>
         </div>
-        
       </v-col>
-      <!-- <v-col class="col-3">
-        <p>"{{ $route.query.keyword }}"에 대해 {{$route.params.type}}로 검색한 결과입니다.</p>
-        <p>{{ $route.query.title }}</p>
-      </v-col> -->
     </v-row>
   </div>
 </template>
@@ -70,8 +70,6 @@ export default {
   },
   data: function () {
     return {
-      // searchType: this.$route.params.type,
-      // keyword: this.$route.query.keyword,
       page: this.$route.query.page,
       searchResult: {
         content: [],

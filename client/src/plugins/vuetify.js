@@ -27,6 +27,5 @@ export default new Vuetify({
   icons: {
     iconfont: 'mdi', // default - only for display purposes
   },
-  customVariables: ['~/assets/scss/variables.scss'],
 }
 )

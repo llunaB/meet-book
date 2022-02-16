@@ -14,7 +14,10 @@
 
       </v-col>
       <v-col cols="8" style="margin-left: 2rem">
-        <h2>{{ user.nickname }}님의 개인 프로필</h2>
+        <div class="d-flex">
+          <h1 style="display:inline;">{{ user.nickname }}님의 개인 프로필</h1>
+          <v-img :src="`src/assets/bookicon/book${cnt}page.svg`" style="height:50px;" contain/>
+        </div>
         <br>
         <v-card>
           <v-card-title><strong>한마디</strong></v-card-title>
@@ -23,7 +26,6 @@
           <v-card-subtitle v-else>아직 한마디가 없어요..</v-card-subtitle>
         </v-card>
         <span v-if="conferences.length > 0">{{ conferences.length }}개의 책을 읽었어요!!</span>
-        
       </v-col>
     </v-row>
     <v-col style="padding-top:2rem">
@@ -113,7 +115,8 @@ export default {
       conferences: [],
       searchUser : this.$route.params.userId,
       name: this.$store.state.auth.user.id,
-
+      bookIcon: `@/assets/bookicon/book1page.svg`,
+      cnt: 0,
     }
   },
   methods: {
@@ -130,8 +133,6 @@ export default {
         return require('@/assets/host_img/host2.jpeg')
       }
     },
-    // 일단은 본인 프로필로 입장이여서 this.$store.state.auth.user.id를 사용 했습니다.
-    // 이후에 다른 유저가 들어올 경우에는 해당 부분을 수정하여 props한 값을 넣으면 됩니다.
     userProfile() {
       if (this.searchUser === undefined) {
         this.searchUser = this.name
@@ -141,11 +142,13 @@ export default {
         url: '/users/' + this.searchUser,
         method: 'GET'
       })
-        .then(res => this.user = res.data)
+        .then(res => {
+          this.user = res.data
+          console.log(this.user)
+          })
         .catch(e => console.log(e))
     },
     userBookmark() {
-      console.log(this.searchUser)
       axios({
         baseURL: SERVER_URL,
         url:`/users/${this.searchUser}/bookmark`,
@@ -155,27 +158,36 @@ export default {
         }
       })
       .then(res => {
-        console.log(res)
-        // res.data.forEach(element => {
-        //   axios({
-        //     baseURL: SERVER_URL,
-        //     url: `/conference/${element.conferenceId}`,
-        //     method: 'GET',
-        //   })
-        //   .then(res => {
-        //     this.conferences.push(res.data)
-        //   })
-        // });
-        // for (let index = 0; index < res.data.length; index++) {
-        //   axios({
-        //     baseURL: SERVER_URL,
-        //     url: `/conference/${res.data[index].conferenceId}`,
-        //     method: 'GET',
-        //   })
-        //   .then(res => {
-        //     this.conferences.push(res.data)
-        //   })
-        // }
+        this.cnt = res.data.length
+        for (let index = 0; index < res.data.length; index++) {
+          axios({
+            baseURL: SERVER_URL,
+            url: `/conference/${res.data[index].conferenceId}`,
+            method: 'GET',
+          })
+          .then(res => {
+            this.conferences.push(res.data)
+            this.cnt += 1
+          })
+        }
+        if (this.cnt >= 500) {
+          this.cnt = 500
+        } else if (this.cnt >= 250) {
+          this.cnt = 250
+        } else if (this.cnt >= 100) {
+          this.cnt = 100
+        } else if (this.cnt >= 50) {
+          this.cnt = 50
+        } else if (this.cnt >= 25) {
+          this.cnt = 25
+        } else if (this.cnt >= 10) {
+          this.cnt = 10
+        } else if (this.cnt >= 5) {
+          this.cnt = 5
+        } else if (this.cnt >= 0) {
+          this.cnt = 1
+        }
+        console.log(this.cnt)
       })
       .catch(e => console.log(e))
     },
@@ -183,7 +195,7 @@ export default {
   beforeMount() {
     this.userProfile()
     this.userBookmark()
-  }
+  },
 }
 </script>
 
