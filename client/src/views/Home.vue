@@ -5,9 +5,11 @@
 
         <div class="d-flex flex-column justify-center align-center">
 
-          <div class="font-white mt-7 mb-6">
+          <div class="font-white mt-7 mb-4">
             <div class="main-sub mt-3" style="text-align:center;">책으로 나누는 우리 이야기</div>
-            <h2 class="main-title">MEETBOOK</h2>
+            <h2 class="main-title" style="text-align:center;">
+              <img src="@/assets/MEETBOOK_txt.svg" alt="" class="main_logo_txt">
+            </h2>
           </div>
 
           <div class="my-1">
@@ -19,14 +21,14 @@
             </div>
           </div>
 
-          <div class="my-3">
+          <div class="mt-2 mb-0">
             <div class="main-sub font-white main-text text-center">
               어떤 모임이 있는지 궁금하신가요?
               모임을 확인해보세요.
             </div>
             <div class="text-center">
-              <v-btn rounded x-large :to="{name: 'ConferenceIndex'}" class="button-white my-5">
-                <span class="font-green px-2 box-shadow-none"> 👋 도서별 모임 확인하기 </span>
+              <v-btn rounded large :to="{name: 'ConferenceIndex'}" class="button-white my-5">
+                <span class="font-green box-shadow-none"> 👋 도서별 모임 확인하기 </span>
               </v-btn>
             </div>
           </div>
@@ -158,6 +160,14 @@
     max-width: 80%;
     height: auto;
 
+  }
+
+  .main_logo_txt {
+    width: 18rem;
+  }
+
+  .v-btn__content span {
+    font-size: 1.2rem !important;
   }
 
   .text-center .v-size--x-large {
