@@ -3,18 +3,18 @@
     <v-row>
       <v-col class="text-center align-self-center justify-center text-center" cols="3">
         <v-avatar v-if="user.profileImage" size="150">
-          <v-img :src="user.profileImage" contain></v-img>
+          <v-img :src="user.profileImage" contain />
         </v-avatar>
-        <div v-else class="img-upload">
-          <v-avatar size="150">
-            <v-img src="@/assets/host_img/HostImg.png" />
-          </v-avatar>
-          <input id="file-input" type="file" />
-        </div>
+        <v-avatar v-else size="150">
+          <v-img src="@/assets/host_img/HostImg.png" />
+        </v-avatar>
 
       </v-col>
       <v-col cols="8" style="margin-left: 2rem">
-        <h2>{{ user.nickname }}님의 개인 프로필</h2>
+        <div class="d-flex">
+          <h1 style="display:inline;">{{ user.nickname }}님의 개인 프로필</h1>
+          <v-img :src="`src/assets/bookicon/book${num}page.svg`" style="height:50px;" />
+        </div>
         <br>
         <v-card>
           <v-card-title><strong>한마디</strong></v-card-title>
@@ -23,7 +23,6 @@
           <v-card-subtitle v-else>아직 한마디가 없어요..</v-card-subtitle>
         </v-card>
         <span v-if="conferences.length > 0">{{ conferences.length }}개의 책을 읽었어요!!</span>
-        
       </v-col>
     </v-row>
     <v-col style="padding-top:2rem">
@@ -33,7 +32,7 @@
         <v-btn v-if="searchUser === name" rounded class="primary" href="conference">참여하러가기</v-btn>
       </v-item-group>
       <div v-else>
-        <h3>최근 모임에서 읽은 책</h3>
+        <h3>최근 참가한 모임</h3>
         <v-item-group>
           <v-container>
             <v-row>
@@ -49,16 +48,17 @@
                           <div class="back"></div>
                           <div class="page6">
                             <v-card-text style="padding:0;">
-                              <v-card-title style="font-size:15px; font-weight:bold;">{{ item.book.bookName }}</v-card-title>
-                              <v-card-subtitle >{{ item.book.bookAuthor }}<hr>{{ item.book.bookPubYear }}</v-card-subtitle>
+                              <v-card-title style="font-size:15px; font-weight:bold;">{{ item.title }}</v-card-title>
+                              <v-card-subtitle >
+                                모임 날짜: {{ item.callStartTime.slice(0, 10) }}
+                                <hr>
+                                시작 시간: {{ item.callStartTime.slice(11, 19) }}
+                                <br>
+                                종료 시간: {{ item.callEndTime.slice(11, 19) }}
+                              </v-card-subtitle>
                             </v-card-text>
                           </div>
-                          <div class="page5">
-                            <v-card-text>
-                              <p>{{ item.book.bookContents.slice(0, 160) }}...</p>
-                            </v-card-text>
-                          </div>
-                          <div class="page4"></div><div class="page3"></div><div class="page2"></div><div class="page1"></div>
+                          <div class="page5" /><div class="page4" /><div class="page3" /><div class="page2" /><div class="page1" />
                           <div class="front">
                             <v-img :src="item.book.bookThumbnailUrl" contain />
                           </div>
@@ -113,6 +113,8 @@ export default {
       conferences: [],
       searchUser : this.$route.params.userId,
       name: this.$store.state.auth.user.id,
+      cnt: 0,
+      num: '1',
 
     }
   },
@@ -130,8 +132,6 @@ export default {
         return require('@/assets/host_img/host2.jpeg')
       }
     },
-    // 일단은 본인 프로필로 입장이여서 this.$store.state.auth.user.id를 사용 했습니다.
-    // 이후에 다른 유저가 들어올 경우에는 해당 부분을 수정하여 props한 값을 넣으면 됩니다.
     userProfile() {
       if (this.searchUser === undefined) {
         this.searchUser = this.name
@@ -141,11 +141,13 @@ export default {
         url: '/users/' + this.searchUser,
         method: 'GET'
       })
-        .then(res => this.user = res.data)
+        .then(res => {
+          this.user = res.data
+          console.log(this.user)
+          })
         .catch(e => console.log(e))
     },
     userBookmark() {
-      console.log(this.searchUser)
       axios({
         baseURL: SERVER_URL,
         url:`/users/${this.searchUser}/bookmark`,
@@ -155,27 +157,35 @@ export default {
         }
       })
       .then(res => {
-        console.log(res)
-        // res.data.forEach(element => {
-        //   axios({
-        //     baseURL: SERVER_URL,
-        //     url: `/conference/${element.conferenceId}`,
-        //     method: 'GET',
-        //   })
-        //   .then(res => {
-        //     this.conferences.push(res.data)
-        //   })
-        // });
-        // for (let index = 0; index < res.data.length; index++) {
-        //   axios({
-        //     baseURL: SERVER_URL,
-        //     url: `/conference/${res.data[index].conferenceId}`,
-        //     method: 'GET',
-        //   })
-        //   .then(res => {
-        //     this.conferences.push(res.data)
-        //   })
-        // }
+        for (let index = 0; index < res.data.length; index++) {
+          axios({
+            baseURL: SERVER_URL,
+            url: `/conference/${res.data[index].conferenceId}`,
+            method: 'GET',
+          })
+          .then(res => {
+            if (!this.conferences.includes(res.data)) this.conferences.push(res.data)
+            this.cnt += 1
+          })
+        }
+        console.log(this.conferences)
+        if (this.cnt >= 500) {
+          this.cnt = 500
+        } else if (this.cnt >= 250) {
+          this.num = '250'
+        } else if (this.cnt >= 100) {
+          this.num = '100'
+        } else if (this.cnt >= 50) {
+          this.num = '50'
+        } else if (this.cnt >= 25) {
+          this.num = '25'
+        } else if (this.cnt >= 10) {
+          this.num = '10'
+        } else if (this.cnt >= 5) {
+          this.num = '5'
+        } else if (this.cnt >= 0) {
+          this.num = '1'
+        }
       })
       .catch(e => console.log(e))
     },
@@ -183,7 +193,7 @@ export default {
   beforeMount() {
     this.userProfile()
     this.userBookmark()
-  }
+  },
 }
 </script>
 
