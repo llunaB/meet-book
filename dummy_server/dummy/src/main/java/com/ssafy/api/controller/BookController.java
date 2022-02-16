@@ -98,10 +98,6 @@ public class BookController {
     public ResponseEntity<Page<GetConferencesRes>> getConferencesExpectingByBookId(@PathVariable("id") String id, @RequestParam("page") Integer page , @RequestParam("size") Integer size, @AuthenticationPrincipal User userEntity) {
             Page<GetConferencesRes> list = Page.empty();
             PageRequest request = PageRequest.of(page, size);
-
-            if(userEntity == null) {
-            	userEntity = new User();
-            }
             
             try {
                 list = conferenceService.getExpectingConferencesByBookId(Integer.parseInt(id), userEntity, request);
@@ -117,10 +113,6 @@ public class BookController {
     public ResponseEntity<Page<GetConferencesRes>> getConferencesFinishedByBookId(@PathVariable("id") String id, @RequestParam("page") Integer page , @RequestParam("size") Integer size, @AuthenticationPrincipal User userEntity) {
         Page<GetConferencesRes> list = Page.empty();
         PageRequest request = PageRequest.of(page, size);
-
-        if(userEntity == null) {
-        	userEntity = new User();
-        }
         
         try {
             list = conferenceService.getFinishedConferencesByBookId(Integer.parseInt(id), userEntity, request);

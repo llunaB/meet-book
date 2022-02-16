@@ -71,8 +71,12 @@ public class ConferenceController {
 		
 		HashMap<String, String> map = new HashMap<String, String>();
 		try {
-			conferenceService.createConference(conferenceDto);
-			map.put("message", "회의 생성 성공");
+			if(conferenceService.createConference(conferenceDto)) {
+				map.put("message", "회의 생성 성공");
+			}else {
+				map.put("message", "회의 생성  실패");
+			}
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 			map.put("message", "회의 생성  실패");
@@ -84,10 +88,6 @@ public class ConferenceController {
 	public ResponseEntity<Page<GetConferencesRes>> getConferences(@RequestParam("size") Integer size, @RequestParam("page") Integer page, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
-		
-		if(userEntity == null) {
-			userEntity = new User();
-		}
 		
 		try {
 			list = conferenceService.getConferences(request, userEntity);
@@ -115,10 +115,6 @@ public class ConferenceController {
 	public ResponseEntity<Page<GetConferencesRes>> getConferencesById(@PathVariable("id") String id, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> response = Page.empty();
 		PageRequest request =PageRequest.of(0, 5); //검색을 원하는 페이지, 개수
-		
-		if(userEntity == null) {
-			userEntity = new User();
-		}
 		
 		try {
 			response = conferenceService.getConferencesById(Integer.parseInt(id), userEntity, request);
