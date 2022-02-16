@@ -148,7 +148,7 @@ export default {
   padding: 1rem !important;
 }
 .v-btn--is-elevated {
-  box-shadow: none;
+  box-shadow: none !important;
 }
 .v-app-bar--hide-shadow {
   border-bottom: 1px solid #C8DBCF !important;
