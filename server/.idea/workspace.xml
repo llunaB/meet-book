@@ -4,7 +4,126 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0b48b3a9-db24-4a30-b21c-678ae86f3102" name="Changes" comment="oauth2" />
+    <list default="true" id="9ed5c676-e1e6-4658-8de2-d3936a6e9f5c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/dummy_server.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/jpa-buddy.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/sshConfigs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/SSAFY.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/openvidu docker.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/DTO/BookDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/DTO/BookmarkDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/DTO/ConferenceDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/DTO/ConferenceHistoryDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/DTO/GenreDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/DTO/UserConferenceDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/DTO/UserDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/DummyApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/controller/BookController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/controller/ConferenceController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/controller/EmailController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/controller/ExceptionController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/controller/ImageController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/controller/OauthController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/controller/SearchController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/controller/UserController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/DeleteUserReq.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/EmailCheckReq.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/EmailReq.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/FindPwdReq.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/LoginReq.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/SignUpReq.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/UpdatePasswordReq.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/UpdateUserByDetailReq.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/UpdateUserByProfileReq.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/conference/ForceDisconnectReq.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/conference/ForceUnpublishReq.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/conference/LeaveConferenceReq.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/responseDto/GetBookRes.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/responseDto/GetBookmarksRes.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/responseDto/GetConferencesRes.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/responseDto/GetSimpleBooksRes.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/responseDto/GetUserByDetailRes.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/responseDto/GetUserByProfileRes.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/responseDto/LoginRes.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/responseDto/MessageRes.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/responseDto/OauthUserRes.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/service/BookService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/service/BookmarkService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/service/ConferenceService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/service/GenreService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/service/JwtUserDetailService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/service/OAuthService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/service/SessionService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/service/UserConferenceService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/service/UserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/config/CustomBasePathSerialize.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/config/JwtAuthenticationFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/config/JwtTokenProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/config/SwaggerConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/config/WebConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/config/WebSecurityConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/config/job/EmailService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/config/job/JobA.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/config/job/JobConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/converter/ActionConverter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/entity/Book.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/entity/Bookmark.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/entity/Conference.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/entity/ConferenceHistory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/entity/Email.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/entity/Genre.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/entity/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/entity/UserConference.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/mapping/ConferenceOnly.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/openApi/OpenApiHelper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/openApi/OpenApiHelper2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/repository/BookRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/repository/BookmarkRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/repository/ConferenceHistoryRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/repository/ConferenceRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/repository/EmailRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/repository/GenreRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/repository/UserConferenceRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/repository/UserRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/error/CustomGlobalExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/error/exception/AlreadyExistEmailException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/error/exception/AlreadyExistNicknameException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/error/exception/securityException/CAuthenticationEntryPointException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/error/exception/securityException/CommonResult.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/error/exception/securityException/CustomAccessDeniedHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/error/exception/securityException/CustomAuthenticationEntryPoint.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/error/exception/securityException/ErrorCode.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/error/exception/securityException/ExceptionAdvice.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/error/exception/securityException/ResponseService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/resources/application-container.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/resources/application-email.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/resources/application-oauth.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/resources/openvidu-selfsigned.jks" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/test/java/com/ssafy/DummyApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dummy_server/resources/upload/null.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -26,29 +145,18 @@
             <expand>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="helloInteliJ" type="f1a62948:ProjectNode" />
+                <item name="meetBook" type="f1a62948:ProjectNode" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="helloInteliJ" type="f1a62948:ProjectNode" />
+                <item name="meetBook" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="helloInteliJ" type="f1a62948:ProjectNode" />
-                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="helloInteliJ" type="f1a62948:ProjectNode" />
-                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
-                <item name="testCompileClasspath" type="62daadca:ExternalSystemViewDefaultContributor$DependencyScopeExternalSystemNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="helloInteliJ" type="f1a62948:ProjectNode" />
-                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
-                <item name="testRuntimeClasspath" type="62daadca:ExternalSystemViewDefaultContributor$DependencyScopeExternalSystemNode" />
+                <item name="meetBook" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
               </path>
             </expand>
             <select />
@@ -60,13 +168,16 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
-        <option value="AnnotationType" />
-        <option value="Class" />
+        <option value="JUnit5 Test Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$USER_HOME$" value="feature/be_deploy" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="GitSEFilterConfiguration">
@@ -77,211 +188,181 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="JpbToolWindowState">
+    <option name="myId2FirstActivated">
+      <map>
+        <entry key="com.haulmont.jpb.jpaInspector" value="true" />
+        <entry key="com.haulmont.jpb.jpaPalette" value="true" />
+        <entry key="com.haulmont.jpb.jpaStructure" value="true" />
+      </map>
+    </option>
+    <option name="myId2Visible">
+      <map>
+        <entry key="com.haulmont.jpb.jpaInspector" value="false" />
+        <entry key="com.haulmont.jpb.jpaPalette" value="false" />
+        <entry key="com.haulmont.jpb.jpaStructure" value="true" />
+      </map>
+    </option>
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
-  <component name="ProjectId" id="23fSk6t6eFMmN9OGD1fNxloH6eE" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
-    <ConfirmationsSetting value="1" id="Add" />
-  </component>
+  <component name="ProjectId" id="23xaFGuySaRBhn1c0eeMIaTMJsn" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_MARK_IGNORED_FILES_AS_EXCLUDED" value="true" />
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelOrder2" value="2" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RequestMappingsPanelWidth2" value="75" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_directory_selection" value="$PROJECT_DIR$/src/test/java/com/jojoldu/book/springboot" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/build.gradle" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit5" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="show.run.dashboard.notification" value="false" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\user\IdeaProjects\helloInteliJ\src\main\resources\templates" />
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
     </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.jojoldu.book.springboot.config.auth" />
-      <recent name="com.jojoldu.book.springboot.config" />
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.ssafy.domain.user" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Application">
-    <configuration name="Application" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.jojoldu.book.springboot.Application" />
-      <module name="helloInteliJ.main" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.jojoldu.book.springboot.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
+  <component name="RunManager" selected="Gradle.dummy [build]">
+    <configuration name="UserRepositoryTest.crud" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.ssafy.domain.user.UserRepositoryTest.crud&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="dummy [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="DummyApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="dummy.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ssafy.MeetBookApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="IndexControllerTest.메인페이지_로딩" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;com.jojoldu.book.springboot.IndexControllerTest.메인페이지_로딩&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
-    </configuration>
-    <configuration name="PostApiControllerTest.Posts_등록된다" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;com.jojoldu.book.springboot.PostApiControllerTest.Posts_등록된다&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
-    </configuration>
-    <configuration name="PostApiControllerTest.Posts_업데이트" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;com.jojoldu.book.springboot.PostApiControllerTest.Posts_업데이트&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
-    </configuration>
-    <configuration name="PostsRepositoyTest.BaseTimeEntity_등록" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;com.jojoldu.book.springboot.domain.posts.PostsRepositoyTest.BaseTimeEntity_등록&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
-    </configuration>
-    <configuration name="PostsRepositoyTest.게시글저장_불러오기" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;com.jojoldu.book.springboot.domain.posts.PostsRepositoyTest.게시글저장_불러오기&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
+    <configuration name="MeetBookApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true">
+      <module name="meetBook.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ssafy.MeetBookApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.PostsRepositoyTest.게시글저장_불러오기" />
-        <item itemvalue="Gradle.IndexControllerTest.메인페이지_로딩" />
-        <item itemvalue="Gradle.PostsRepositoyTest.BaseTimeEntity_등록" />
-        <item itemvalue="Application.Application" />
-        <item itemvalue="Gradle.PostApiControllerTest.Posts_등록된다" />
+        <item itemvalue="Gradle.dummy [build]" />
+        <item itemvalue="Spring Boot.MeetBookApplication" />
+        <item itemvalue="Gradle.UserRepositoryTest.crud" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="0b48b3a9-db24-4a30-b21c-678ae86f3102" name="Changes" comment="" />
-      <created>1642123791185</created>
+      <changelist id="9ed5c676-e1e6-4658-8de2-d3936a6e9f5c" name="Changes" comment="" />
+      <created>1642678087156</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1642123791185</updated>
+      <updated>1642678087156</updated>
+      <workItem from="1642678088390" duration="4605000" />
+      <workItem from="1642707064074" duration="6000" />
+      <workItem from="1642708927828" duration="2585000" />
+      <workItem from="1642757698904" duration="2062000" />
+      <workItem from="1642944149036" duration="7000" />
+      <workItem from="1642944292012" duration="36000" />
+      <workItem from="1644593758830" duration="12423000" />
+      <workItem from="1644750617915" duration="15629000" />
+      <workItem from="1645076416473" duration="2772000" />
     </task>
-    <task id="LOCAL-00001" summary="gitignore등록">
-      <created>1642142907525</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1642142907525</updated>
-    </task>
-    <task id="LOCAL-00002" summary="oauth2">
-      <created>1642352622513</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1642352622513</updated>
-    </task>
-    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
-  <component name="UnknownFeatures">
-    <option featureType="dependencySupport" implementationName="java:javax.persistence:javax.persistence-api" />
-    <option featureType="dependencySupport" implementationName="java:org.hibernate:hibernate-core" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
+        <entry key="7cac9cbb-0766-4a2b-a4d5-5af6ac937bf6">
+          <value>
+            <State>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/develop" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="structure">
+                    <value>
+                      <list>
+                        <option value="dir:/Users/euijinpang/S06P12A206/dummy_server/dummy" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
         <entry key="MAIN">
           <value>
             <State />
@@ -289,21 +370,45 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="gitignore등록" />
-    <MESSAGE value="oauth2" />
-    <option name="LAST_COMMIT_MESSAGE" value="oauth2" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/jojoldu/book/springboot/Application.java</url>
-          <line>8</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="7cac9cbb-0766-4a2b-a4d5-5af6ac937bf6" value="TOOL_WINDOW" />
+      </map>
+    </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="origin/develop" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="feature/be_deploy" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="feature/be_CORS" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="develop" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="origin/master" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
