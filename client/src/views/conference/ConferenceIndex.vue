@@ -69,6 +69,7 @@ export default {
   watch: {
     tab: function(){
       if(this.conferences[this.tab].length < 1){
+        console.log(`search/conference/genre?genre=${this.genres[this.tab]}&page=${this.page-1}&size=20`)
         axios({
           baseURL: SERVER_URL,
           method: 'get',
