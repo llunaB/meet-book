@@ -169,8 +169,13 @@
 
 
             <select v-model="chatConnection">
+<<<<<<< HEAD
               <option value=0>모두에게</option>
               <option v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :value="sub.stream.connection">
+=======
+              <option value="0">모두에게</option>
+              <option v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :value="sub.stream.connection.connectionId">
+>>>>>>> 0f551573c8ee5056570d2a9749f1d32209fb0ef3
                 {{sub.stream.connection.length !== 0 ? JSON.parse(sub.stream.connection.data.split('%')[0]).clientData : "모두에게"}}
               </option>
             </select>
@@ -555,7 +560,11 @@ export default {
       } else {
         this.session.signal({
           data: this.inputChat,
+<<<<<<< HEAD
           to: [this.publisher.stream.connection, this.chatConnection],
+=======
+          to: [this.publisher.stream.connection.connectionId, this.chatConnection],
+>>>>>>> 0f551573c8ee5056570d2a9749f1d32209fb0ef3
           type: 'my-chat'
         })
         .then(() => {          
