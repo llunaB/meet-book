@@ -98,6 +98,19 @@ public class ConferenceController {
 		}
 		return new ResponseEntity<Page<GetConferencesRes>>(list, HttpStatus.OK);
 	}
+	
+	@GetMapping("/bookmarked")
+	public ResponseEntity<Page<GetConferencesRes>> getConferencesByUserId(@RequestParam("size") Integer size, @RequestParam("page") Integer page,  @RequestParam("id") Integer userId){
+		Page<GetConferencesRes> list = Page.empty();
+		PageRequest request = PageRequest.of(page, size);
+		
+		try {
+			list = conferenceService.getConfrerencesByBookmarkUserId(userId, request);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<Page<GetConferencesRes>>(list, HttpStatus.OK);
+	}
 
 
 	
@@ -119,10 +132,6 @@ public class ConferenceController {
 		PageRequest request =PageRequest.of(0, 5); //검색을 원하는 페이지, 개수
 		
 		try {
-//<<<<<<< HEAD
-//			response = conferenceService.getConferencesById(Integer.parseInt(id), request);
-//			return new ResponseEntity<Page<GetConferencesRes>>(response, HttpStatus.OK);
-//=======
 			response = conferenceService.getConferencesById(Integer.parseInt(id), userEntity, request);
 			new ResponseEntity<Page<GetConferencesRes>>(response, HttpStatus.OK);
 		}catch (Exception e){

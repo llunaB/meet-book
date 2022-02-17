@@ -398,6 +398,18 @@ public class ConferenceService {
 		}
 	}
 	
+	public Page<GetConferencesRes> getConfrerencesByBookmarkUserId(int userId, Pageable pageable){
+		Page<GetConferencesRes> result = Page.empty();
+		try {
+			Page<ConferenceOnly> data = bookmarkRepository.findByUserId(userId, pageable);
+			result = data.map(source -> modelMapper.map(source.getConference(), GetConferencesRes.class));
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
 	public Conference updateConferenceEntity(Conference target, Conference data) {
 		target.setBook(data.getBook());
 		target.setUser(data.getUser());
