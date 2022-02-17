@@ -8,21 +8,21 @@
         <v-avatar v-else size="150">
           <v-img src="@/assets/host_img/HostImg.png" />
         </v-avatar>
-
       </v-col>
       <v-col cols="8" style="margin-left: 2rem">
-        <div class="d-flex">
-          <h1 style="display:inline;">{{ user.nickname }}님의 개인 프로필</h1>
-          <v-img :src="`src/assets/bookicon/book${num}page.svg`" style="height:50px;" ></v-img>
-        </div>
-        <br><br>
+        <h1 style="display:inline;">{{ user.nickname }}님의 개인 프로필</h1>
+        <br><br><br>
         <v-card>
           <v-card-title><strong>한마디</strong></v-card-title>
           <v-spacer></v-spacer>
           <v-card-subtitle v-if="user.profileDescription.length > 0">{{ user.profileDescription }}</v-card-subtitle>
           <v-card-subtitle v-else>아직 한마디가 없어요..</v-card-subtitle>
         </v-card>
-        <span v-if="conferences.length">{{ conferences.length }}개의 책을 읽었어요!!</span>
+        <br>
+        <div class="d-flex">
+          <h3 v-if="conferences.length">{{ conferences.length }}개의 모임에 참가했습니다.</h3>
+          <v-img  :src="require(`@/assets/bookicon/book${iconUrl}page.svg`)" style="height:70px;" contain />
+        </div>
       </v-col>
     </v-row>
     <v-col style="padding-top:2rem">
@@ -88,8 +88,9 @@ export default {
       conference: '',
       conferences: [],
       searchUser : null,
+      iconUrl: '',
       cnt: 0,
-      num: '1',
+      num: '',
 
     }
   },
@@ -131,7 +132,26 @@ export default {
         url:`/users/${this.searchUser}/bookmark`,
         method: 'GET',
       })
-      .then(res => this.conferences = res.data)
+      .then(res => {
+        this.conferences = res.data
+        if (this.conferences.length >= 500) {
+          this.iconUrl = "500"
+        } else if (this.conferences.length >= 250) {
+          this.iconUrl = "250"
+        } else if (this.conferences.length >= 100) {
+          this.iconUrl = "100"
+        } else if (this.conferences.length >= 50) {
+          this.iconUrl = "50"
+        } else if (this.conferences.length >= 25) {
+          this.iconUrl = "25"
+        } else if (this.conferences.length >= 10) {
+          this.iconUrl = "10"
+        } else if (this.conferences.length >= 5) {
+          this.iconUrl = "50"
+        } else{
+          this.iconUrl = "1"
+        }
+        })
       .catch(e => console.log(e))
     },
   },
