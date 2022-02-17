@@ -120,7 +120,7 @@ export default {
       if (this.user.nickname.length) {
         axios({
           baseURL: SERVER_URL,
-          url: `/users/${this.token}`,
+          url: `/users/${this.user.id}`,
           method: 'PUT',
           data: {
             'nickname': this.user.nickname,
