@@ -120,7 +120,10 @@ export default {
     //     return null
     //   }
     // },
-    
+    canOpen: function () {
+      const nowMoment = moment()
+      return (moment(this.conference.callStartTime).isBefore(nowMoment) && nowMoment.isBefore(moment(this.conference.callEndTime)))
+    },
     // canOpen: function(){
     //   const now = moment()
       
@@ -143,10 +146,7 @@ export default {
     newEndTime: function () {
       return moment(this.conference.callEndTime).format('M월 D일 A HH:mm')
     },
-    canOpen: function () {
-      const nowMoment = moment()
-      return (moment(this.conference.callStartTime).isBefore(nowMoment) && nowMoment.isBefore(moment(this.conference.callEndTime)))
-    },
+    
 
     ...mapState(['auth'])
   },
