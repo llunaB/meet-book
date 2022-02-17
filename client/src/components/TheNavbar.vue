@@ -97,6 +97,10 @@
 </template>
 
 <script>
+import axios from 'axios'
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
+
+
 export default {
   name: "navbar",
   data: function () {
@@ -123,6 +127,22 @@ export default {
       this.$store.dispatch('auth/logout')
       this.$router.push('/')
     },
+    userProfile() {
+      const result = JSON.parse(Buffer.from(this.$store.state.auth.user.token.split('.')[1], 'base64').toString())
+      axios({
+        baseURL: SERVER_URL,
+        url: '/users/' + result["sub"],
+        method: 'GET',
+        headers: {
+            'X-AUTH-TOKEN': this.$store.state.auth.user.token
+          },
+      })
+      .then(res => {
+        res.data['token'] = this.$store.state.auth.user.token
+        this.user = res
+      })
+      .catch(() => {})
+    },
 
     
   },
@@ -133,9 +153,9 @@ export default {
       return this.$store.state.auth.status.loggedIn
     },
   },
-  mounted() {
-    this.user = this.$store.state.auth.user
-  }
+  beforeMount() {
+    this.userProfile()
+  },
 }
 </script>
 
