@@ -1,36 +1,36 @@
 <template>
-  <div class="card-container text-center loginClass">
+  <div class="card-container loginClass">
       <v-container>
       <div class="signup-form-group row">
-        <div class="col-lg-4 col-md-6 col-sm-8 mx-auto">
+        <div class="col-lg-6 col-md-6 col-sm-8 mx-auto">
           <!-- 회원가입 전체 Form Start-->
           <div class="card flex-grid signup">
-            <main><h2><strong>회원가입</strong></h2></main>
+            <main><h2><strong>회 원 가 입</strong></h2></main>
 
-            <form class="form-group my-2" @submit.prevent="handleRegister">
+            <form class="form-group my-3" @submit.prevent="handleRegister">
               <!-- nickname 회원가입 Form -->
-              <v-text-field class="row" type="text" label="* 별명" hide-details="auto" :rules="Message"
+              <v-text-field type="text" label="* 별명" hide-details="auto" :rules="Message"
                             v-model="user.nickname" id="nickname-signup" required />
               <!-- Email 회원가입 Form && 인증번호 받기 버튼 -->
-              <div class="row m-3" style="align-items: baseline">
+              <div class="row px-3 my-1" style="align-items: baseline">
                 <v-text-field type="email" label="* Email" hide-details="auto" :rules="Message"
                               v-model="user.email" id="email-signup" required />
 
               </div>
               <!--       인증번호 전송 후, 값 확인하는 Form       -->
-              <div v-if="cert_key" class="row my-3" style="align-items: baseline">
+              <div v-if="cert_key" class="d-flex my-3" style="align-items: baseline">
 
                 <v-text-field type="text" label="* 인증번호" hide-details="auto" :rules="Message"
                               v-model="confirm_key" id="cert-key" required />
 
-                <v-btn rounded @click="confirmKey" elevation="5" color="#fffdad"
+                <v-btn rounded @click="confirmKey" elevation="5" color="primary"
                        :disabled="validated_key">인증번호 확인</v-btn>
               </div>
               <div v-else class="my-3 py-3" style="align-items: baseline">
                 <v-btn rounded elevation="3" class="row-2" color="primary"
                        @click="emailDuplication">이메일 중복확인</v-btn>
               </div>
-              <div class="row">
+              <div class="row px-3">
                 <!-- Password 회원가입 Form -->
                 <v-text-field type="password" label="* 비밀번호" hide-details="auto" :rules="Message"
                               v-model="user.password" id="password-signup" required
