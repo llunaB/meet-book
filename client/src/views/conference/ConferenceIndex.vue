@@ -88,27 +88,8 @@ export default {
     }
   },
   mounted(){
-    axios({
-        baseURL: SERVER_URL,
-        method: 'get',
-        url: `search/conference/genre?genre=${this.genres[this.tab]}&page=${this.page-1}&size=20`,
-        // headers: {
-        //   'X-AUTH-TOKEN': this.$store.state.auth.user.token
-        // }
-      })
-      .then(res=> {        
-        console.log(res)
-        this.conferences[this.tab].push(res.data.content)
-      })
-      .catch(err => console.error(err))
-
-    axios({
-        method: 'get',
-        baseURL: SERVER_URL,
-        url: `search/conference/genre/count?genre=${this.genres[this.tab]}`
-      })
-      .then(res=> this.genrePages=parseInt(parseInt(res.data.data)/20) + 1)
-      .catch(err => console.error(err))
+    this.loading(this.tab, this.page)
+    this.pageCount(this.tab)
   }
 }
 </script>
