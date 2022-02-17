@@ -20,14 +20,14 @@
     </div>
     <div class="card-back flex-column" v-bind:class="{backLocked: locked}">
       <v-card-text class="description">
-        <p class="mt-10">책이름: {{conference.book.bookName}}</p>
-        <p>회의명: {{conference.title}}</p>
-        <p>개설자: {{conference.user.nickname}}</p>
-        <p>{{conference.id}}</p>
+        <h3>{{conference.title}}</h3>
+        <h4>{{conference.user.nickname}}</h4>
+        <p class="mt-3">{{conference.description}}</p>
+        <p class="mt-5">책: {{conference.book.bookName}}</p>
+        <!-- <p>{{conference.id}}</p> -->
         <p>시작예정: {{formating(conference.callStartTime)}}</p>
         <p>종료예정: {{formating(conference.callEndTime)}}</p>
         <p>참여인원 / 최대인원: {{conference.attendMember}} / {{conference.maxMembers}}</p>
-        <p>설명: {{conference.description}}</p>
       </v-card-text>
       <v-btn class="mx-3 lock" @click="lockClick">
         <v-icon v-if="locked === false">mdi-lock-open-outline</v-icon>
@@ -140,7 +140,9 @@ export default {
   created: function () {
     
     this.userId = this.auth.user ? this.auth.user.id : null
+    // 로그인한 유저라면
     if (this.auth.user) {
+      // 북마크 유저 목록에 내가 존재하는지 확인
       this.isBookmarked = this.conference.bookmark.some((e) => {
         if (e === this.auth.user.id) {
           return true
@@ -148,6 +150,7 @@ export default {
       })
     }
     
+    // 참여 인원이 있다면 Active(=)
     if (this.conference.attendMember > 0) {
       this.isActive = true
     }
