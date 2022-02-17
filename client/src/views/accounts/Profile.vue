@@ -36,7 +36,7 @@
         <v-item-group>
           <v-container>
             <v-row>
-              <v-col cols="6" v-for="(item, idx) in conferences.slice(0, 5)" :key="idx">
+              <v-col cols="6" v-for="(item, idx) in conferences.reverse().slice(0, 5)" :key="idx">
                 <v-item>
                   <v-card
                     class="bookcard"
