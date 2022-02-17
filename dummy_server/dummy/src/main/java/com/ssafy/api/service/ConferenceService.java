@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import com.ssafy.api.responseDto.GetSimpleBooksRes;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import com.ssafy.api.responseDto.GetUserByProfileRes;
 import org.modelmapper.ModelMapper;
@@ -122,6 +123,18 @@ public class ConferenceService {
 	
 	public boolean createConference(ConferenceDTO source) {
 		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(source.getCallStartTime());
+			log.info("시간 : "+ sdf.format(cal.getTime()));
+			cal.add(Calendar.HOUR, -9);
+			log.info("-9시간 : "+sdf.format(cal.getTime()));
+			log.info("시작시간"+cal.getTime());
+			source.setCallStartTime(cal.getTime());
+			cal.setTime(source.getCallEndTime());
+			cal.add(Calendar.HOUR,-9);
+			log.info("종료시간"+ cal.getTime());
+			source.setCallEndTime(cal.getTime());
 			Conference conference = conferenceRepository.save(modelMapper.map(source, Conference.class));
 			Bookmark bookmark = new Bookmark();
 			
