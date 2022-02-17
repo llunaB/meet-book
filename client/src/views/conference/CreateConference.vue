@@ -207,7 +207,7 @@ export default {
         
         console.log(response)
         // 2. 일정 페이지 등으로 리다이렉트하기
-        this.$router.push({name: 'Home'})
+        this.$router.push({name: 'Profile'})
       })
       .catch(error => {
         console.log(error)
