@@ -25,6 +25,8 @@
         <p class="mt-3">{{conference.description}}</p>
         <p class="mt-5">책: {{conference.book.bookName}}</p>
         <!-- <p>{{conference.id}}</p> -->
+        {{newStartTime}}
+        {{newEndTime}}
         <p>시작: {{formating(conference.callStartTime)}}</p>
         <p>종료: {{formating(conference.callEndTime)}}</p>
         <p v-bind:class="{'color-red': conference.attendMember >= conference.maxMembers}">참여인원 / 최대인원: {{conference.attendMember}} / {{conference.maxMembers}}</p>
@@ -51,6 +53,7 @@
   </v-card>
 </template>
 <script>
+import moment from 'moment'
 import axios from 'axios'
 import { mapState } from 'vuex'
 const SERVER_URL = process.env.VUE_APP_SERVER_URL
@@ -132,6 +135,14 @@ export default {
   },
 
   computed: {
+
+    newStartTime: function () {
+      return moment(this.conference.callStartTime)
+    },
+    newEndTime: function () {
+      return moment(this.conference.callEndTime)
+    },
+
     ...mapState(['auth'])
   },
 
