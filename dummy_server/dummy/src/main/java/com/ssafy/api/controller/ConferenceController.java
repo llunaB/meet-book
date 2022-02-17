@@ -70,7 +70,8 @@ public class ConferenceController {
 	
 	@PostMapping("")
 	public ResponseEntity<Map<String, String>> createConference(@RequestBody ConferenceDTO conferenceDto){
-		
+		log.info("***Time : "+conferenceDto.getCallStartTime());
+
 		HashMap<String, String> map = new HashMap<String, String>();
 		try {
 			if(conferenceService.createConference(conferenceDto)) {
