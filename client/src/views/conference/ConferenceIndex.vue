@@ -15,7 +15,7 @@
               </conference-card>             -->
               
 
-              <conference-card  class="mx-2 my-2 col-2" v-for="conference in conferences[tab][page-1]" :key="conference.id" :conference="conference">
+              <conference-card  class="mx-2 my-2 col-2" v-for="(conference,i) in showing" :key="i" :conference="conference">
               </conference-card>            
           </v-row>
         </v-container>
@@ -51,82 +51,45 @@ export default {
   methods: {
     loging: function() {
       console.log(this.tab)      
-      this.page = 1
+      this.page = 1      
     },
-    // loading: function() {
-    //   console.log(this.genres[this.tab])
-    //   axios({
-    //     method: 'get',
-    //     url: `/conference/list/${this.page}`,        
-    //   })
-    //   .then(res=>{
-    //     this.conferences[10] = res.data
-    //     console.log("a",this.tab)})
-    //   .catch(err => console.error(err))
-    // }
+    pageCount: function(tab) {
+      axios({
+        method: 'get',
+        baseURL: SERVER_URL,
+        url: `search/conference/genre/count?genre=${this.genres[tab]}`
+      })
+      .then(res=> this.genrePages=parseInt((parseInt(res.data.data)-1)/20) + 1)
+      .catch(err => console.error(err))
+    },
+    loading: function(tab,page) {
+      console.log(this.genres[tab])
+      axios({
+        baseURL: SERVER_URL,
+        method: 'get',
+        url: `search/conference/genre?genre=${this.genres[tab]}&page=${page-1}&size=20`      
+      })
+      .then(res=>{
+        this.showing = res.data.content
+        console.log("a",this.tab)})
+      .catch(err => console.error(err))
+    }
   },
   components: {
     ConferenceCard,
   },  
   watch: {
-    tab: function(){
-      if(this.conferences[this.tab].length < 1){
-        axios({
-          baseURL: SERVER_URL,
-          method: 'get',
-          url: `search/conference/genre?genre=${this.genres[this.tab]}&page=${this.page-1}&size=20`,          
-        })
-        .then(res=> {
-          console.log(res)
-          this.conferences[this.tab].push(res.data.content)     
-        })
-        .catch(err => console.error(err))
-      }
-      axios({
-        method: 'get',
-        baseURL: SERVER_URL,
-        url: `search/conference/genre/count?genre=${this.genres[this.tab]}`
-      })
-      .then(res=> this.genrePages=parseInt((parseInt(res.data.data)-1)/20) + 1)
-      .catch(err => console.error(err))
+    tab: function(newTab){
+      this.loading(newTab,this.page)
+      this.pageCount(newTab)
     },
-    page: function(){
-      if(this.conferences[this.tab].length < this.page){
-        axios({
-          baseURL: SERVER_URL,
-          method: 'get',
-          url: `search/conference/genre?genre=${this.genres[this.tab]}&page=${this.page-1}&size=20`,          
-        })
-        .then(res=> {
-          console.log(res)
-          this.conferences[this.tab].push(res.data.content)     
-        })
-        .catch(err => console.error(err))      
-      }
+    page: function(newPage){
+      this.loading(this.tab,newPage)
     }
   },
   mounted(){
-    axios({
-        baseURL: SERVER_URL,
-        method: 'get',
-        url: `search/conference/genre?genre=${this.genres[this.tab]}&page=${this.page-1}&size=20`,
-        // headers: {
-        //   'X-AUTH-TOKEN': this.$store.state.auth.user.token
-        // }
-      })
-      .then(res=> {        
-        console.log(res)
-        this.conferences[this.tab].push(res.data.content)
-      })
-      .catch(err => console.error(err))
-
-    axios({
-        method: 'get',
-        baseURL: SERVER_URL,
-        url: `search/conference/genre/count?genre=${this.genres[this.tab]}`
-      })
-      .then(res=> this.genrePages=parseInt(parseInt(res.data.data)/20) + 1)
-      .catch(err => console.error(err))
+    this.loading(this.tab, this.page)
+    this.pageCount(this.tab)
   }
 }
 </script>
