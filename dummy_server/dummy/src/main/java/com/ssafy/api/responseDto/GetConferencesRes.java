@@ -1,5 +1,6 @@
 package com.ssafy.api.responseDto;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,5 +29,6 @@ public class GetConferencesRes {
 	private String tags;
 	private String question;
 	private String password;
-	private boolean bookmark;
+	private List<Integer> bookmark = new ArrayList<Integer>();
+	private int attendMember;
 }
