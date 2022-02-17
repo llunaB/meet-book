@@ -1,14 +1,15 @@
 package com.ssafy.api.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.ssafy.api.responseDto.GetSimpleBooksRes;
-import com.ssafy.api.responseDto.GetUserByProfileRes;
 
+import lombok.extern.slf4j.Slf4j;
+import com.ssafy.api.responseDto.GetUserByProfileRes;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,6 +34,7 @@ import com.ssafy.db.repository.UserRepository;
 
 import javax.swing.text.html.Option;
 
+@Slf4j
 @Service
 public class ConferenceService {
 	
@@ -281,6 +283,18 @@ public class ConferenceService {
 	public Page<GetConferencesRes> getReservedConferencesByGenre(String genre, User user, Pageable pageable){
 		Page<GetConferencesRes> list = Page.empty();
 		try {
+//<<<<<<< HEAD
+//
+//			Date date = new Date();
+//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//			Calendar cal = Calendar.getInstance();
+//			cal.setTime(date);
+//			cal.add(Calendar.HOUR,9);
+//			date = cal.getTime();
+//			log.info("");
+//			Page<Conference> data = conferenceRepository.findConferenceByBookGenreGenreAndCallEndTimeAfterOrderByCallStartTime(genre, date, pageable);
+//			list = data.map(source -> modelMapper.map(source, GetConferencesRes.class));
+//=======
 			Page<Conference> data = conferenceRepository.findConferenceByBookGenreGenreAndCallEndTimeAfterOrderByCallStartTime(genre, new Date(), pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);

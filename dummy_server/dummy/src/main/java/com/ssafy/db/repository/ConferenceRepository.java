@@ -22,7 +22,7 @@ public interface ConferenceRepository extends JpaRepository<Conference, Integer>
 	Page<Conference> findConferencesByUserNickname(String nickname, Pageable pageable);
 	Page<Conference> findByTagsContaining(String tags, Pageable pageable);
 	Page<Conference> findConferenceByBookGenreGenreOrderByCallStartTime(String genre, Pageable pageable);
-	Page<Conference> findConferenceByBookGenreGenreAndCallEndTimeAfterOrderByCallStartTime(String genre, Date current, Pageable pageable);
+	Page<Conference> findConferenceByBookGenreGenreAndCallEndTimeAfterOrderByCallStartTime( String genre,Date current, Pageable pageable);
 	Page<Conference> findConferenceByBookGenreGenreAndCallEndTimeBeforeOrderByCallStartTime(String genre, Date current, Pageable pageable);
 	Long countByBookGenreGenre(String genre);
 
