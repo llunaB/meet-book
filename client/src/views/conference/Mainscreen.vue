@@ -7,7 +7,7 @@
         <p class="body-2">비밀번호 문제: {{ conference.question }}</p>
         <v-text-field solo v-model="confPassword"></v-text-field>
         <div class="d-flex justify-space-around" >          
-          <v-btn  color="primary" class="my-5" @click="inputPassword(confPassword)">
+          <v-btn  color="primary" class="my-5" @click="checkParticipants(); inputPassword(confPassword)">
             입력
           </v-btn>
           <v-btn class="my-5" :to="{name: 'Home'}">
@@ -28,10 +28,10 @@
         <v-spacer></v-spacer>
 
         <div class="d-flex justify-space-around">
-          <v-btn v-if="attendCheck===false" color="primary" class="my-5" @click="checkParticipants() ; attendCheck=true">
+          <!-- <v-btn v-if="attendCheck===false" color="primary" class="my-5" @click="checkParticipants() ; attendCheck=true">
             인원체크
-          </v-btn>
-          <v-btn v-else color="primary" class="my-5" @click="enterRoom">
+          </v-btn> -->
+          <v-btn color="primary" class="my-5" @click="enterRoom">
             입장
           </v-btn>
           <v-btn class="my-5" :to="{name: 'Home'}">
@@ -170,7 +170,7 @@
 
             <select v-model="chatConnection">
               <option value="0">모두에게</option>
-              <option v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :value="sub.stream.connection.connectionId">
+              <option v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :value="sub.stream.connection">
                 {{sub.stream.connection.length !== 0 ? JSON.parse(sub.stream.connection.data.split('%')[0]).clientData : "모두에게"}}
               </option>
             </select>
@@ -539,7 +539,7 @@ export default {
     // },
 
     sendMessage: function () {
-      if(this.chatConnection === 0) {
+      if(this.chatConnection === 0 || this.chatConnection === '0') {
         this.session.signal({
           data: this.inputChat,
           to: [],
@@ -555,7 +555,7 @@ export default {
       } else {
         this.session.signal({
           data: this.inputChat,
-          to: [this.publisher.stream.connection.connectionId, this.chatConnection],
+          to: [this.publisher.stream.connection, this.chatConnection],
           type: 'my-chat'
         })
         .then(() => {          
