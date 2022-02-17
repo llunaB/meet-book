@@ -13,6 +13,8 @@
           <v-row>            
               <!-- <conference-card  class="mx-2 my-2 col-2" v-for="conference in conferences[tab].slice((page-1)*24,(page-1)*24+24)" :key="conference.id" :conference="conference">
               </conference-card>             -->
+              
+
               <conference-card  class="mx-2 my-2 col-2" v-for="conference in conferences[tab][page-1]" :key="conference.id" :conference="conference">
               </conference-card>            
           </v-row>

@@ -1,7 +1,7 @@
 <template>
   <v-card class="card-flip">
     <div class="card-front" v-bind:class="{frontLocked: locked}">
-      <v-img v-if="conference.thumbnailUrl" :src="conference.thumbnailUrl" class="border" eager max-width="219">
+      <v-img v-if="conference.thumbnailUrl" :src="conference.thumbnailUrl" class="border" eager max-width="220px">
         <div v-if="isActive">
           <v-btn color="red livecast" dark>
             <v-icon dark left>mdi-broadcast</v-icon>
@@ -9,7 +9,7 @@
           </v-btn>
         </div>
       </v-img>
-      <v-img v-else :src="conference.book.bookThumbnailUrl" class="border" eager max-width="219">
+      <v-img v-else :src="conference.book.bookThumbnailUrl" class="border" eager max-width="220px">
         <div v-if="isActive">
         <v-btn color="red" dark>
           <v-icon dark left>mdi-broadcast</v-icon>
@@ -20,16 +20,16 @@
     </div>
     <div class="card-back flex-column" v-bind:class="{backLocked: locked}">
       <v-card-text class="description">
-        <h3>{{conference.title}}</h3>
+        <h3 class="mt-7">{{conference.title}}</h3>
         <h4>{{conference.user.nickname}}</h4>
         <p class="mt-3">{{conference.description}}</p>
         <p class="mt-5">책: {{conference.book.bookName}}</p>
         <!-- <p>{{conference.id}}</p> -->
-        <p>시작예정: {{formating(conference.callStartTime)}}</p>
-        <p>종료예정: {{formating(conference.callEndTime)}}</p>
-        <p>참여인원 / 최대인원: {{conference.attendMember}} / {{conference.maxMembers}}</p>
+        <p>시작: {{formating(conference.callStartTime)}}</p>
+        <p>종료: {{formating(conference.callEndTime)}}</p>
+        <p v-bind:class="{'color-red': conference.attendMember >= conference.maxMembers}">참여인원 / 최대인원: {{conference.attendMember}} / {{conference.maxMembers}}</p>
       </v-card-text>
-      <v-btn class="mx-3 lock" @click="lockClick">
+      <v-btn class="lock mx-3" @click="lockClick">
         <v-icon v-if="locked === false">mdi-lock-open-outline</v-icon>
         <v-icon v-else>mdi-lock</v-icon>
       </v-btn>

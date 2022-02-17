@@ -34,8 +34,15 @@
         <div v-if="conferences.length === 0">
           <div class="text-center">
             <p>아직 이 책에 관한 모임이 없어요!</p>
-            <router-link :to="{name: 'CreateConference', query: {bookId: book.id}}">지금 이 책 모임 만들기</router-link>
           </div>
+        </div>
+
+        <ConferenceList :conferences="conferences" />
+
+        <div class="text-center">
+          <v-btn rounded large color="#568D6C" :to="{name: 'CreateConference', query: {bookId: book.id}}" class="button my-5">
+            <span class="font-white box-shadow-none">📚 지금 이 책 모임 만들기 </span>
+          </v-btn>
         </div>
         <!-- <div class="d-flex flex-row">
           <div v-for="conference in conferences" :key="conference.conferenceId">
@@ -43,7 +50,6 @@
           </div>
         </div> -->
 
-        <ConferenceList :conferences="conferences" />
 
       </div>
         
