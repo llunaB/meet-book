@@ -41,7 +41,7 @@
                   <v-card
                     class="bookcard"
                     max-width="0"
-                    :to="{path: `/conference/${item.conference.id}`}"
+                    :to="{path: `/conference/${item.conference.id}/main`}"
                       >
                       <template>
                         <div class="book">
