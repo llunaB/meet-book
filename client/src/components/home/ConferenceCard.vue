@@ -28,6 +28,7 @@
         <p>종료예정: {{formating(conference.callEndTime)}}</p>
         <p>참여인원 / 최대인원: {{attendMembers}} / {{conference.maxMembers}}</p>
         <p>설명: {{conference.description}}</p>
+        <p>{{conference}}</p>
       </v-card-text>
       <v-btn class="mx-3 lock" @click="lockClick">
         <v-icon v-if="locked === false">mdi-lock-open-outline</v-icon>
@@ -43,15 +44,17 @@
       && canOpen()">
         개설하기
       </v-btn>
-      <v-btn class="mx-5 mb-2 enter" v-else @click="bookmarking">
-          <v-icon v-if="bookmarked">mdi-bookmark-check</v-icon>
-          <v-icon v-else>mdi-bookmark-check-outline</v-icon>
+      <v-btn class="mx-5 mb-2 enter" v-else>
+      <!-- <v-btn class="mx-5 mb-2 enter" v-else @click="bookmarking"> -->
+          <v-icon v-show="bookmarked">mdi-bookmark-check</v-icon>
+          <v-icon v-show="!bookmarked">mdi-bookmark-check-outline</v-icon>
       </v-btn>
     </div>    
   </v-card>
 </template>
 <script>
 import axios from 'axios'
+import { mapState } from 'vuex'
 const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
 export default {
@@ -69,44 +72,70 @@ export default {
   props: {
     conference: Object,
   },
+
   methods: {
     lockClick: function() {      
       this.locked = !this.locked
     },
-    bookmarking: function() {
-      if(this.$store.state.auth.user){
-        if(this.bookmarked) {
-          axios({
-            baseURL: SERVER_URL,
-            method: 'delete',
-            url:`/users/${this.$store.state.auth.user.id}/bookmark/${this.bookmarkId}`,
-            headers: {
-            'X-AUTH-TOKEN': this.$store.state.auth.user.token
-            }
-          })
-          .then(res=>{
-            this.bookmarked = false
-            console.log(res)})
-          .catch(err => console.error(err))
-        } else {
-          axios({
-            baseURL: SERVER_URL,
-            method: 'post',
-            url:`/users/${this.$store.state.auth.user.id}/bookmark/${this.conference.id}`,
-            headers: {
-            'X-AUTH-TOKEN': this.$store.state.auth.user.token
-            }
-          })
-          .then(res=>{
-            this.bookmarked = true
-            this.bookmarkId = res.data.bookmarkId})
-          .catch(err => console.error(err))
 
-        }      
+    setBookmark: function () {
+      // 로그인되어야 동작
+      if (this.auth.user) {
+        axios({
+          baseURL: SERVER_URL,
+          method: 'POST',
+          // 추후 수정되기를...
+          url: `/users/${this.auth.user.id}/bookmark/${this.bookmarkId}`,
+          headers: {'X-AUTH-TOKEN': this.auth.user.token}
+        })
+        .then(() => {
+          // toggle
+          this.bookmarked = !this.bookmarked
+        })
+        .catch(error => {
+          console.log(`SetBookmarking ${this.conference.id} failed.`)
+          console.log(error)
+        })
       } else {
+        // 로그인해주세요!
         this.$router.push({name: 'Login'})
       }
     },
+    // 북마크 포스트
+    // bookmarking: function() {
+    //   if(this.$store.state.auth.user){
+    //     if(this.bookmarked) {
+    //       axios({
+    //         baseURL: SERVER_URL,
+    //         method: 'delete',
+    //         url:`/users/${this.$store.state.auth.user.id}/bookmark/${this.bookmarkId}`,
+    //         headers: {
+    //         'X-AUTH-TOKEN': this.$store.state.auth.user.token
+    //         }
+    //       })
+    //       .then(res=>{
+    //         this.bookmarked = false
+    //         console.log(res)})
+    //       .catch(err => console.error(err))
+    //     } else {
+    //       axios({
+    //         baseURL: SERVER_URL,
+    //         method: 'post',
+    //         url:`/users/${this.$store.state.auth.user.id}/bookmark/${this.conference.id}`,
+    //         headers: {
+    //         'X-AUTH-TOKEN': this.$store.state.auth.user.token
+    //         }
+    //       })
+    //       .then(res=>{
+    //         this.bookmarked = true
+    //         this.bookmarkId = res.data.bookmarkId})
+    //       .catch(err => console.error(err))
+
+    //     }      
+    //   } else {
+    //     this.$router.push({name: 'Login'})
+    //   }
+    // },
     goToMeeting: function(conferenceId){
       if (this.$store.state.auth.user !== null) {
         this.$router.push({ name: 'ConferenceMeeting', params: {conferenceId: conferenceId}})
@@ -162,20 +191,22 @@ export default {
     //     this.founder=res.data.nickname})
     //   .catch(err=>console.error(err))
     // },
-    isbookmarked: function(){
-      if(this.$store.state.auth.user){
-        axios({
-          baseURL: SERVER_URL,
-          method: 'get',
-          url: `/users/${this.$store.state.auth.user.id}/bookmark/${this.conference.id}`
-        })
-        .then(res=>{
-          this.bookmarkId = res.data.id
-          this.bookmarked = true
-        })
-        .catch(err=>console.error(err))
-      }
-    },
+
+    // 북마크 겟
+    // isbookmarked: function(){
+    //   if(this.$store.state.auth.user){
+    //     axios({
+    //       baseURL: SERVER_URL,
+    //       method: 'get',
+    //       url: `/users/${this.$store.state.auth.user.id}/bookmark/${this.conference.id}`
+    //     })
+    //     .then(res=>{
+    //       this.bookmarkId = res.data.id
+    //       this.bookmarked = true
+    //     })
+    //     .catch(err=>console.error(err))
+    //   }
+    // },
     checkAttends: function(){
       axios({
         baseURL: SERVER_URL,
@@ -194,15 +225,24 @@ export default {
       const nowval = now.valueOf()
       return (startval < nowval) && (nowval < endval)
     }
-  },  
+  },
+
+  computed: {
+    ...mapState(['auth'])
+  },
+
   mounted(){
-    this.$nextTick(function(){      
-      this.activeCheck()      
-      this.isbookmarked()
-      this.checkAttends()
+    this.$nextTick(function(){    
+
+      
+      // this.activeCheck()      
+      // this.isbookmarked()
+      // this.checkAttends()
+
+
       if(this.$store.state.auth.user) this.userId = this.$store.state.auth.user.id
     })
-  }
+  },
 }
 </script>
 <style scoped>
