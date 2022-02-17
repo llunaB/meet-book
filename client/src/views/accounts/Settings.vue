@@ -100,7 +100,6 @@ export default {
   data() {
     return {
       user: {},
-      token: null,
       genderGroup: ['', '남자', '여자'],
       name: this.$store.state.auth.user.id,
       userEmail: this.$store.state.auth.user,
@@ -167,7 +166,7 @@ export default {
     userProfile() {
       axios({
         baseURL: SERVER_URL,
-        url: '/users/' + this.token,
+        url: '/users/' + this.$store.state.auth.user.id,
         method: 'GET',
         headers: {
             'X-AUTH-TOKEN': this.$store.state.auth.user.token
@@ -205,7 +204,6 @@ export default {
     },
   },
   beforeMount() {
-    this.token = parseInt(JSON.parse(Buffer.from(this.$store.state.auth.user.token.split('.')[1], 'base64'))["sub"])
     this.userProfile()
   },
 }

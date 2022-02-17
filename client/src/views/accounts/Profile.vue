@@ -87,7 +87,6 @@ export default {
   data() {
     return {
       user: {},
-      token: null,
       conference: '',
       conferences: [],
       searchUser : null,
@@ -106,14 +105,13 @@ export default {
     userProfile() {
       axios({
         baseURL: SERVER_URL,
-        url: '/users/' + this.token,
+        url: '/users/' + this.$store.state.auth.user.id,
         method: 'GET',
         headers: {
             'X-AUTH-TOKEN': this.$store.state.auth.user.token
           },
       })
       .then(res => {
-        res.data['token'] = this.$store.state.auth.user.token
         this.user = res.data
       })
       .catch(() => {})
@@ -154,7 +152,6 @@ export default {
     }
   },
   beforeMount() {
-    this.token = parseInt(JSON.parse(Buffer.from(this.$store.state.auth.user.token.split('.')[1], 'base64'))["sub"])
     this.searchUser = JSON.parse(this.$route.query.data)['userId']
     this.userProfile()
     this.userBookmark()
