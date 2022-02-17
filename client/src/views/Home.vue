@@ -82,7 +82,7 @@
       }
     },
     onMount() {
-      return window.location.reload(true);
+      window.location.reload(true)
     }
   }
 </script>

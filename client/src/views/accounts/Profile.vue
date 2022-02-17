@@ -32,7 +32,7 @@
         <v-btn v-if="searchUser === this.$store.state.auth.user.id" rounded class="primary" href="conference">참여하러가기</v-btn>
       </v-item-group>
       <div v-else>
-        <h3>최근 참가한 모임</h3>
+        <h3>북마크한 모임</h3>
         <v-item-group>
           <v-container>
             <v-row>
@@ -41,26 +41,26 @@
                   <v-card
                     class="bookcard"
                     max-width="0"
-                    :to="{name: 'Bookinfo', params: {id: item.book.id}}"
+                    :to="{path: `/conference/${item.conference.id}`}"
                       >
                       <template>
                         <div class="book">
                           <div class="back"></div>
                           <div class="page6">
                             <v-card-text style="padding:0;">
-                              <v-card-title style="font-size:15px; font-weight:bold;">{{ item.title }}</v-card-title>
+                              <v-card-title style="font-size:15px; font-weight:bold;">{{ item.conference.title }}</v-card-title>
                               <v-card-subtitle >
-                                모임 날짜: {{ item.callStartTime.slice(0, 10) }}
+                                모임 날짜: {{ item.conference.callStartTime.slice(0, 10) }}
                                 <hr>
-                                시작 시간: {{ item.callStartTime.slice(11, 19) }}
+                                시작 시간: {{ item.conference.callStartTime.slice(11, 19) }}
                                 <br>
-                                종료 시간: {{ item.callEndTime.slice(11, 19) }}
+                                종료 시간: {{ item.conference.callEndTime.slice(11, 19) }}
                               </v-card-subtitle>
                             </v-card-text>
                           </div>
                           <div class="page5" /><div class="page4" /><div class="page3" /><div class="page2" /><div class="page1" />
                           <div class="front">
-                            <v-img :src="item.book.bookThumbnailUrl" contain />
+                            <v-img :src="item.conference.book.bookThumbnailUrl" contain />
                           </div>
                         </div>
                       </template>
@@ -120,24 +120,8 @@ export default {
         baseURL: SERVER_URL,
         url:`/users/${this.searchUser}/bookmark`,
         method: 'GET',
-        headers: {
-          'X-AUTH-TOKEN': this.$store.state.auth.user.token
-        }
       })
-      .then(res => {
-        for (let index = 0; index < res.data.length; index++) {
-          axios({
-            baseURL: SERVER_URL,
-            url: `/conference/${(res.data[index].conferenceId).toString()}`,
-            method: 'GET',
-          })
-          .then(res => {
-            if (!this.conferences.includes(res.data)) this.conferences.push(res.data)
-            this.cnt += 1
-          })
-          .catch(e => console.log(e))
-        }
-      })
+      .then(res => this.conferences = res.data)
       .catch(e => console.log(e))
     },
   },
