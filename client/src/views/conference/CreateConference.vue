@@ -116,12 +116,8 @@ export default {
     date_time: moment().add(1, 'hours').format('YYYY-MM-DDTHH:00'),
     date_time_now: moment().format('YYYY-MM-DDTHH:mm'),
 
-    // date_time: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 14) + "00",
-    // date_time_now: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 14) + "00",
 
     date_menu: false,
-    date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-    nowDate: new Date().toISOString().slice(0,10),
     dateRules: [
       v => !!v || '날짜를 설정해주세요.',
       // v => v - this.nowDate < 0 || '오늘 이후의 날짜를 설정해주세요.',
@@ -173,7 +169,7 @@ export default {
       const endTime = moment(this.date_time, 'YYYY-MM-DDTHH:mm').add(1, 'hours').format('YYYY-MM-DDTHH:mm')
       
       
-
+      console.log(this.date_time)
       const conference = {
         userId: this.$store.state.auth.user.id,
         title: this.title,
