@@ -6,8 +6,8 @@
         <p class="text-center body-1">해당 회의는 비밀번호가 설정되어 있습니다. <br>비밀번호를 입력해주세요.</p>
         <p class="body-2">비밀번호 문제: {{ conference.question }}</p>
         <v-text-field solo v-model="confPassword"></v-text-field>
-        <div class="d-flex justify-space-around">
-          <v-btn color="primary" class="my-5" @click="inputPassword(confPassword)">
+        <div class="d-flex justify-space-around" >          
+          <v-btn  color="primary" class="my-5" @click="inputPassword(confPassword)">
             입력
           </v-btn>
           <v-btn class="my-5" :to="{name: 'Home'}">
@@ -28,7 +28,10 @@
         <v-spacer></v-spacer>
 
         <div class="d-flex justify-space-around">
-          <v-btn color="primary" class="my-5" @click="joinSession(); yetSession = false">
+          <v-btn v-if="attendCheck===false" color="primary" class="my-5" @click="checkParticipants() ; attendCheck=true">
+            인원체크
+          </v-btn>
+          <v-btn v-else color="primary" class="my-5" @click="enterRoom">
             입장
           </v-btn>
           <v-btn class="my-5" :to="{name: 'Home'}">
@@ -122,7 +125,7 @@
                       소리 켜기
                     </v-list-item>
                     <v-divider></v-divider>
-                    <v-list-item link @click="onKick(n)">
+                    <v-list-item v-if="OV.role === 'MODERATOR'" link @click="kickUser(sub.stream.connection)">
                       강퇴
                     </v-list-item>
                   </v-list>
@@ -240,9 +243,9 @@ export default {
 
       yetSession: true,
       yetPassword: true,
-      session: undefined,
-      
-      participants: null,
+      session: undefined,      
+
+      participants: 0,
       showMenu: false,
 
       token: null,
@@ -267,6 +270,10 @@ export default {
       // ConferenceMeeting 신규 기능 관련 변수
       banTo: 0,
       silenceTo: 0,
+      nIntervalId : null,
+
+      // 비동기 문제
+      attendCheck: false,
 
     }
   },
@@ -300,18 +307,24 @@ export default {
       console.log(response)
       if (response.data) {
         this.conference = response.data
+        if(response.data.password === null || response.data.password === '') {
+          this.yetPassword = false
+        }
       }
     })
     .catch(error => {
       console.log(error)
     })
 
+    
 
-    if (this.conference.password !== null && this.conference.password !== '' ) {
-      this.yetPassword = true
-    } else {
-      this.yetPassword = false
-    }
+
+    // if (this.conference.password === null && this.conference.password !== '' ) {
+    //   this.yetPassword = true
+    // } else {
+    //   this.yetPassword = false
+    //   console.log("password!!",this.conference.password)
+    // }
   },
 
   methods: {
@@ -365,8 +378,7 @@ export default {
       // })
 
       this.session.on('signal:kick-msg', () => {        
-        alert("강퇴당했습니다.")
-        this.$router.push({ name: 'Home'})        
+        this.leaveSession()       
       })
 
 
@@ -444,6 +456,7 @@ export default {
 			this.publisher = undefined;
 			this.subscribers = [];
 			this.OV = undefined;
+      this.nIntervalId = null;
 
       window.removeEventListener('beforeunload', this.leaveSession);
 
@@ -558,26 +571,26 @@ export default {
     inputPassword: function (str) {
       if (str === this.conference.password) {
         this.yetPassword = false
+      } else {
+        alert("비밀번호가 틀렸습니다.")
+        this.confPassword = ''
       }
     },
 
     // ConferenceMeeting 신규 기능
-    kickUser(){
-      console.log("connection:", this.connections[this.banTo])
-      if(this.banTo !== 0){
-        this.session.signal({
-          to: [this.connections[this.banTo]],
-          type: 'kick-msg'
-        })
-        .then(res => console.log(res))
-        .catch(err => console.error(err))
-        // axios({
-        //   method:'get',
-          
-        // })
-        this.session.forceDisconnect(this.connections[this.banTo])
-        this.banTo = 0
-      }
+    kickUser(someConnection){
+      console.log("connection:", someConnection)
+      
+      this.session.signal({
+        to: [someConnection],
+        type: 'kick-msg'
+      })
+      .then(res => console.log(res))
+      .catch(err => console.error(err))
+      
+      this.session.forceDisconnect(someConnection)
+      
+      
     },
     republish(){
       this.session.publish(this.publisher)
@@ -590,6 +603,69 @@ export default {
       this.session.forceUnpublish(this.subscribers[this.silenceTo].stream)
       this.silenceTo = 0
     },
+    checkTime(){
+      const startTime = new Date(this.conference.callStartTime)
+      const startVal = startTime.valueOf() - 32400000
+      const endTime = new Date(this.conference.callEndTime)
+      const endVal = endTime.valueOf() - 32400000
+      const now = new Date()
+      const nowVal = now.valueOf()
+      return (startVal <= nowVal) && (nowVal <= endVal)
+    },
+    checkParticipants(){
+      axios({
+        baseURL: SERVER_URL,
+        method: 'get',
+        url: `/conference/${this.conference.id}/attend`
+      })
+      .then(res=>{
+        this.participants = res.data.data
+        console.log("p-check",res)})
+      .catch(err=>console.error(err))
+    },
+    enterRoom(){
+      this.checkParticipants()
+      if(this.checkTime()){
+        if(this.participants === 0){
+          if (this.auth.user.id === this.conference.user.id){
+            this.joinSession()
+            this.yetSession = false
+            this.checkTimeOut()
+          } else {
+            alert('개설자가 회의를 개설할 때까지 기다려주세요.')
+          }
+        } else if(this.participants < this.conference.maxMembers) {
+          this.joinSession()
+          this.yetSession = false
+          this.checkTimeOut()
+        } else {
+          alert('인원이 초과되었습니다.')
+        }
+      } else {
+        alert('회의에 참석할 수 있는 시간이 아닙니다.')
+      }
+    },
+
+    checkTimeOut(){
+      if(!this.nIntervalId){
+        this.nIntervalId = setInterval(this.endTimeCheck,60000)
+        console.log("active!!!")
+      }
+    },
+    endTimeCheck(){
+      const endTime = new Date(this.conference.callEndTime)
+      const endVal = endTime.valueOf() - 32400000
+      const now = new Date()
+      const nowVal = now.valueOf()
+      console.log("timeCheck!!",now)
+      if(nowVal >= endVal){
+        clearInterval(this.nIntervalId)
+        this.nIntervalId = null
+        this.leaveSession()
+        alert('종료시간이 되었습니다.')
+      }
+    }
+
 
     ////
 
