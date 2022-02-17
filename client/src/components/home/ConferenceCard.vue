@@ -88,7 +88,7 @@ export default {
         .then(() => {
           // toggle
           // 응답값을 넣는 방식으로 추후 수정할 것 (실제로 반영이 되었는지 check하기 위함)
-          this.bookmarked = !this.bookmarked
+          this.isBookmarked = !this.isBookmarked
         })
         .catch(error => {
           console.log(`SetBookmarking ${this.conference.id} failed.`)
