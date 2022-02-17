@@ -81,6 +81,7 @@
 
 <script>
 import axios from "axios";
+// import moment from 'moment';
 const SERVER_URL = process.env.VUE_APP_SERVER_URL
 export default {
   name: 'Profile',
@@ -89,7 +90,7 @@ export default {
       user: {},
       conference: '',
       conferences: [],
-      searchUser : this.$route.params.userId,
+      searchUser : null,
       name: this.$store.state.auth.user.id,
       cnt: 0,
       num: '1',
@@ -104,18 +105,19 @@ export default {
       this.$router.push("conference/" + id)
     },
     userProfile() {
-      if (this.searchUser === undefined) {
-        this.searchUser = this.name
-      }
       axios({
         baseURL: SERVER_URL,
         url: '/users/' + this.searchUser,
-        method: 'GET'
+        method: 'GET',
+        headers: {
+          'X-AUTH-TOKEN': this.$store.state.auth.user.token
+        }
       })
         .then(res => this.user = res.data)
         .catch(() => {})
     },
     userBookmark() {
+      console.log(this.searchUser)
       axios({
         baseURL: SERVER_URL,
         url:`/users/${this.searchUser}/bookmark`,
@@ -125,39 +127,21 @@ export default {
         }
       })
       .then(res => {
+        console.log(res.data)
         for (let index = 0; index < res.data.length; index++) {
           axios({
             baseURL: SERVER_URL,
-            url: `/conference/${res.data[index].conferenceId}`,
-            method: 'GET',
+          url: `/conference/${res.data[index].conferenceId}`,
+          method: 'GET',
           })
           .then(res => {
-            let date = new Date()
-            console.log(date)
+            console.log(res.data)
             if (!this.conferences.includes(res.data)) this.conferences.push(res.data)
             this.cnt += 1
           })
-        }
-        console.log(this.conferences)
-        if (this.cnt >= 500) {
-          this.cnt = 500
-        } else if (this.cnt >= 250) {
-          this.num = '250'
-        } else if (this.cnt >= 100) {
-          this.num = '100'
-        } else if (this.cnt >= 50) {
-          this.num = '50'
-        } else if (this.cnt >= 25) {
-          this.num = '25'
-        } else if (this.cnt >= 10) {
-          this.num = '10'
-        } else if (this.cnt >= 5) {
-          this.num = '5'
-        } else if (this.cnt >= 0) {
-          this.num = '1'
-        }
-      })
-      .catch(() => {})
+      }
+    })
+      .catch(e => console.log(e))
     },
     IsLive(id) {
       axios({
@@ -168,6 +152,7 @@ export default {
     }
   },
   beforeMount() {
+    this.searchUser = JSON.parse(this.$route.query.data)['userId']
     this.userProfile()
     this.userBookmark()
   },

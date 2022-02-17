@@ -58,7 +58,7 @@
 
       <v-list v-if="loggedIn">
         <v-list-item
-          v-for="(item, index) in profileMenuItems" :key="index" :to="item.to">
+          v-for="(item, index) in profileMenuItems" :key="index" :to="{path: item.to, query: {data: JSON.stringify({userId: user.id})}}">
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
 
@@ -133,11 +133,6 @@ export default {
       return this.$store.state.auth.status.loggedIn
     },
   },
-  beforeMount() {
-    if (this.loggedIn()) {
-      this.user = this.$store.state.auth.user
-    }
-  }
 }
 </script>
 

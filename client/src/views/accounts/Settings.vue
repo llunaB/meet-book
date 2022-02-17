@@ -149,7 +149,10 @@ export default {
           baseURL: SERVER_URL,
           url: `/users/${this.name}/detail`,
           method: 'PUT',
-          data: {'newPassword': this.newPassword}
+          data: {'newPassword': this.newPassword},
+          headers: {
+            'X-AUTH-TOKEN': this.$store.state.auth.user.token
+          }
         })
         .then(() => {
           this.submitMessage = '비밀번호가 변경되었습니다.'
@@ -168,7 +171,7 @@ export default {
         method: 'GET',
         headers: {
         "X-Auth-Token": this.$store.state.auth.user.token,
-        "content-type": "application/json"}
+        }
       })
       .then(res => {this.user = res.data
       console.log(this.user)})
@@ -179,9 +182,13 @@ export default {
         baseURL: SERVER_URL,
         url:`/users/${this.name}`,
         method: 'DELETE',
+        headers: {
+          'X-AUTH-TOKEN': this.$store.state.auth.user.token
+        },
         data: {
           "password": this.resign,
         },
+        
       })
       .then(() => {
         alert('탈퇴되었습니다.')
