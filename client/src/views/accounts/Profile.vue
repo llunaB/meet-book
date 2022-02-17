@@ -40,30 +40,31 @@
                 <v-item>
                   <v-card
                     class="bookcard"
-                    max-width="0"
-                    :to="{path: `/conference/${item.conference.id}/main`}"
-                      >
-                      <template>
-                        <div class="book">
-                          <div class="back"></div>
-                          <div class="page6">
-                            <v-card-text style="padding:0;">
-                              <v-card-title style="font-size:15px; font-weight:bold;">{{ item.conference.title }}</v-card-title>
-                              <v-card-subtitle >
-                                모임 날짜: {{ item.conference.callStartTime.slice(0, 10) }}
-                                <hr>
-                                시작 시간: {{ item.conference.callStartTime.slice(11, 19) }}
-                                <br>
-                                종료 시간: {{ item.conference.callEndTime.slice(11, 19) }}
-                              </v-card-subtitle>
-                            </v-card-text>
-                          </div>
-                          <div class="page5" /><div class="page4" /><div class="page3" /><div class="page2" /><div class="page1" />
-                          <div class="front">
-                            <v-img :src="item.conference.book.bookThumbnailUrl" contain />
+                    max-width="0">
+                    <template>
+                      <div class="book">
+                        <div class="back" />
+                        <div class="page6">
+                          <v-card-text style="padding:0;">
+                            <v-card-title style="font-size:15px; font-weight:bold;">{{ item.conference.title }}</v-card-title>
+                            <v-card-subtitle >
+                              모임 날짜: {{ item.conference.callStartTime.slice(0, 10) }}
+                              <hr>
+                              시작 시간: {{ item.conference.callStartTime.slice(11, 19) }}
+                              <br>
+                              종료 시간: {{ item.conference.callEndTime.slice(11, 19) }}
+                            </v-card-subtitle>
+                          </v-card-text>
+                          <div class="container" style="text-align: center;">
+                            <v-btn class="primary" v-if="isLive(item.conference.id)" @click="GoToConference(item.conference.id)">참여하기</v-btn>
                           </div>
                         </div>
-                      </template>
+                        <div class="page5" /><div class="page4" /><div class="page3" /><div class="page2" /><div class="page1" />
+                        <div class="front">
+                          <v-img :src="item.conference.book.bookThumbnailUrl" contain />
+                        </div>
+                      </div>
+                    </template>
                   </v-card>
                 </v-item>
               </v-col>
@@ -96,8 +97,17 @@ export default {
     onclick(item) {
       this.conference = item
     },
+    isLive(id) {
+      axios({
+        baseURL: SERVER_URL,
+        url: `/conference/${id}/live`,
+        method: 'GET',
+      }).then(res => {
+        return res.data
+        })
+    },
     GoToConference(id) {
-      this.$router.push("conference/" + id)
+      this.$router.push({path: `/conference/${id}/main`})
     },
     userProfile() {
       if (this.searchUser === undefined || this.searchUser === null) this.searchUser = this.$store.state.auth.user.id
