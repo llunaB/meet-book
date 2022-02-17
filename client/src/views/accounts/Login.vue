@@ -5,9 +5,8 @@
         <div class="col-lg-4 col-md-6 col-sm-8 mx-auto">
           <!-- 로그인 전체 Form Start-->
           <div class="card flex-grid login">
-            <main>
-              <h2>로 그 인</h2>
-            </main>
+            <main><h2>로 그 인</h2></main>
+            
             <form class="form-group my-3" @submit.prevent="handleLogin">
               <!-- Email 로그인 Form -->
               <v-text-field
