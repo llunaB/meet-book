@@ -16,8 +16,6 @@
                 <v-text-field type="email" label="* Email" hide-details="auto" :rules="Message"
                               v-model="user.email" id="email-signup" required />
 
-                <v-btn rounded elevation="3" class="row-2" color="#fffdad"
-                       @click="emailDuplication">이메일 중복확인</v-btn>
               </div>
               <!--       인증번호 전송 후, 값 확인하는 Form       -->
               <div v-if="cert_key" class="row my-3" style="align-items: baseline">
@@ -27,6 +25,10 @@
 
                 <v-btn rounded @click="confirmKey" elevation="5" color="#fffdad"
                        :disabled="validated_key">인증번호 확인</v-btn>
+              </div>
+              <div v-else class="my-3 py-3" style="align-items: baseline">
+                <v-btn rounded elevation="3" class="row-2" color="primary"
+                       @click="emailDuplication">이메일 중복확인</v-btn>
               </div>
               <div class="row">
                 <!-- Password 회원가입 Form -->
@@ -43,7 +45,7 @@
               <br>
               <h5><strong>* 표시는 필수 입력값입니다.</strong></h5>
               <div class="field text-center" id="submit-signup-form">
-                <v-btn elevation="11" type="submit" color="#fffdad">가입하기</v-btn>
+                <v-btn elevation="11" type="submit" color="primary">가입하기</v-btn>
                 <br>
                 <a role="link" :href="'Login'">계정이 이미 있으신가요?</a>
               </div>
