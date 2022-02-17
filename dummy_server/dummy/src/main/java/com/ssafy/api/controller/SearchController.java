@@ -200,7 +200,7 @@ public class SearchController {
 	}
 	
 	@GetMapping("/conference/join/{userId}")
-	public ResponseEntity<Page<GetConferencesRes>> getJoinedConferencesByUser(@RequestParam("userId") String id, @RequestParam("page") Integer page , @RequestParam("size") Integer size, @AuthenticationPrincipal User userEntity){
+	public ResponseEntity<Page<GetConferencesRes>> getJoinedConferencesByUser(@PathVariable("userId") String id, @RequestParam("page") Integer page , @RequestParam("size") Integer size, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 		

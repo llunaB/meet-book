@@ -398,6 +398,23 @@ public class ConferenceService {
 		}
 	}
 	
+	public Page<GetConferencesRes> getConfrerencesByBookmarkUserId(int userId, Pageable pageable){
+		Page<GetConferencesRes> list = Page.empty();
+		try {
+			Page<ConferenceOnly> data = bookmarkRepository.findByUserId(userId, pageable);
+			list = data.map(source ->{ 
+				GetConferencesRes result = modelMapper.map(source.getConference(), GetConferencesRes.class);
+				result.setBookmark(bookmarkRepository.findByConferenceId(source.getConference().getId()).stream().map(source2 -> source2.getUser().getId()).collect(Collectors.toList()));
+				if(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getConference().getId())) != null) result.setAttendMember(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getConference().getId())).size());
+				else result.setAttendMember(0);
+				return result;});
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
 	public Conference updateConferenceEntity(Conference target, Conference data) {
 		target.setBook(data.getBook());
 		target.setUser(data.getUser());

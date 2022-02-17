@@ -6,19 +6,21 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import com.ssafy.DTO.BookmarkDTO;
 import com.ssafy.api.responseDto.GetBookmarksRes;
+import com.ssafy.api.responseDto.GetConferencesRes;
 import com.ssafy.db.entity.Bookmark;
 import com.ssafy.db.entity.Conference;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.mapping.ConferenceOnly;
 import com.ssafy.db.repository.BookmarkRepository;
 import com.ssafy.db.repository.ConferenceRepository;
 import com.ssafy.db.repository.UserRepository;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class BookmarkService {
@@ -102,6 +104,8 @@ public class BookmarkService {
 			return false;
 		}
 	}
+	
+	
 	
 	public boolean deleteBookmark(int id) {
 		try {
