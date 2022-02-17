@@ -4,7 +4,7 @@
   elevation="0"
   :to="{
     name: 'Profile',
-    params: { userId: person.id }
+    query: {data: JSON.stringify( {userId: person.id} ) },
   }">
   <v-card-title>
     <v-avatar

@@ -81,6 +81,7 @@
 
 <script>
 import axios from "axios";
+// import moment from 'moment';
 const SERVER_URL = process.env.VUE_APP_SERVER_URL
 export default {
   name: 'Profile',
@@ -89,7 +90,7 @@ export default {
       user: {},
       conference: '',
       conferences: [],
-      searchUser : this.$route.params.userId,
+      searchUser : null,
       name: this.$store.state.auth.user.id,
       cnt: 0,
       num: '1',
@@ -116,6 +117,7 @@ export default {
         .catch(() => {})
     },
     userBookmark() {
+      
       axios({
         baseURL: SERVER_URL,
         url:`/users/${this.searchUser}/bookmark`,
@@ -125,6 +127,9 @@ export default {
         }
       })
       .then(res => {
+        console.log(res.data)
+        console.log(this.searchUser)
+
         for (let index = 0; index < res.data.length; index++) {
           axios({
             baseURL: SERVER_URL,
@@ -132,8 +137,7 @@ export default {
             method: 'GET',
           })
           .then(res => {
-            let date = new Date()
-            console.log(date)
+            console.log(res.data)
             if (!this.conferences.includes(res.data)) this.conferences.push(res.data)
             this.cnt += 1
           })
@@ -168,6 +172,7 @@ export default {
     }
   },
   beforeMount() {
+    this.searchUser = JSON.parse(this.$route.query.data)['userId']
     this.userProfile()
     this.userBookmark()
   },
