@@ -211,6 +211,7 @@
 
 <script>
 import axios from 'axios'
+import moment from 'moment'
 import { OpenVidu } from 'openvidu-browser'
 import UserVideo from '@/components/conference/UserVideo'
 import Chat from '@/components/conference/Chat'
@@ -604,13 +605,8 @@ export default {
       this.silenceTo = 0
     },
     checkTime(){
-      const startTime = new Date(this.conference.callStartTime)
-      const startVal = startTime.valueOf() - 32400000
-      const endTime = new Date(this.conference.callEndTime)
-      const endVal = endTime.valueOf() - 32400000
-      const now = new Date()
-      const nowVal = now.valueOf()
-      return (startVal <= nowVal) && (nowVal <= endVal)
+      const nowMoment = moment()
+      return (moment(this.conference.callStartTime).isBefore(nowMoment) && nowMoment.isBefore(moment(this.conference.callEndTime)))
     },
     checkParticipants(){
       axios({
