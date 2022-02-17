@@ -162,16 +162,16 @@
             </div>
           </v-card>
           <!-- 사용자 선택 -->
-          <div class="talkTo">
+          <div class="ChatConnection">
             <!-- <v-select label="누구에게 메시지를 보낼까요?" v-model="chatConnection">
 
             </v-select> -->
 
 
-            <select v-model="talkTo">
+            <select v-model="chatConnection">
               <option value="0">모두에게</option>
-              <option v-for="(connection,n) in connections" :key="n" :value="n">
-                {{n!==0 ? JSON.parse(connection.data.split('%')[0]).clientData : "모두에게"}}
+              <option v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :value="sub.stream.connection.connectionId">
+                {{sub.stream.connection.length !== 0 ? JSON.parse(sub.stream.connection.data.split('%')[0]).clientData : "모두에게"}}
               </option>
             </select>
           </div>
@@ -264,7 +264,6 @@ export default {
       inputChat: '',
       errorDialog: false,
 
-      connections: [],
       chatConnection: 0,
       chatlog: [],
 
@@ -364,19 +363,19 @@ export default {
         })
       })
 
-      this.session.on('connectionCreated', (event) => {
-        this.connections.push(event.connection)        
-        console.log("connections:", this.connections)
-      })
+      // this.session.on('connectionCreated', (event) => {
+      //   this.connections.push(event.connection)        
+      //   console.log("connections:", this.connections)
+      // })
 
-      this.session.on('connectionDestroyed', (event)=> {
-        console.log("disconnection:", event)
-        const index = this.connections.indexOf(event.connection, 0)
-        console.log("index:", index)
-        if (index >= 0) {
-          this.connections.splice(index, 1)
-        }
-      })
+      // this.session.on('connectionDestroyed', (event)=> {
+      //   console.log("disconnection:", event)
+      //   const index = this.connections.indexOf(event.connection, 0)
+      //   console.log("index:", index)
+      //   if (index >= 0) {
+      //     this.connections.splice(index, 1)
+      //   }
+      // })
 
       this.session.on('signal:kick-msg', () => {        
         this.leaveSession()       
@@ -540,7 +539,7 @@ export default {
     // },
 
     sendMessage: function () {
-      if(this.talkTo === 0) {
+      if(this.chatConnection === 0) {
         this.session.signal({
           data: this.inputChat,
           to: [],
@@ -556,7 +555,7 @@ export default {
       } else {
         this.session.signal({
           data: this.inputChat,
-          to: [this.publisher.stream.connection.connectionId, this.talkTo],
+          to: [this.publisher.stream.connection.connectionId, this.chatConnection],
           type: 'my-chat'
         })
         .then(() => {          
