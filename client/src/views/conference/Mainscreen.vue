@@ -649,12 +649,10 @@ export default {
       }
     },
     endTimeCheck(){
-      const endTime = new Date(this.conference.callEndTime)
-      const endVal = endTime.valueOf() - 32400000
-      const now = new Date()
-      const nowVal = now.valueOf()
-      console.log("timeCheck!!",now)
-      if(nowVal >= endVal){
+
+      const now = moment()
+      const isEndtime = moment(this.conference.callEndTime).isBefore(now)
+      if( isEndtime ){
         clearInterval(this.nIntervalId)
         this.nIntervalId = null
         this.leaveSession()
