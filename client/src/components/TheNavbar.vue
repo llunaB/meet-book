@@ -101,7 +101,7 @@ export default {
   name: "navbar",
   data: function () {
     return {
-      user: this.$store.state.auth.user,
+      user: null,
       login: this.$store.state.login,
       profileMenuItems: [
         { title: '내 프로필', to: '/profile' },
@@ -133,6 +133,9 @@ export default {
       return this.$store.state.auth.status.loggedIn
     },
   },
+  mounted() {
+    this.user = this.$store.state.auth.user
+  }
 }
 </script>
 

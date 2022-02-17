@@ -11,7 +11,6 @@ export const auth = {
     state: initialState,
     actions: {
         snslogin({ commit }, user) {
-            console.log(user)
             commit('loginSuccess', user)
             return Promise.resolve(user)
         },
@@ -22,11 +21,10 @@ export const auth = {
                     axios.get(SERVER_URL + '/users/' + result["sub"])
                       .then(res => {
                           res.data['token'] = user.token
-                          console.log(res.data)
                           commit('loginSuccess', res.data)
                           return Promise.resolve(user)
                         })
-                      .catch(e => console.log(e))
+                      .catch(() => {})
                 }).catch(e => {
                     commit('loginFailure')
                     return Promise.reject(e.response.data)})
@@ -42,7 +40,6 @@ export const auth = {
                     commit('registerSuccess')
                     return Promise.resolve(res.data)
                 }).catch(e => {
-                    console.log(e)
                     commit('registerFailure')
                     return Promise.reject(e)})
         }
