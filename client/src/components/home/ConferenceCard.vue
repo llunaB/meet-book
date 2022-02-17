@@ -85,10 +85,8 @@ export default {
           url: `/users/${this.auth.user.id}/bookmark/${this.conference.id}/toggle`,
           headers: {'X-AUTH-TOKEN': this.auth.user.token}
         })
-        .then(() => {
-          // toggle
-          // 응답값을 넣는 방식으로 추후 수정할 것 (실제로 반영이 되었는지 check하기 위함)
-          this.isBookmarked = !this.isBookmarked
+        .then((response) => {
+          this.isBookmarked = response.data.isBookmarked
         })
         .catch(error => {
           console.log(`SetBookmarking ${this.conference.id} failed.`)
