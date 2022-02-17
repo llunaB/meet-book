@@ -25,10 +25,8 @@
         <p class="mt-3">{{conference.description}}</p>
         <p class="mt-5">책: {{conference.book.bookName}}</p>
         <!-- <p>{{conference.id}}</p> -->
-        {{newStartTime}}
-        {{newEndTime}}
-        <p>시작: {{formating(conference.callStartTime)}}</p>
-        <p>종료: {{formating(conference.callEndTime)}}</p>
+        <p>시작: {{newStartTime}}</p>
+        <p>종료: {{newEndTime}}</p>
         <p v-bind:class="{'color-red': conference.attendMember >= conference.maxMembers}">참여인원 / 최대인원: {{conference.attendMember}} / {{conference.maxMembers}}</p>
       </v-card-text>
       <v-btn class="lock mx-3" @click="lockClick">
@@ -109,38 +107,45 @@ export default {
         this.$router.push({name: 'Login'})
       }
     },
-    formating: function(time){
-      if(time){
-        const date = time.split("T")[0]
-        const clock = time.split("T")[1].split(".")[0]
-        const dateSplited = date.split("-")
-        const year = dateSplited[0]
-        const month = dateSplited[1]
-        const day = dateSplited[2]
-        return `${year.slice(2,4)}.${month}.${day} ${clock.slice(0,5)}`
-      } else {
-        return null
-      }
-    },
+    // formating: function(time){
+    //   if(time){
+    //     const date = time.split("T")[0]
+    //     const clock = time.split("T")[1].split(".")[0]
+    //     const dateSplited = date.split("-")
+    //     const year = dateSplited[0]
+    //     const month = dateSplited[1]
+    //     const day = dateSplited[2]
+    //     return `${year.slice(2,4)}.${month}.${day} ${clock.slice(0,5)}`
+    //   } else {
+    //     return null
+    //   }
+    // },
     
-    canOpen: function(){
-      const startTime = new Date(this.conference.callStartTime)
-      const startval = startTime.valueOf() - 32400000
-      const endTime = new Date(this.conference.callEndTime)
-      const endval = endTime.valueOf() - 32400000
-      const now = new Date()
-      const nowval = now.valueOf()
-      return (startval < nowval) && (nowval < endval)
-    }
+    // canOpen: function(){
+    //   const now = moment()
+      
+
+    //   const startTime = new Date(this.conference.callStartTime)
+    //   const startval = startTime.valueOf() - 32400000
+    //   const endTime = new Date(this.conference.callEndTime)
+    //   const endval = endTime.valueOf() - 32400000
+    //   const now = new Date()
+    //   const nowval = now.valueOf()
+    //   return (startval < nowval) && (nowval < endval)
+    // }
   },
 
   computed: {
 
     newStartTime: function () {
-      return moment(this.conference.callStartTime)
+      return moment(this.conference.callStartTime).format('M월 D일 A HH:mm')
     },
     newEndTime: function () {
-      return moment(this.conference.callEndTime)
+      return moment(this.conference.callEndTime).format('M월 D일 A HH:mm')
+    },
+    canOpen: function () {
+      const nowMoment = moment()
+      return (moment(this.conference.callStartTime).isBefore(nowMoment) && nowMoment.isBefore(moment(this.conference.callEndTime)))
     },
 
     ...mapState(['auth'])
