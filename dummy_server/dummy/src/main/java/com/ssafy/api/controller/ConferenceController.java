@@ -128,6 +128,7 @@ public class ConferenceController {
 
 	@GetMapping("/{id}/list")
 	public ResponseEntity<Page<GetConferencesRes>> getConferencesById(@PathVariable("id") String id, @AuthenticationPrincipal User userEntity){
+		log.info("**conference : " + userEntity.toString());
 		Page<GetConferencesRes> response = Page.empty();
 		PageRequest request =PageRequest.of(0, 5); //검색을 원하는 페이지, 개수
 		

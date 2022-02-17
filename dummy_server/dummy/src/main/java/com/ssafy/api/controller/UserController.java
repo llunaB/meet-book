@@ -195,7 +195,9 @@ public class UserController {
 	
 	@PutMapping("/{id}/detail")
 	public ResponseEntity<Map<String,String>> updateUserByDetail(@PathVariable("id") String id,@RequestBody UpdateUserByDetailReq updateUserByDetailReq, @AuthenticationPrincipal User userEntity){
-		
+
+		log.info("id : "+ id);
+
 		HashMap<String, String> map = new HashMap<String, String>();
 		
 		if(!checkUser(id, userEntity)) {
@@ -215,7 +217,9 @@ public class UserController {
 	
 	@PutMapping("/{id}/Password")
 	public ResponseEntity<Map<String,String>> updatePassword(@PathVariable("id") String id,@RequestBody UpdatePasswordReq updatePasswordReq, @AuthenticationPrincipal User userEntity){
-		
+
+		log.info("pwd : "+id);
+
 		HashMap<String, String> map = new HashMap<String, String>();
 		
 		if(!checkUser(id, userEntity)) {
@@ -236,7 +240,8 @@ public class UserController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Map<String,String>> deleteUser(@RequestBody DeleteUserReq deleteUserReq, @PathVariable("id") String id, @AuthenticationPrincipal User userEntity){
 		HashMap<String, String> map = new HashMap<String, String>();
-		
+
+		log.info("id : "+id);
 		if(!checkUser(id, userEntity)) {
 			map.put("message", "삭제 실패");
 			return new ResponseEntity<Map<String,String>>(map, HttpStatus.FORBIDDEN);
