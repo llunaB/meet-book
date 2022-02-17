@@ -17,8 +17,7 @@ import com.ssafy.db.entity.User;
 @Repository
 public interface ConferenceRepository extends JpaRepository<Conference, Integer> {
 	Page<Conference> findByTitleContaining(String title, Pageable pageable);
-	@Query(value = "select * from conference where book_id in :types", nativeQuery = true)
-	Page<Conference> findConferencesByBook(@Param("types") List<Book> books, Pageable pageable);
+	Page<Conference> findConferencesByBookBookNameContaining(String bookName, Pageable pageable);
 	Page<Conference> findConferencesByUserNicknameContaining(String nickname, Pageable pageable);
 	Page<Conference> findConferencesByUserNickname(String nickname, Pageable pageable);
 	Page<Conference> findByTagsContaining(String tags, Pageable pageable);

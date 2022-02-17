@@ -1,5 +1,6 @@
 <template>
   <div class="card-container text-center loginClass">
+      <v-container>
       <div class="signup-form-group row">
         <div class="col-lg-4 col-md-6 col-sm-8 mx-auto">
           <!-- 회원가입 전체 Form Start-->
@@ -55,6 +56,7 @@
             <!-- 회원가입 전체 Form End -->
         </div>
       </div>
+      </v-container>
   </div>
 </template>
 

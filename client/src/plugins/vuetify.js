@@ -18,6 +18,7 @@ export default new Vuetify({
       light: {
         primary: '#568D6C', // 녹색
         secondary: '#1E1E1E', // 검정
+        third: '#C8DBCF', //아주 연한 연두색
         accent: '#FFB61D', // 골드
         error: '#F7DBCE',
         

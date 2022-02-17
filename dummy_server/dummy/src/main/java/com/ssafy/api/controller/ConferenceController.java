@@ -1,5 +1,6 @@
 package com.ssafy.api.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,7 @@ import com.ssafy.api.requestDto.conference.ForceDisconnectReq;
 import com.ssafy.api.requestDto.conference.ForceUnpublishReq;
 import com.ssafy.api.requestDto.conference.LeaveConferenceReq;
 import com.ssafy.api.responseDto.GetConferencesRes;
+import com.ssafy.api.responseDto.GetUserByProfileRes;
 import com.ssafy.api.service.ConferenceService;
 import com.ssafy.db.entity.User;
 
@@ -71,8 +73,12 @@ public class ConferenceController {
 		
 		HashMap<String, String> map = new HashMap<String, String>();
 		try {
-			conferenceService.createConference(conferenceDto);
-			map.put("message", "회의 생성 성공");
+			if(conferenceService.createConference(conferenceDto)) {
+				map.put("message", "회의 생성 성공");
+			}else {
+				map.put("message", "회의 생성  실패");
+			}
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 			map.put("message", "회의 생성  실패");
@@ -81,12 +87,12 @@ public class ConferenceController {
 	}
 	
 	@GetMapping("/list")
-	public ResponseEntity<Page<GetConferencesRes>> getConferences(@RequestParam("size") Integer size, @RequestParam("page") Integer page){
+	public ResponseEntity<Page<GetConferencesRes>> getConferences(@RequestParam("size") Integer size, @RequestParam("page") Integer page, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> list = Page.empty();
 		PageRequest request = PageRequest.of(page, size);
 		
 		try {
-			list = conferenceService.getConferences(request);
+			list = conferenceService.getConferences(request, userEntity);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -108,12 +114,31 @@ public class ConferenceController {
 	}
 
 	@GetMapping("/{id}/list")
-	public ResponseEntity<Page<GetConferencesRes>> getConferencesById(@PathVariable("id") String id){
+	public ResponseEntity<Page<GetConferencesRes>> getConferencesById(@PathVariable("id") String id, @AuthenticationPrincipal User userEntity){
 		Page<GetConferencesRes> response = Page.empty();
 		PageRequest request =PageRequest.of(0, 5); //검색을 원하는 페이지, 개수
+		
 		try {
-			response = conferenceService.getConferencesById(Integer.parseInt(id), request);
-			return new ResponseEntity<Page<GetConferencesRes>>(response, HttpStatus.OK);
+//<<<<<<< HEAD
+//			response = conferenceService.getConferencesById(Integer.parseInt(id), request);
+//			return new ResponseEntity<Page<GetConferencesRes>>(response, HttpStatus.OK);
+//=======
+			response = conferenceService.getConferencesById(Integer.parseInt(id), userEntity, request);
+			new ResponseEntity<Page<GetConferencesRes>>(response, HttpStatus.OK);
+		}catch (Exception e){
+			e.printStackTrace();
+			log.info("회의목록 에러");
+		}
+		return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
+	}
+	
+	@GetMapping("/{id}/bookmark")
+	public ResponseEntity<List<GetUserByProfileRes>> getUserById(@PathVariable("id") String id){
+		List<GetUserByProfileRes> response = new ArrayList<GetUserByProfileRes>();
+		
+		try {
+			response = conferenceService.getUsersByBookmarkConference(Integer.parseInt(id));
+			new ResponseEntity<List<GetUserByProfileRes>>(response, HttpStatus.OK);
 		}catch (Exception e){
 			e.printStackTrace();
 			log.info("회의목록 에러");
