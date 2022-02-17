@@ -100,7 +100,8 @@ export default {
       this.$router.push("conference/" + id)
     },
     userProfile() {
-      if (this.searchUser === undefined) this.searchUser = this.$store.state.auth.user.id
+      if (this.searchUser === undefined || this.searchUser === null) this.searchUser = this.$store.state.auth.user.id
+      console.log(this.searchUser)
       axios({
         baseURL: SERVER_URL,
         url: '/users/' + this.searchUser,
@@ -117,7 +118,7 @@ export default {
     userBookmark() {
       axios({
         baseURL: SERVER_URL,
-        url:`/users/${(this.searchUser).toString()}/bookmark`,
+        url:`/users/${this.searchUser}/bookmark`,
         method: 'GET',
         headers: {
           'X-AUTH-TOKEN': this.$store.state.auth.user.token
@@ -131,7 +132,6 @@ export default {
             method: 'GET',
           })
           .then(res => {
-            console.log(res.data)
             if (!this.conferences.includes(res.data)) this.conferences.push(res.data)
             this.cnt += 1
           })
@@ -142,8 +142,7 @@ export default {
     },
   },
   beforeMount() {
-    if (JSON.parse(this.$route.query.data)) this.searchUser = JSON.parse(this.$route.query.data).userId
-    console.log(this.searchUser)
+    if (this.$route.query.data !== undefined) this.searchUser = JSON.parse(this.$route.query.data).userId
     this.userProfile()
     this.userBookmark()
   },
