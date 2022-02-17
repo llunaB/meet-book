@@ -20,93 +20,86 @@
     </div>
     <div class="card-back flex-column" v-bind:class="{backLocked: locked}">
       <v-card-text class="description">
-        <p class="mt-10">책이름: {{conference.book.bookName}}</p>
-        <p>회의명: {{conference.title}}</p>
-        <p>개설자: {{conference.user.nickname}}</p>
-        <p>{{conference.id}}</p>
+        <h3>{{conference.title}}</h3>
+        <h4>{{conference.user.nickname}}</h4>
+        <p class="mt-3">{{conference.description}}</p>
+        <p class="mt-5">책: {{conference.book.bookName}}</p>
+        <!-- <p>{{conference.id}}</p> -->
         <p>시작예정: {{formating(conference.callStartTime)}}</p>
         <p>종료예정: {{formating(conference.callEndTime)}}</p>
-        <p>참여인원 / 최대인원: {{attendMembers}} / {{conference.maxMembers}}</p>
-        <p>설명: {{conference.description}}</p>
+        <p>참여인원 / 최대인원: {{conference.attendMember}} / {{conference.maxMembers}}</p>
       </v-card-text>
       <v-btn class="mx-3 lock" @click="lockClick">
         <v-icon v-if="locked === false">mdi-lock-open-outline</v-icon>
         <v-icon v-else>mdi-lock</v-icon>
       </v-btn>
-      <v-btn class="mx-5 mb-2 enter" @click="goToMeeting(conference.id)" v-if="isActive && (attendMembers < conference.maxMembers)">
+      <v-btn class="mx-5 mb-2 enter" @click="goToMeeting(conference.id)" v-if="isActive && (conference.attendMember < conference.maxMembers)">
         참여하기        
       </v-btn>
-      <v-btn class="mx-5 mb-2 enter" v-else-if="attendMembers >= conference.maxMembers">
+      <v-btn class="mx-5 mb-2 enter" v-else-if="conference.attendMember >= conference.maxMembers">
         최대인원        
       </v-btn>
-      <v-btn class="mx-5 mb-2 enter" @click="goToMeeting(conference.id)" v-else-if="(userId===conference.user.id) 
+      <v-btn class="mx-5 mb-2 enter" @click="goToMeeting(conference.id)" v-else-if="(userId === conference.user.id) 
       && canOpen()">
         개설하기
       </v-btn>
-      <v-btn class="mx-5 mb-2 enter" v-else @click="bookmarking">
-          <v-icon v-if="bookmarked">mdi-bookmark-check</v-icon>
-          <v-icon v-else>mdi-bookmark-check-outline</v-icon>
+      <v-btn class="mx-5 mb-2 enter" v-else @click="setBookmark">
+        <v-icon v-show="isBookmarked">mdi-bookmark-check</v-icon>
+        <v-icon v-show="!isBookmarked">mdi-bookmark-check-outline</v-icon>
       </v-btn>
     </div>    
   </v-card>
 </template>
 <script>
 import axios from 'axios'
+import { mapState } from 'vuex'
 const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
 export default {
   name: "ConferenceCard",
   data(){
     return{
+      userId: -1,
       locked: false,            
-      isActive: null,      
-      bookmarkId: null,
-      bookmarked: false,
-      attendMembers: 0,
-      userId: null,
+      isActive: false,      
+      isBookmarked: false,
     }
   },
   props: {
     conference: Object,
   },
+
   methods: {
     lockClick: function() {      
       this.locked = !this.locked
     },
-    bookmarking: function() {
-      if(this.$store.state.auth.user){
-        if(this.bookmarked) {
-          axios({
-            baseURL: SERVER_URL,
-            method: 'delete',
-            url:`/users/${this.$store.state.auth.user.id}/bookmark/${this.bookmarkId}`,
-            headers: {
-            'X-AUTH-TOKEN': this.$store.state.auth.user.token
-            }
-          })
-          .then(res=>{
-            this.bookmarked = false
-            console.log(res)})
-          .catch(err => console.error(err))
-        } else {
-          axios({
-            baseURL: SERVER_URL,
-            method: 'post',
-            url:`/users/${this.$store.state.auth.user.id}/bookmark/${this.conference.id}`,
-            headers: {
-            'X-AUTH-TOKEN': this.$store.state.auth.user.token
-            }
-          })
-          .then(res=>{
-            this.bookmarked = true
-            this.bookmarkId = res.data.bookmarkId})
-          .catch(err => console.error(err))
 
-        }      
+    setBookmark: function () {
+      // 로그인되어야 동작
+      if (this.auth.user) {
+        console.log(this.auth.user)
+        axios({
+          baseURL: SERVER_URL,
+          method: 'POST',
+          // 추후 수정되기를...
+          url: `/users/${this.auth.user.id}/bookmark/${this.conference.id}/toggle`,
+          headers: {'X-AUTH-TOKEN': this.auth.user.token}
+        })
+        .then(() => {
+          // toggle
+          // 응답값을 넣는 방식으로 추후 수정할 것 (실제로 반영이 되었는지 check하기 위함)
+          this.bookmarked = !this.bookmarked
+        })
+        .catch(error => {
+          console.log(`SetBookmarking ${this.conference.id} failed.`)
+          console.log(error)
+        })
       } else {
+        // 로그인해주세요!
         this.$router.push({name: 'Login'})
       }
     },
+    
     goToMeeting: function(conferenceId){
       if (this.$store.state.auth.user !== null) {
         this.$router.push({ name: 'ConferenceMeeting', params: {conferenceId: conferenceId}})
@@ -128,63 +121,7 @@ export default {
         return null
       }
     },
-    // bookCall: function(){
-    //   axios({
-    //     baseURL: SERVER_URL,
-    //     method: 'get',
-    //     url: `/books/${this.conference.bookId}`
-    //   })
-    //   .then(res => {
-    //     console.log(this.conference.id,"bookload!!")
-    //     this.book = res.data})
-    //   .catch(err => console.error(err))
-    // },
-    activeCheck: function(){
-      axios({
-        baseURL: SERVER_URL,
-        method: 'get',
-        url: `/conference/${this.conference.id}/live`,
-        // headers: {
-        //   'X-AUTH-TOKEN': this.$store.state.auth.user.token
-        // }
-      })
-      .then(res=>this.isActive=res.data)
-      .catch(err=>console.error(err))
-    },
-    // findFounder: function(){
-    //   axios({
-    //     baseURL: SERVER_URL,
-    //     method: 'get',
-    //     url: `/users/${this.conference.userId}`,        
-    //   })
-    //   .then(res=>{
-    //     console.log(this.conference.id,"findNickname!!")
-    //     this.founder=res.data.nickname})
-    //   .catch(err=>console.error(err))
-    // },
-    isbookmarked: function(){
-      if(this.$store.state.auth.user){
-        axios({
-          baseURL: SERVER_URL,
-          method: 'get',
-          url: `/users/${this.$store.state.auth.user.id}/bookmark/${this.conference.id}`
-        })
-        .then(res=>{
-          this.bookmarkId = res.data.id
-          this.bookmarked = true
-        })
-        .catch(err=>console.error(err))
-      }
-    },
-    checkAttends: function(){
-      axios({
-        baseURL: SERVER_URL,
-        method: 'get',
-        url: `/conference/${this.conference.id}/attend`
-      })
-      .then(res=>this.attendMembers = res.data.data)
-      .catch(err=>console.error(err))
-    },
+    
     canOpen: function(){
       const startTime = new Date(this.conference.callStartTime)
       const startval = startTime.valueOf() - 32400000
@@ -194,15 +131,31 @@ export default {
       const nowval = now.valueOf()
       return (startval < nowval) && (nowval < endval)
     }
-  },  
-  mounted(){
-    this.$nextTick(function(){      
-      this.activeCheck()      
-      this.isbookmarked()
-      this.checkAttends()
-      if(this.$store.state.auth.user) this.userId = this.$store.state.auth.user.id
-    })
-  }
+  },
+
+  computed: {
+    ...mapState(['auth'])
+  },
+
+  created: function () {
+    
+    this.userId = this.auth.user ? this.auth.user.id : null
+    // 로그인한 유저라면
+    if (this.auth.user) {
+      // 북마크 유저 목록에 내가 존재하는지 확인
+      this.isBookmarked = this.conference.bookmark.some((e) => {
+        if (e === this.auth.user.id) {
+          return true
+        }
+      })
+    }
+    
+    // 참여 인원이 있다면 Active(=)
+    if (this.conference.attendMember > 0) {
+      this.isActive = true
+    }
+  },
+
 }
 </script>
 <style scoped>
@@ -210,6 +163,8 @@ export default {
   backface-visibility: hidden;
   transition: transform 300ms;
   transition-timing-function: linear;
+  min-width: 220px;
+
   width: 100%;
   height: 100%;
   margin: 0;
