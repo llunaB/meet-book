@@ -132,14 +132,6 @@ p {
   line-height: 1rem;
 }
 
-.card {
-  /* padding: 3rem; */
-  /* border-radius: 10%; */
-  /* glass effect */
-  /* background-color: #ffffff10; */
-  /* backdrop-filter: blur(12px); */
-  /* -webkit-backdrop-filter: blur(12px); */
-}
 
 .form-group > input {
   margin-bottom: 20px;

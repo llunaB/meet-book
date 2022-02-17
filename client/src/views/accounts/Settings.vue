@@ -92,7 +92,6 @@
 
 <script>
 import axios from "axios"
-import User from "@/api/users"
 const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
 
@@ -100,7 +99,7 @@ export default {
   name: "Settings",
   data() {
     return {
-      user: new User(),
+      user: {},
       genderGroup: ['', '남자', '여자'],
       name: this.$store.state.auth.user.id,
       userEmail: this.$store.state.auth.user,
@@ -121,19 +120,20 @@ export default {
       if (this.user.nickname.length) {
         axios({
           baseURL: SERVER_URL,
-          url: `/users/${this.name}`,
+          url: `/users/${this.user.id}`,
           method: 'PUT',
           data: {
             'nickname': this.user.nickname,
-            'profileDescription': this.user.profileDescription,
-            'profileImage': this.user.profileImage,
+            'profileDescription': this.user.profileDescription ? this.user.profileDescription : '',
+            'profileImage': '',
           },
           headers: {
             'X-AUTH-TOKEN': this.$store.state.auth.user.token
           }
         })
         .then(() => setTimeout(() => this.$router.push({name:'Profile'}), 1000))
-        .catch(() => {
+        .catch(e => {
+          console.log(e)
           this.submitMessage = '값을 입력해주세요'
           setTimeout(() => this.snackbar = !this.snackbar, 2000);
         })
@@ -144,10 +144,10 @@ export default {
       }
     },
     passwordEditChange() {
-      if ((this.newPassword === this.newPasswordConfirm) && (this.newPassword.length > 0)) {
+      if ((this.newPassword === this.newPasswordConfirm) && (this.newPassword.length > 0)) {        
         axios({
           baseURL: SERVER_URL,
-          url: `/users/${this.name}/detail`,
+          url: `/users/${this.user.id}/Password`,
           method: 'PUT',
           data: {'newPassword': this.newPassword},
           headers: {
@@ -167,20 +167,22 @@ export default {
     userProfile() {
       axios({
         baseURL: SERVER_URL,
-        url:`/users/${this.name}/detail`,
+        url: '/users/' + this.$store.state.auth.user.id,
         method: 'GET',
         headers: {
-        "X-Auth-Token": this.$store.state.auth.user.token,
-        }
+            'X-AUTH-TOKEN': this.$store.state.auth.user.token
+          },
       })
-      .then(res => {this.user = res.data
-      console.log(this.user)})
+      .then(res => {
+        res.data['token'] = this.$store.state.auth.user.token
+        this.user = res.data
+      })
       .catch(() => {})
     },
     userResign() {
       axios({
         baseURL: SERVER_URL,
-        url:`/users/${this.name}`,
+        url:`/users/${this.user.id}`,
         method: 'DELETE',
         headers: {
           'X-AUTH-TOKEN': this.$store.state.auth.user.token
@@ -193,7 +195,8 @@ export default {
       .then(() => {
         alert('탈퇴되었습니다.')
         setTimeout(() => {
-          localStorage.removeItem('user')
+          localStorage.removeItem('vuex')
+          this.$router.go(0)
           this.$router.push({name: "Home"})}, 100)
       })
       .catch(() => {
@@ -204,7 +207,7 @@ export default {
   },
   beforeMount() {
     this.userProfile()
-  }
+  },
 }
 </script>
 
