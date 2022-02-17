@@ -58,7 +58,7 @@
 
       <v-list v-if="loggedIn">
         <v-list-item
-          v-for="(item, index) in profileMenuItems" :key="index" :to="{path: item.to, query: {data: JSON.stringify({userId: token})}}">
+          v-for="(item, index) in profileMenuItems" :key="index" :to="item.to">
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
 
@@ -137,15 +137,10 @@ export default {
           },
       })
       .then(res => {
-        res.data['token'] = this.$store.state.auth.user.token
         this.user = res.data
       })
-      .catch(() => {})
     },
-
-    
   },
-
   computed: {
     // 로그인 여부 확인
     loggedIn: function () {
