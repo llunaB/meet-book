@@ -257,7 +257,7 @@ public class UserController {
 		HashMap<String, String> map = new HashMap<String, String>();
 		
 		if(!checkUser(userId, userEntity)) {
-			map.put("message", "삭제 실패");
+			map.put("bookmarkId", "-1");
 			return new ResponseEntity<Map<String,String>>(map, HttpStatus.FORBIDDEN);
 		}
 		
@@ -269,6 +269,34 @@ public class UserController {
 			map.put("bookmarkId", "-1");
 			return new ResponseEntity<Map<String,String>>(map, HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	@PostMapping("/{user}/bookmark/{conference}/toggle")
+	public ResponseEntity<Map<String,String>> toggleBookmark(@PathVariable("user") String userId, @PathVariable("conference") String conferenceId){
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		int uid = Integer.parseInt(userId);
+		int cid = Integer.parseInt(conferenceId);
+		
+		try {
+			int bookmarkId = bookmarkService.checkUserHaveBookmark(uid, cid);
+			if (bookmarkId < 0) {
+				//북마크가 없는 경우
+				bookmarkService.createBookmark(uid, cid);
+				map.put("message", "북마크 설정");
+				return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
+			} else {
+				//북마크가 있는 경우
+				bookmarkService.deleteBookmark(bookmarkId);
+				map.put("message", "북마크 해제");
+				return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
+			}
+		}catch(Exception e) {
+			map.put("message", "북마크 토글 오류");
+			return new ResponseEntity<Map<String,String>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
 	}
 	
 	@DeleteMapping("/{user}/bookmark/{bookmark}")

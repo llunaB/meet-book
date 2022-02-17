@@ -47,8 +47,10 @@ public class ConferenceService {
 	private ConferenceHistoryRepository conferenceHistoryRepository;
 	private ModelMapper modelMapper;
 	
+	private SessionService sessionService;
+	
 	@Autowired
-	public ConferenceService(ConferenceRepository conferenceRepository, UserRepository userRepository, BookRepository bookRepository, UserConferenceRepository userConferenceRepository, ConferenceHistoryRepository conferenceHistoryRepository, BookmarkRepository bookmarkRepository) {
+	public ConferenceService(ConferenceRepository conferenceRepository, UserRepository userRepository, BookRepository bookRepository, UserConferenceRepository userConferenceRepository, ConferenceHistoryRepository conferenceHistoryRepository, BookmarkRepository bookmarkRepository, SessionService sessionService) {
 		this.conferenceRepository = conferenceRepository;
 		this.userRepository = userRepository;
 		this.bookRepository = bookRepository;
@@ -56,6 +58,7 @@ public class ConferenceService {
 		this.conferenceHistoryRepository = conferenceHistoryRepository;
 		this.bookmarkRepository = bookmarkRepository;
 		this.modelMapper = new ModelMapper();
+		this.sessionService = sessionService;
 	}
 	
 	public List<ConferenceDTO> getConferences(){
@@ -90,7 +93,9 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findAll(pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				result.setBookmark(bookmarkRepository.findByConferenceId(source.getId()).stream().map(source2 -> source2.getUser().getId()).collect(Collectors.toList()));
+				if(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())) != null) result.setAttendMember(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())).size());
+				else result.setAttendMember(0);
 				return result;});
 		}catch(Exception e){
 			e.printStackTrace();
@@ -105,7 +110,9 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findById(userid, pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				result.setBookmark(bookmarkRepository.findByConferenceId(source.getId()).stream().map(source2 -> source2.getUser().getId()).collect(Collectors.toList()));
+				if(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())) != null) result.setAttendMember(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())).size());
+				else result.setAttendMember(0);
 				return result;});
 		}catch (Exception e){
 			e.printStackTrace();
@@ -146,7 +153,9 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findByTitleContaining(title, pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				result.setBookmark(bookmarkRepository.findByConferenceId(source.getId()).stream().map(source2 -> source2.getUser().getId()).collect(Collectors.toList()));
+				if(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())) != null) result.setAttendMember(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())).size());
+				else result.setAttendMember(0);
 				return result;});
 		}catch(Exception e){
 			e.printStackTrace();
@@ -161,7 +170,9 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findConferencesByBookBookNameContaining(bookname, pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				result.setBookmark(bookmarkRepository.findByConferenceId(source.getId()).stream().map(source2 -> source2.getUser().getId()).collect(Collectors.toList()));
+				if(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())) != null) result.setAttendMember(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())).size());
+				else result.setAttendMember(0);
 				return result;});
 
 		}catch(Exception e){
@@ -177,7 +188,9 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findFinishedConferencesByBookId(book_id, pageable);
 			page = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				result.setBookmark(bookmarkRepository.findByConferenceId(source.getId()).stream().map(source2 -> source2.getUser().getId()).collect(Collectors.toList()));
+				if(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())) != null) result.setAttendMember(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())).size());
+				else result.setAttendMember(0);
 				return result;});
 
 		}catch(Exception e){
@@ -193,7 +206,9 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findExpectingConferencesByBookId(book_id, pageable);
 			page = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				result.setBookmark(bookmarkRepository.findByConferenceId(source.getId()).stream().map(source2 -> source2.getUser().getId()).collect(Collectors.toList()));
+				if(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())) != null) result.setAttendMember(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())).size());
+				else result.setAttendMember(0);
 				return result;});
 
 		}catch(Exception e){
@@ -209,7 +224,9 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findConferencesByUserNicknameContaining(nickname, pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				result.setBookmark(bookmarkRepository.findByConferenceId(source.getId()).stream().map(source2 -> source2.getUser().getId()).collect(Collectors.toList()));
+				if(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())) != null) result.setAttendMember(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())).size());
+				else result.setAttendMember(0);
 				return result;});
 
 		}catch(Exception e){
@@ -225,7 +242,9 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findConferencesByUserNickname(nickname, pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				result.setBookmark(bookmarkRepository.findByConferenceId(source.getId()).stream().map(source2 -> source2.getUser().getId()).collect(Collectors.toList()));
+				if(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())) != null) result.setAttendMember(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())).size());
+				else result.setAttendMember(0);
 				return result;});
 
 		}catch(Exception e){
@@ -241,7 +260,9 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findByTagsContaining(tags, pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				result.setBookmark(bookmarkRepository.findByConferenceId(source.getId()).stream().map(source2 -> source2.getUser().getId()).collect(Collectors.toList()));
+				if(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())) != null) result.setAttendMember(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())).size());
+				else result.setAttendMember(0);
 				return result;});
 		}catch(Exception e){
 			e.printStackTrace();
@@ -256,7 +277,9 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findConferenceByBookGenreGenreOrderByCallStartTime(genre, pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				result.setBookmark(bookmarkRepository.findByConferenceId(source.getId()).stream().map(source2 -> source2.getUser().getId()).collect(Collectors.toList()));
+				if(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())) != null) result.setAttendMember(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())).size());
+				else result.setAttendMember(0);
 				return result;});
 		}catch(Exception e){
 			e.printStackTrace();
@@ -271,7 +294,9 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findConferenceByBookGenreGenreAndCallEndTimeBeforeOrderByCallStartTime(genre, new Date(), pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				result.setBookmark(bookmarkRepository.findByConferenceId(source.getId()).stream().map(source2 -> source2.getUser().getId()).collect(Collectors.toList()));
+				if(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())) != null) result.setAttendMember(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())).size());
+				else result.setAttendMember(0);
 				return result;});
 		}catch(Exception e){
 			e.printStackTrace();
@@ -298,7 +323,9 @@ public class ConferenceService {
 			Page<Conference> data = conferenceRepository.findConferenceByBookGenreGenreAndCallEndTimeAfterOrderByCallStartTime(genre, new Date(), pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source, GetConferencesRes.class);
-				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source).size() > 0);
+				result.setBookmark(bookmarkRepository.findByConferenceId(source.getId()).stream().map(source2 -> source2.getUser().getId()).collect(Collectors.toList()));
+				if(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())) != null) result.setAttendMember(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getId())).size());
+				else result.setAttendMember(0);
 				return result;});
 		}catch(Exception e){
 			e.printStackTrace();
@@ -313,7 +340,9 @@ public class ConferenceService {
 			Page<ConferenceOnly> data = conferenceHistoryRepository.findDistinctConferenceByUserIdAndActionOrderByConferenceCallStartTimeDesc(id, "JOIN", pageable);
 			list = data.map(source ->{ 
 				GetConferencesRes result = modelMapper.map(source.getConference(), GetConferencesRes.class);
-				if(user != null) result.setBookmark(bookmarkRepository.findByUserAndConference(user, source.getConference()).size() > 0);
+				result.setBookmark(bookmarkRepository.findByConferenceId(source.getConference().getId()).stream().map(source2 -> source2.getUser().getId()).collect(Collectors.toList()));
+				if(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getConference().getId())) != null) result.setAttendMember(sessionService.getMapSessionNamesTokens().get(Integer.toString(source.getConference().getId())).size());
+				else result.setAttendMember(0);
 				return result;});
 		}catch(Exception e){
 			e.printStackTrace();

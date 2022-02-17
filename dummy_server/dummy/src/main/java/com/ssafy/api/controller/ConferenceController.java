@@ -36,6 +36,7 @@ import com.ssafy.api.requestDto.conference.LeaveConferenceReq;
 import com.ssafy.api.responseDto.GetConferencesRes;
 import com.ssafy.api.responseDto.GetUserByProfileRes;
 import com.ssafy.api.service.ConferenceService;
+import com.ssafy.api.service.SessionService;
 import com.ssafy.db.entity.User;
 
 import io.openvidu.java.client.ConnectionProperties;
@@ -53,19 +54,18 @@ public class ConferenceController {
 	
 	private ConferenceService conferenceService;
 	private OpenVidu openVidu;
-	private Map<String, Session> mapSessions = new ConcurrentHashMap<>();
-	private Map<String, Map<String, OpenViduRole>> mapSessionNamesTokens = new ConcurrentHashMap<>();
-	private Map<String, Map<String, Integer>> mapSessionNamesUsers = new ConcurrentHashMap<>();
+	private SessionService sessionService;
 	
 	private String OPENVIDU_URL;
 	private String SECRET;
 	
 	@Autowired
-	public ConferenceController(ConferenceService conferenceService, @Value("${openvidu.secret}") String secret, @Value("${openvidu.url}") String openviduUrl) {
+	public ConferenceController(ConferenceService conferenceService, @Value("${openvidu.secret}") String secret, @Value("${openvidu.url}") String openviduUrl, SessionService sessionService) {
 		this.conferenceService = conferenceService;
 		this.SECRET = secret;
 		this.OPENVIDU_URL = openviduUrl;
 		this.openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
+		this.sessionService = sessionService;
 	}
 	
 	@PostMapping("")
@@ -192,7 +192,7 @@ public class ConferenceController {
 	@GetMapping("/{id}/live")
 	public ResponseEntity<String> isSessionLive(@PathVariable("id") String id){
 		
-		if (this.mapSessions.get(id) == null) {
+		if (sessionService.getMapSessions().get(id) == null) {
 			return new ResponseEntity<>("false", HttpStatus.OK);
 		}
 		
@@ -232,19 +232,17 @@ public class ConferenceController {
 		ConnectionProperties connectionProperties = new ConnectionProperties.Builder().type(ConnectionType.WEBRTC)
 				.role(role).data("user_data").build();
 
-		JsonObject responseJson = new JsonObject();
-
-		if (this.mapSessions.get(id) != null) {
+		if (sessionService.getMapSessions().get(id) != null) {
 			// Session already exists
 			System.out.println("Existing session " + id);
 			try {
 
 				// Generate a new token with the recently created connectionProperties
-				String token = this.mapSessions.get(id).createConnection(connectionProperties).getToken();
+				String token = sessionService.getMapSessions().get(id).createConnection(connectionProperties).getToken();
 
 				// Update our collection storing the new token
-				this.mapSessionNamesTokens.get(id).put(token, role);
-				this.mapSessionNamesUsers.get(id).put(token, user.getId());
+				sessionService.getMapSessionNamesTokens().get(id).put(token, role);
+				sessionService.getMapSessionNamesUsers().get(id).put(token, user.getId());
 				conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), user.getId(), "JOIN"));
 
 				// Return the response to the client
@@ -258,9 +256,9 @@ public class ConferenceController {
 				if (404 == e2.getStatus()) {
 					// Invalid sessionId (user left unexpectedly). Session object is not valid
 					// anymore. Clean collections and continue as new session
-					this.mapSessions.remove(id);
-					this.mapSessionNamesTokens.remove(id);
-					this.mapSessionNamesUsers.remove(id);
+					sessionService.getMapSessions().remove(id);
+					sessionService.getMapSessionNamesTokens().remove(id);
+					sessionService.getMapSessionNamesUsers().remove(id);
 				}
 			}
 		}
@@ -275,14 +273,14 @@ public class ConferenceController {
 			String token = session.createConnection(connectionProperties).getToken();
 
 			// Store the session and the token in our collections
-			this.mapSessions.put(id, session);
+			sessionService.getMapSessions().put(id, session);
 			conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), user.getId(), "CREATE"));
 
-			this.mapSessionNamesTokens.put(id, new ConcurrentHashMap<>());
-			this.mapSessionNamesTokens.get(id).put(token, role);
+			sessionService.getMapSessionNamesTokens().put(id, new ConcurrentHashMap<>());
+			sessionService.getMapSessionNamesTokens().get(id).put(token, role);
 
-			this.mapSessionNamesUsers.put(id, new ConcurrentHashMap<>());
-			this.mapSessionNamesUsers.get(id).put(token, user.getId());
+			sessionService.getMapSessionNamesUsers().put(id, new ConcurrentHashMap<>());
+			sessionService.getMapSessionNamesUsers().get(id).put(token, user.getId());
 			conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), user.getId(), "JOIN"));
 
 			// Return the response to the client
@@ -300,20 +298,20 @@ public class ConferenceController {
 		System.out.println("Removing user | {sessionName, token}=" + id+", "+token);
 		
 		// If the session exists
-		if (this.mapSessions.get(id) != null && this.mapSessionNamesTokens.get(id) != null) {
-			int userId = this.mapSessionNamesUsers.get(id).get(token);
+		if (sessionService.getMapSessions().get(id) != null && sessionService.getMapSessionNamesTokens().get(id) != null) {
+			int userId = sessionService.getMapSessionNamesUsers().get(id).get(token);
 			
 			
 			// If the token exists
-			if (this.mapSessionNamesTokens.get(id).remove(token) != null) {
+			if (sessionService.getMapSessionNamesTokens().get(id).remove(token) != null) {
 				// User left the session
 
-				this.mapSessionNamesUsers.get(id).remove(token);
+				sessionService.getMapSessionNamesUsers().get(id).remove(token);
 				conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), userId, "EXIT"));
 
-				if (this.mapSessionNamesTokens.get(id).isEmpty()) {
+				if (sessionService.getMapSessionNamesTokens().get(id).isEmpty()) {
 					// Last user left: session must be removed
-					this.mapSessions.remove(id);
+					sessionService.getMapSessions().remove(id);
 				}
 				return new ResponseEntity<>(HttpStatus.OK);
 			} else {
@@ -335,11 +333,11 @@ public class ConferenceController {
 		System.out.println("Closing session | {sessionName}=" + id);
 
 		// If the session exists
-		if (this.mapSessions.get(id) != null && this.mapSessionNamesTokens.get(id) != null) {
-			Session s = this.mapSessions.get(id);
+		if (sessionService.getMapSessions().get(id) != null && sessionService.getMapSessionNamesTokens().get(id) != null) {
+			Session s = sessionService.getMapSessions().get(id);
 			s.close();
-			this.mapSessions.remove(id);
-			this.mapSessionNamesTokens.remove(id);
+			sessionService.getMapSessions().remove(id);
+			sessionService.getMapSessionNamesTokens().remove(id);
 
 			return new ResponseEntity<>(HttpStatus.OK);
 		} else {
@@ -356,9 +354,9 @@ public class ConferenceController {
 			String connectionId = req.getConnectionId();
 			
 			// If the session exists
-			if (this.mapSessions.get(id) != null && this.mapSessionNamesTokens.get(id) != null) {
-				Session s = this.mapSessions.get(id);
-				int userId = this.mapSessionNamesUsers.get(id).get(token);
+			if (sessionService.getMapSessions().get(id) != null && sessionService.getMapSessionNamesTokens().get(id) != null) {
+				Session s = sessionService.getMapSessions().get(id);
+				int userId = sessionService.getMapSessionNamesUsers().get(id).get(token);
 				s.forceDisconnect(connectionId);
 				conferenceService.createSessionHistory(new ConferenceHistoryDTO(Integer.parseInt(id), userId, "EXIT"));
 				return new ResponseEntity<>(HttpStatus.OK);
@@ -378,8 +376,8 @@ public class ConferenceController {
 		
 		try {
 			// If the session exists
-			if (this.mapSessions.get(id) != null && this.mapSessionNamesTokens.get(id) != null) {
-				Session s = this.mapSessions.get(id);
+			if (sessionService.getMapSessions().get(id) != null && sessionService.getMapSessionNamesTokens().get(id) != null) {
+				Session s = sessionService.getMapSessions().get(id);
 				s.forceUnpublish(streamId);
 				return new ResponseEntity<>(HttpStatus.OK);
 			} else {
@@ -397,13 +395,13 @@ public class ConferenceController {
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		try {
 			// If the session exists
-			if (this.mapSessions.get(id) != null && this.mapSessionNamesTokens.get(id) != null) {
-				map.put("data", mapSessionNamesTokens.get(id).size());
+			if (sessionService.getMapSessions().get(id) != null && sessionService.getMapSessionNamesTokens().get(id) != null) {
+				map.put("data", sessionService.getMapSessionNamesTokens().get(id).size());
 				return new ResponseEntity<>(map ,HttpStatus.OK);
 			} else {
 				// The SESSION does not exist
 				map.put("data", 0);
-				return new ResponseEntity<>(map,HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(map,HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
