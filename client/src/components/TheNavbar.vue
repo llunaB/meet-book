@@ -13,14 +13,14 @@
             text
             plain
           >
-          <span class="mr-2">모임 개설</span>
+          <span class="mr-2" style="color: white;">모임 개설</span>
         </v-btn>
         <v-btn
             :to="{name: 'ConferenceSchedule'}"
             text
             plain
           >
-          <span class="mr-2">나의 일정</span>
+          <span class="mr-2" style="color: white;">나의 일정</span>
         </v-btn>
 
       </div>
