@@ -105,16 +105,20 @@ export default {
       this.$router.push("conference/" + id)
     },
     userProfile() {
+      const result = JSON.parse(Buffer.from(this.$store.state.auth.user.token.split('.')[1], 'base64').toString())
       axios({
         baseURL: SERVER_URL,
-        url: '/users/' + this.searchUser,
+        url: '/users/' + result["sub"],
         method: 'GET',
         headers: {
-          'X-AUTH-TOKEN': this.$store.state.auth.user.token
-        }
+            'X-AUTH-TOKEN': this.$store.state.auth.user.token
+          },
       })
-        .then(res => this.user = res.data)
-        .catch(() => {})
+      .then(res => {
+        res.data['token'] = this.$store.state.auth.user.token
+        this.user = res
+      })
+      .catch(() => {})
     },
     userBookmark() {
       console.log(this.searchUser)
@@ -131,8 +135,8 @@ export default {
         for (let index = 0; index < res.data.length; index++) {
           axios({
             baseURL: SERVER_URL,
-          url: `/conference/${res.data[index].conferenceId}`,
-          method: 'GET',
+            url: `/conference/${res.data[index].conferenceId}`,
+            method: 'GET',
           })
           .then(res => {
             console.log(res.data)

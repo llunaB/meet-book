@@ -165,16 +165,19 @@ export default {
       }
     },
     userProfile() {
+      const result = JSON.parse(Buffer.from(this.$store.state.auth.user.token.split('.')[1], 'base64').toString())
       axios({
         baseURL: SERVER_URL,
-        url:`/users/${this.name}/detail`,
+        url: '/users/' + result["sub"],
         method: 'GET',
         headers: {
-        "X-Auth-Token": this.$store.state.auth.user.token,
-        }
+            'X-AUTH-TOKEN': this.$store.state.auth.user.token
+          },
       })
-      .then(res => {this.user = res.data
-      console.log(this.user)})
+      .then(res => {
+        res.data['token'] = this.$store.state.auth.user.token
+        this.user = res
+      })
       .catch(() => {})
     },
     userResign() {
@@ -204,7 +207,7 @@ export default {
   },
   beforeMount() {
     this.userProfile()
-  }
+  },
 }
 </script>
 
