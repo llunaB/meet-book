@@ -47,7 +47,7 @@
       <template v-slot:activator="{ on, attrs }">
         <v-btn
           icon v-bind="attrs" v-on="on">
-          <v-avatar v-if="user.profileImage">
+          <v-avatar v-if='user.profileImage !== ""'>
             <v-img :src="user.profileImage" contain />
           </v-avatar>
           <v-avatar v-else>
@@ -58,7 +58,7 @@
 
       <v-list v-if="loggedIn">
         <v-list-item
-          v-for="(item, index) in profileMenuItems" :key="index" :to="{path: item.to, query: {data: JSON.stringify({userId: user.id})}}">
+          v-for="(item, index) in profileMenuItems" :key="index" :to="{path: item.to, query: {data: JSON.stringify({userId: token})}}">
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
 
@@ -105,7 +105,8 @@ export default {
   name: "navbar",
   data: function () {
     return {
-      user: null,
+      user: {},
+      token: null,
       login: this.$store.state.login,
       profileMenuItems: [
         { title: '내 프로필', to: '/profile' },
@@ -128,10 +129,9 @@ export default {
       this.$router.push('/')
     },
     userProfile() {
-      const result = JSON.parse(Buffer.from(this.$store.state.auth.user.token.split('.')[1], 'base64').toString())
       axios({
         baseURL: SERVER_URL,
-        url: '/users/' + result["sub"],
+        url: '/users/' + this.token,
         method: 'GET',
         headers: {
             'X-AUTH-TOKEN': this.$store.state.auth.user.token
@@ -139,7 +139,7 @@ export default {
       })
       .then(res => {
         res.data['token'] = this.$store.state.auth.user.token
-        this.user = res
+        this.user = res.data
       })
       .catch(() => {})
     },
@@ -154,6 +154,7 @@ export default {
     },
   },
   beforeMount() {
+    this.token = parseInt(JSON.parse(Buffer.from(this.$store.state.auth.user.token.split('.')[1], 'base64'))["sub"])
     this.userProfile()
   },
 }

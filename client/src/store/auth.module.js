@@ -9,8 +9,8 @@ export const auth = {
     state: initialState,
     actions: {
         snslogin({ commit }, user) {
-            commit('loginSuccess', user)
-            return Promise.resolve(user)
+            commit('loginSuccess', {"token": user.token})
+            return Promise.resolve({"token": user.token})
         },
         login({ commit }, user) {
             return AuthService.login(user).then(

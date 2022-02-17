@@ -29,7 +29,7 @@
       <v-item-group v-if="!conferences.length" style="text-align-last: center">
         <h2 style="color: #ff3170;">아직 함께 참여한 모임이 없어요 ㅠㅠ </h2>
         <br>
-        <v-btn v-if="searchUser === name" rounded class="primary" href="conference">참여하러가기</v-btn>
+        <v-btn v-if="searchUser === token" rounded class="primary" href="conference">참여하러가기</v-btn>
       </v-item-group>
       <div v-else>
         <h3>최근 참가한 모임</h3>
@@ -81,17 +81,16 @@
 
 <script>
 import axios from "axios";
-// import moment from 'moment';
 const SERVER_URL = process.env.VUE_APP_SERVER_URL
 export default {
   name: 'Profile',
   data() {
     return {
       user: {},
+      token: null,
       conference: '',
       conferences: [],
       searchUser : null,
-      name: this.$store.state.auth.user.id,
       cnt: 0,
       num: '1',
 
@@ -105,10 +104,9 @@ export default {
       this.$router.push("conference/" + id)
     },
     userProfile() {
-      const result = JSON.parse(Buffer.from(this.$store.state.auth.user.token.split('.')[1], 'base64').toString())
       axios({
         baseURL: SERVER_URL,
-        url: '/users/' + result["sub"],
+        url: '/users/' + this.token,
         method: 'GET',
         headers: {
             'X-AUTH-TOKEN': this.$store.state.auth.user.token
@@ -116,7 +114,7 @@ export default {
       })
       .then(res => {
         res.data['token'] = this.$store.state.auth.user.token
-        this.user = res
+        this.user = res.data
       })
       .catch(() => {})
     },
@@ -156,6 +154,7 @@ export default {
     }
   },
   beforeMount() {
+    this.token = parseInt(JSON.parse(Buffer.from(this.$store.state.auth.user.token.split('.')[1], 'base64'))["sub"])
     this.searchUser = JSON.parse(this.$route.query.data)['userId']
     this.userProfile()
     this.userBookmark()
