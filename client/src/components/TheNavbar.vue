@@ -58,7 +58,7 @@
 
       <v-list v-if="loggedIn">
         <v-list-item
-          v-for="(item, index) in profileMenuItems" :key="index" :to="item.to">
+          v-for="(item, index) in profileMenuItems" :key="index" :to="{path: item.to, query: {data: JSON.stringify({userId: user.id})}}">
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
 
@@ -101,7 +101,7 @@ export default {
   name: "navbar",
   data: function () {
     return {
-      user: this.$store.state.auth.user,
+      user: null,
       login: this.$store.state.login,
       profileMenuItems: [
         { title: '내 프로필', to: '/profile' },
@@ -133,6 +133,9 @@ export default {
       return this.$store.state.auth.status.loggedIn
     },
   },
+  mounted() {
+    this.user = this.$store.state.auth.user
+  }
 }
 </script>
 

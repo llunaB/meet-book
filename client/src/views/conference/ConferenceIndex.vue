@@ -1,5 +1,6 @@
 <template>
 <div>
+  <v-container>
   <v-card>
     <v-tabs v-model="tab">      
       <v-tab v-for="genre in genres" :key="genre" @click="loging()">
@@ -23,6 +24,8 @@
     <v-pagination v-model="page" :length="genrePages">  
     </v-pagination>
   </div>
+  </v-container>
+
 </div>
 </template>
 <script>

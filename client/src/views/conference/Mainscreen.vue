@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <!-- Nested Dialog -->
     <v-dialog v-if="yetPassword" v-model="yetPassword" max-width="360px" persistent>
       <v-card class="pa-3">
@@ -93,11 +93,11 @@
           </v-row>
         </div>
         <!-- 주 진행자 화면 -->
-        <div>
+        <!-- <div>
           <v-card class="ma-1" min-height="480px">주 진행자 화면</v-card>
-        </div>
+        </div> -->
         <!-- 기타 청취자 화면 -->
-        <v-sheet class="my-4">
+        <v-sheet class="ma-1" min-height="480px">
           <v-slide-group class="pa-1" active-class="success" show-arrows>
             <v-slide-item v-for="sub in subscribers" :key="sub.stream.connection.connectionId" class="ma-2">
               <div>
@@ -183,14 +183,12 @@
           </div>
         </div>
 
-
-
         <!-- 기타 조작부 -->
         <v-divider class="my-5"></v-divider>
         <div class="d-flex flex-row justify-space-between">
-          <v-btn>
+          <!-- <v-btn>
             환경설정
-          </v-btn>
+          </v-btn> -->
           <v-btn color="accent" @click="leaveSession">
             나가기
           </v-btn>
@@ -274,6 +272,14 @@ export default {
   },
 
   created: function () {
+
+    if (!this.auth.status.loggedIn) {
+      alert('로그인이 필요한 기능입니다.')
+      this.yetSession = false
+      this.yetPassword = false
+      this.$router.push({name: 'Login'})
+    }
+
     this.mySessionId = String(this.$route.params.conferenceId)
     
     // conference init

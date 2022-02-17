@@ -13,9 +13,9 @@
       <v-col cols="8" style="margin-left: 2rem">
         <div class="d-flex">
           <h1 style="display:inline;">{{ user.nickname }}님의 개인 프로필</h1>
-          <v-img :src="`src/assets/bookicon/book${num}page.svg`" style="height:50px;" />
+          <v-img :src="`src/assets/bookicon/book${num}page.svg`" style="height:50px;" ></v-img>
         </div>
-        <br>
+        <br><br>
         <v-card>
           <v-card-title><strong>한마디</strong></v-card-title>
           <v-spacer></v-spacer>
@@ -56,6 +56,10 @@
                                 <br>
                                 종료 시간: {{ item.callEndTime.slice(11, 19) }}
                               </v-card-subtitle>
+                              <v-card-subtitle v-if="IsLive(item.id)">
+                                {{ IsLive(item.id) }}
+                                참가하기
+                              </v-card-subtitle>
                             </v-card-text>
                           </div>
                           <div class="page5" /><div class="page4" /><div class="page3" /><div class="page2" /><div class="page1" />
@@ -72,37 +76,12 @@
         </v-item-group>
       </div>
     </v-col>
-    <v-col style="padding-top: 2rem">
-
-    </v-col>
-    <v-col v-if="conference">
-      <h3>선택한 모임 정보</h3>
-      <br>
-      <v-card>
-        <v-col class="d-flex">
-          <v-img :src="conference.thumbnail_url" max-width="256px" height="100%"></v-img>
-          <v-container class="overflow-auto">
-            <h2>{{ conference.title }}</h2>
-            <br>
-            <p>모임 시작 시간: {{ conference.call_start_time }}</p>
-            <p>모임 종료 시간: {{ conference.call_end_time }}</p>
-            <br>
-            <p>{{ conference.description }}</p>
-          </v-container>
-        </v-col>
-        <span>관련 Tag들: {{ conference.tag }}</span>
-        <v-footer color="white" class="item-center">
-          <v-col class="text-end">
-            <a @click="GoToConference(conference.id)">더보기</a>
-          </v-col>
-        </v-footer>
-      </v-card>
-    </v-col>
   </v-container>
 </template>
 
 <script>
 import axios from "axios";
+// import moment from 'moment';
 const SERVER_URL = process.env.VUE_APP_SERVER_URL
 export default {
   name: 'Profile',
@@ -111,7 +90,7 @@ export default {
       user: {},
       conference: '',
       conferences: [],
-      searchUser : this.$route.params.userId,
+      searchUser : null,
       name: this.$store.state.auth.user.id,
       cnt: 0,
       num: '1',
@@ -125,29 +104,20 @@ export default {
     GoToConference(id) {
       this.$router.push("conference/" + id)
     },
-    getImg(point) {
-      if (point > 10) {
-        return require('@/assets/host_img/images.jpeg')
-      } else {
-        return require('@/assets/host_img/host2.jpeg')
-      }
-    },
     userProfile() {
-      if (this.searchUser === undefined) {
-        this.searchUser = this.name
-      }
       axios({
         baseURL: SERVER_URL,
         url: '/users/' + this.searchUser,
-        method: 'GET'
+        method: 'GET',
+        headers: {
+          'X-AUTH-TOKEN': this.$store.state.auth.user.token
+        }
       })
-        .then(res => {
-          this.user = res.data
-          console.log(this.user)
-          })
-        .catch(e => console.log(e))
+        .then(res => this.user = res.data)
+        .catch(() => {})
     },
     userBookmark() {
+      console.log(this.searchUser)
       axios({
         baseURL: SERVER_URL,
         url:`/users/${this.searchUser}/bookmark`,
@@ -157,40 +127,32 @@ export default {
         }
       })
       .then(res => {
+        console.log(res.data)
         for (let index = 0; index < res.data.length; index++) {
           axios({
             baseURL: SERVER_URL,
-            url: `/conference/${res.data[index].conferenceId}`,
-            method: 'GET',
+          url: `/conference/${res.data[index].conferenceId}`,
+          method: 'GET',
           })
           .then(res => {
+            console.log(res.data)
             if (!this.conferences.includes(res.data)) this.conferences.push(res.data)
             this.cnt += 1
           })
-        }
-        console.log(this.conferences)
-        if (this.cnt >= 500) {
-          this.cnt = 500
-        } else if (this.cnt >= 250) {
-          this.num = '250'
-        } else if (this.cnt >= 100) {
-          this.num = '100'
-        } else if (this.cnt >= 50) {
-          this.num = '50'
-        } else if (this.cnt >= 25) {
-          this.num = '25'
-        } else if (this.cnt >= 10) {
-          this.num = '10'
-        } else if (this.cnt >= 5) {
-          this.num = '5'
-        } else if (this.cnt >= 0) {
-          this.num = '1'
-        }
-      })
+      }
+    })
       .catch(e => console.log(e))
     },
+    IsLive(id) {
+      axios({
+        baseURL: SERVER_URL,
+        url: `/conference/${id}/live`,
+        method: 'GET'
+      }).then(res => {return res.data})
+    }
   },
   beforeMount() {
+    this.searchUser = JSON.parse(this.$route.query.data)['userId']
     this.userProfile()
     this.userBookmark()
   },

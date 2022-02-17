@@ -81,6 +81,16 @@ public class UserService {
 		return "";
 	}
 
+	//토큰으로 사용할 시 암호 비교
+	public String login2(LoginReq data) {
+		User user = userRepository.findByEmail(data.getEmail()).orElseThrow(()->new UsernameNotFoundException("사용자를 찾을 수 없습니다.") );
+		if(data.getPassword().equals(user.getPassword())) {
+			return jwtTokenProvider.createToken(user,user.getRoles());
+		}
+
+		return "";
+	}
+
 
 	public UserDTO getUserById(int id) {
 		try {

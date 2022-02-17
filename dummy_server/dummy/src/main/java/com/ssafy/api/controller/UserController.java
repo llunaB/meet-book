@@ -162,6 +162,8 @@ public class UserController {
 	
 	@GetMapping("/{id}/detail")
 	public ResponseEntity<GetUserByDetailRes> getUserDetail(@PathVariable("id") String id, @AuthenticationPrincipal User userEntity) {
+		log.info("userEntity"+ userEntity.getEmail());
+		log.info("id" + id);
 		if(!checkUser(id, userEntity)) {
 			return new ResponseEntity<GetUserByDetailRes>(new GetUserByDetailRes(), HttpStatus.FORBIDDEN);
 		}
@@ -182,8 +184,9 @@ public class UserController {
 
 		 if(userService.updateUserByProfile(updateProfileRequestDto, Integer.parseInt(id))){
             UserDTO user = userService.getUserById(Integer.parseInt(id));
+			log.info("user:"+user);
             map.put("message", "회원정보 수정 성공");
-            map.put("token", userService.login(new LoginReq(user.getEmail(), user.getPassword())));
+            map.put("token", userService.login2(new LoginReq(user.getEmail(), user.getPassword())));
             return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
         }
         map.put("message", "회원정보 수정 실패");
@@ -203,7 +206,7 @@ public class UserController {
 		if(userService.updateUserByDetail(updateUserByDetailReq, Integer.parseInt(id))){
 			 UserDTO user = userService.getUserById(Integer.parseInt(id));
 	            map.put("message", "회원정보 수정 성공");
-	            map.put("token",userService.login(new LoginReq(user.getEmail(), user.getPassword())));
+	            map.put("token",userService.login2(new LoginReq(user.getEmail(), user.getPassword())));
 			return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
 		}
 		map.put("message", "회원정보 수정 실패");
@@ -223,7 +226,7 @@ public class UserController {
 		if(userService.updatePassword(updatePasswordReq, Integer.parseInt(id))){
 			 UserDTO user = userService.getUserById(Integer.parseInt(id));
 	            map.put("message", "비밀번호 수정 성공");
-	            map.put("token",userService.login(new LoginReq(user.getEmail(), user.getPassword())));
+	            map.put("token",userService.login(new LoginReq(user.getEmail(), updatePasswordReq.getNewPassword())));
 			return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
 		}
 		map.put("message", "비밀번호 수정 실패");
