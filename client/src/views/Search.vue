@@ -127,12 +127,9 @@ export default {
         params: Object.assign(goParams, {page: parseInt(page)-1}), 
       })
       .then(response => {
-        console.log(response)
         this.searchResult = response.data
       })
-      .catch(error => {
-        console.log(error)
-      })
+      .catch(() => {})
     },
 
     onPageChange(page) {
