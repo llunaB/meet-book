@@ -22,14 +22,14 @@
           <v-card-subtitle v-if="user.profileDescription.length > 0">{{ user.profileDescription }}</v-card-subtitle>
           <v-card-subtitle v-else>아직 한마디가 없어요..</v-card-subtitle>
         </v-card>
-        <span v-if="conferences.length > 0">{{ conferences.length }}개의 책을 읽었어요!!</span>
+        <span v-if="conferences.length">{{ conferences.length }}개의 책을 읽었어요!!</span>
       </v-col>
     </v-row>
     <v-col style="padding-top:2rem">
       <v-item-group v-if="!conferences.length" style="text-align-last: center">
         <h2 style="color: #ff3170;">아직 함께 참여한 모임이 없어요 ㅠㅠ </h2>
         <br>
-        <v-btn v-if="searchUser === user.id" rounded class="primary" href="conference">참여하러가기</v-btn>
+        <v-btn v-if="searchUser === this.$store.state.auth.user.id" rounded class="primary" href="conference">참여하러가기</v-btn>
       </v-item-group>
       <div v-else>
         <h3>최근 참가한 모임</h3>
@@ -76,8 +76,9 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "axios"
 const SERVER_URL = process.env.VUE_APP_SERVER_URL
+
 export default {
   name: 'Profile',
   data() {
@@ -99,24 +100,21 @@ export default {
       this.$router.push("conference/" + id)
     },
     userProfile() {
+      if (this.searchUser === undefined) this.searchUser = this.$store.state.auth.user.id
       axios({
         baseURL: SERVER_URL,
-        url: '/users/' + this.$store.state.auth.user.id,
+        url: '/users/' + this.searchUser,
         method: 'GET',
         headers: {
             'X-AUTH-TOKEN': this.$store.state.auth.user.token
           },
       })
       .then(res => {
-        res.data['token'] = this.$store.state.auth.user.token
         this.user = res.data
       })
       .catch(() => {})
     },
     userBookmark() {
-      if (!this.searchUser) {
-        this.searchUser = this.user.id
-      }
       axios({
         baseURL: SERVER_URL,
         url:`/users/${(this.searchUser).toString()}/bookmark`,
@@ -129,7 +127,7 @@ export default {
         for (let index = 0; index < res.data.length; index++) {
           axios({
             baseURL: SERVER_URL,
-            url: `/conference/${res.data[index].conferenceId}`,
+            url: `/conference/${(res.data[index].conferenceId).toString()}`,
             method: 'GET',
           })
           .then(res => {
@@ -137,12 +135,15 @@ export default {
             if (!this.conferences.includes(res.data)) this.conferences.push(res.data)
             this.cnt += 1
           })
-      }
-    })
+          .catch(e => console.log(e))
+        }
+      })
       .catch(e => console.log(e))
     },
   },
   beforeMount() {
+    if (JSON.parse(this.$route.query.data)) this.searchUser = JSON.parse(this.$route.query.data).userId
+    console.log(this.searchUser)
     this.userProfile()
     this.userBookmark()
   },
