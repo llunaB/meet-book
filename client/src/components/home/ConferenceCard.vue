@@ -100,7 +100,7 @@ export default {
     
     goToMeeting: function(conferenceId){
       if (this.$store.state.auth.user !== null) {
-        this.$router.push({ name: 'ConferenceMeeting', params: {conferenceId: conferenceId}})
+        this.$router.push({ name: 'Mainscreen', params: {conferenceId: conferenceId}})
       }
       else{
         this.$router.push({name: 'Login'})
