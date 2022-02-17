@@ -113,7 +113,7 @@ public class ConferenceController {
 		PageRequest request =PageRequest.of(0, 5); //검색을 원하는 페이지, 개수
 		try {
 			response = conferenceService.getConferencesById(Integer.parseInt(id), request);
-			new ResponseEntity<Page<GetConferencesRes>>(response, HttpStatus.OK);
+			return new ResponseEntity<Page<GetConferencesRes>>(response, HttpStatus.OK);
 		}catch (Exception e){
 			e.printStackTrace();
 			log.info("회의목록 에러");
