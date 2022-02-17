@@ -64,7 +64,7 @@ public class BookmarkService {
 	//check user have bookmark of conference
 	public int checkUserHaveBookmark(int uid, int cid) {
 		try {
-			return bookmarkRepository.findByUserAndConference(userRepository.findById(uid).get(), conferenceRepository.findById(cid).get()).get(0).getId();
+			return bookmarkRepository.findByUserIdAndConferenceId(uid, cid).get(0).getId();
 		}catch(Exception e) {
 			e.printStackTrace();
 			return -1;
