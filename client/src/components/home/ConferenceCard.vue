@@ -20,7 +20,6 @@
     </div>
     <div class="card-back flex-column" v-bind:class="{backLocked: locked}">
       <v-card-text class="description">
-        {{ auth }}
         <p class="mt-10">책이름: {{conference.book.bookName}}</p>
         <p>회의명: {{conference.title}}</p>
         <p>개설자: {{conference.user.nickname}}</p>
@@ -78,6 +77,7 @@ export default {
     setBookmark: function () {
       // 로그인되어야 동작
       if (this.auth.user) {
+        console.log(this.auth.user)
         axios({
           baseURL: SERVER_URL,
           method: 'POST',
