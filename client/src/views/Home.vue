@@ -80,6 +80,9 @@
           })
         }
       }
+    },
+    onMount() {
+      return window.location.reload(true);
     }
   }
 </script>
