@@ -318,11 +318,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/{user}/bookmark")
-	public ResponseEntity<List<GetBookmarksRes>> getBookmarks(@PathVariable("user") String userId, @AuthenticationPrincipal User userEntity){
-		
-		if(!checkUser(userId, userEntity)) {
-			return new ResponseEntity<>(new ArrayList<GetBookmarksRes>(), HttpStatus.FORBIDDEN);
-		}
+	public ResponseEntity<List<GetBookmarksRes>> getBookmarks(@PathVariable("user") String userId){
 		
 		List<GetBookmarksRes> list = bookmarkService.getBookmarks(Integer.parseInt(userId));
 		
