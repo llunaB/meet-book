@@ -92,7 +92,6 @@
 
 <script>
 import axios from "axios"
-import User from "@/api/users"
 const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
 
@@ -100,7 +99,8 @@ export default {
   name: "Settings",
   data() {
     return {
-      user: new User(),
+      user: {},
+      token: null,
       genderGroup: ['', '남자', '여자'],
       name: this.$store.state.auth.user.id,
       userEmail: this.$store.state.auth.user,
@@ -121,7 +121,7 @@ export default {
       if (this.user.nickname.length) {
         axios({
           baseURL: SERVER_URL,
-          url: `/users/${this.name}`,
+          url: `/users/${this.token}`,
           method: 'PUT',
           data: {
             'nickname': this.user.nickname,
@@ -147,7 +147,7 @@ export default {
       if ((this.newPassword === this.newPasswordConfirm) && (this.newPassword.length > 0)) {
         axios({
           baseURL: SERVER_URL,
-          url: `/users/${this.name}/detail`,
+          url: `/users/${this.token}/detail`,
           method: 'PUT',
           data: {'newPassword': this.newPassword},
           headers: {
@@ -165,10 +165,9 @@ export default {
       }
     },
     userProfile() {
-      const result = JSON.parse(Buffer.from(this.$store.state.auth.user.token.split('.')[1], 'base64').toString())
       axios({
         baseURL: SERVER_URL,
-        url: '/users/' + result["sub"],
+        url: '/users/' + this.token,
         method: 'GET',
         headers: {
             'X-AUTH-TOKEN': this.$store.state.auth.user.token
@@ -176,7 +175,7 @@ export default {
       })
       .then(res => {
         res.data['token'] = this.$store.state.auth.user.token
-        this.user = res
+        this.user = res.data
       })
       .catch(() => {})
     },
@@ -206,6 +205,7 @@ export default {
     },
   },
   beforeMount() {
+    this.token = parseInt(JSON.parse(Buffer.from(this.$store.state.auth.user.token.split('.')[1], 'base64'))["sub"])
     this.userProfile()
   },
 }
