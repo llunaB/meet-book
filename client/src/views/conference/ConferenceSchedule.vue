@@ -18,7 +18,7 @@
     <div class="col-12 col-md-10 offset-md-1">
       <p>개설한 모임</p>
       <div v-show="createdConference.numberOfElements === 0"><p>아직 개설한 모임이 없습니다. <br> <router-link :to="{name: 'CreateConference'}">모임 만들기</router-link></p></div>
-      <div v-if="createdConference.numberOfElements > 0" class="d-flex flex-row justify-space-around">
+      <div v-if="createdConference.numberOfElements > 0" class="d-flex flex-row flex-wrap justify-space-around">
         <ConferenceCard class="mx-2 my-2 conf-card" v-for="conference in createdConference.content" :key="conference.id" :conference="conference" />
       </div>
     </div>
@@ -26,7 +26,7 @@
     <div class="col-12 col-md-10 offset-md-1">
       <p>참여한 모임</p>
       <div v-show="joinedConference.numberOfElements === 0"><p>아직 참여한 모임이 없습니다. <br> <router-link :to="{name: 'ConferenceIndex'}">모임 찾아보기</router-link></p></div>
-      <div v-if="joinedConference.numberOfElements > 0" class="d-flex flex-row justify-space-around">
+      <div v-if="joinedConference.numberOfElements > 0" class="d-flex flex-row flex-wrap justify-space-around">
         <ConferenceCard class="mx-2 my-2 conf-card" v-for="conference in joinedConference.content" :key="conference.id" :conference="conference" />
       </div>
     </div>
