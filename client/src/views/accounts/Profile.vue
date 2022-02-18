@@ -36,7 +36,7 @@
         <v-item-group>
           <v-container>
             <v-row>
-              <v-col cols="6" v-for="(item, idx) in conferences.reverse().slice(0, 5)" :key="idx">
+              <v-col cols="6" v-for="(item, idx) in conferences.reverse().slice(0, 4)" :key="idx">
                 <v-item>
                   <v-card
                     class="bookcard"
@@ -158,8 +158,10 @@ export default {
   beforeMount() {
     if (this.$route.query.data !== undefined) this.searchUser = JSON.parse(this.$route.query.data).userId
     this.userProfile()
-    this.userBookmark()
   },
+  mounted() {
+    this.userBookmark()
+  }
 }
 </script>
 
