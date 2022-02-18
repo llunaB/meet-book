@@ -195,7 +195,6 @@ export default {
         alert('탈퇴되었습니다.')
         setTimeout(() => {
           localStorage.removeItem('vuex')
-          this.$router.go(0)
           this.$router.push({name: "Home"})}, 100)
       })
       .catch(() => {
