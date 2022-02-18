@@ -78,7 +78,6 @@ export default {
     setBookmark: function () {
       // 로그인되어야 동작
       if (this.auth.user) {
-        console.log(this.auth.user)
         axios({
           baseURL: SERVER_URL,
           method: 'POST',
@@ -87,6 +86,7 @@ export default {
           headers: {'X-AUTH-TOKEN': this.auth.user.token}
         })
         .then((response) => {
+          console.log(response.data)
           this.isBookmarked = response.data.isBookmarked
         })
         .catch(error => {
