@@ -80,9 +80,6 @@ import UserVideo from '@/components/conference/UserVideo'
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
-// const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
-// const OPENVIDU_SERVER_SECRET = "MY_SECRET";
-
 export default {
   name: "ConferenceMeeting",
   data(){
@@ -146,13 +143,13 @@ export default {
 
       this.session.on('connectionCreated', (event) => {
         this.connections.push(event.connection)        
-        console.log("connections:", this.connections)
+        // console.log("connections:", this.connections)
       })
 
       this.session.on('connectionDestroyed', (event)=> {
-        console.log("disconnection:", event)
+        // console.log("disconnection:", event)
         const index = this.connections.indexOf(event.connection, 0)
-        console.log("index:", index)
+        // console.log("index:", index)
         if (index >= 0) {
           this.connections.splice(index, 1)
         }
@@ -175,7 +172,6 @@ export default {
 
       // user token
       this.getToken(this.mySessionId).then(token => {
-        console.log("token:",token)
         this.token = token
         this.session.connect(token, { clientData: this.myUserName})
           .then(() => {
@@ -217,8 +213,8 @@ export default {
             'X-AUTH-TOKEN': this.$store.state.auth.user.token
           },
         })
-        .then(res => console.log(res))
-        .catch(err => console.error(err))
+        .then(() => {})
+        .catch(() => {})
         this.session.disconnect()}
 
       this.session = undefined;
@@ -241,7 +237,6 @@ export default {
     // 여기서부터 server와 상호작용
     getToken (mySessionId) {      
       const token = this.createToken(mySessionId)
-      console.log("createdToken:", token)
       return token
     },
 
@@ -288,9 +283,7 @@ export default {
 
           }
         )
-        .then(response => {
-          console.log(response.data)
-          return response.data})
+        .then(response => {return response.data})
         .then(data => resolve(data))
         .catch(error => reject(error.response));
 					// .get(`https://localhost:8080/conference/${sessionId}/token`, {}, {
@@ -331,7 +324,6 @@ export default {
           type: 'my-chat'
         })
         .then(() => {          
-          console.log('Message successfully sent')
           this.inputText = ''
         })
         .catch(error => {
@@ -344,7 +336,6 @@ export default {
           type: 'my-chat'
         })
         .then(() => {          
-          console.log('Private Message successfully sent')
           this.inputText = ''
         })
         .catch(error => {
@@ -359,7 +350,7 @@ export default {
           to: [this.connections[this.banTo]],
           type: 'kick-msg'
         })
-        .then(res => console.log(res))
+        .then(() => {})
         .catch(err => console.error(err))
         // axios({
         //   method:'get',

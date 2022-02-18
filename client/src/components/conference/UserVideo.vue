@@ -22,7 +22,6 @@ export default {
 	computed: {
 		clientData () {
 			const { clientData } = this.getConnectionData();
-			console.log("streamManager:",this.streamManager)
 			return clientData;
 		},
 	},

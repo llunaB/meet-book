@@ -71,7 +71,6 @@ export default {
 
     
     getCreatedConference: function (userNickname) {
-      console.log(this.auth)
       axios({
         method: 'GET',
         baseURL: SERVER_URL,

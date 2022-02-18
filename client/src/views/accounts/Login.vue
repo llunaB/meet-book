@@ -115,10 +115,7 @@ export default {
               this.$router.push({"name": "Home"})
             })
           })
-          .catch((e) => {console.log(e)})
-        },
-        fail(error) {
-          console.log(error);
+          .catch(() => {})
         },
       })
     },

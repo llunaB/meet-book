@@ -2,21 +2,6 @@
     <div class="footer-basic">
       <footer>
         <div class="container">
-          <!-- <div class="social">
-            <a href="#"><i class="v-icon mdi mdi-instagram"></i></a>
-            <a href="#"><i class="v-icon mdi mdi-snapchat"></i></a>
-            <a href="#"><i class="v-icon mdi mdi-twitter"></i></a>
-            <a href="#"><i class="v-icon mdi mdi-facebook"></i></a>
-          </div> -->
-          <!-- <div class="item">
-           <ul class="d-flex justify-center">
-            <li class=""><a href="#">Services</a></li>
-            <li class=""><a href="#">Home</a></li>
-            <li class=""><a href="#">About</a></li>
-            <li class=""><a href="#">Terms</a></li>
-            <li class=""><a href="#">Privacy Policy</a></li>
-          </ul>
-          </div> -->
           <div class="item d-flex justify-center">
             <p class="">Meetbook © 2022</p>
           </div>

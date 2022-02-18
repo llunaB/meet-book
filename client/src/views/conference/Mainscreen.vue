@@ -304,7 +304,6 @@ export default {
 
     })
     .then(response => {
-      console.log(response)
       if (response.data) {
         this.conference = response.data
         if(response.data.password === null || response.data.password === '') {
@@ -354,7 +353,6 @@ export default {
 
       // 채팅 로그 작성
       this.session.on('signal:my-chat', (event) => {
-        console.log(event)
         const timestamp = new Date()
         this.chatlog.push({
           user: `${JSON.parse(event.from.data.split('%')[0]).clientData}`,
@@ -395,7 +393,6 @@ export default {
 
       // user token
       this.getToken(this.mySessionId).then(token => {
-        console.log('token: ', token)
         this.token = token
         // clientData: 접속하는 사람의 정보 입력
         this.session.connect(token, { clientData: this.auth.user.nickname})
@@ -442,9 +439,7 @@ export default {
             token: this.token
           },
         })
-        .then(response => {
-          console.log(response)
-        })
+        .then(() => {})
         .catch(error => console.log(error))
         .finally(
           this.session.disconnect()
@@ -514,8 +509,6 @@ export default {
           },
         })
         .then(response => {
-          
-          console.log('ok: ', response.data)
           return response.data
           
         })
@@ -546,7 +539,6 @@ export default {
           type: 'my-chat'
         })
         .then(() => {          
-          console.log('Message successfully sent')
           this.inputChat = ''
         })
         .catch(error => {
@@ -559,7 +551,6 @@ export default {
           type: 'my-chat'
         })
         .then(() => {          
-          console.log('Private Message successfully sent')
           this.inputChat = ''
         })
         .catch(error => {
@@ -579,13 +570,12 @@ export default {
 
     // ConferenceMeeting 신규 기능
     kickUser(someConnection){
-      console.log("connection:", someConnection)
       
       this.session.signal({
         to: [someConnection],
         type: 'kick-msg'
       })
-      .then(res => console.log(res))
+      .then(() => {})
       .catch(err => console.error(err))
       
       this.session.forceDisconnect(someConnection)
@@ -599,7 +589,6 @@ export default {
       this.session.unpublish(this.publisher)
     },
     makeSilence(){
-      console.log(this.subscribers[this.silenceTo].stream)
       this.session.forceUnpublish(this.subscribers[this.silenceTo].stream)
       this.silenceTo = 0
     },
@@ -620,7 +609,7 @@ export default {
       })
       .then(res=>{
         this.participants = res.data.data
-        console.log("p-check",res)})
+      })
       .catch(err=>console.error(err))
     },
     enterRoom(){
@@ -649,7 +638,6 @@ export default {
     checkTimeOut(){
       if(!this.nIntervalId){
         this.nIntervalId = setInterval(this.endTimeCheck,60000)
-        console.log("active!!!")
       }
     },
     endTimeCheck(){

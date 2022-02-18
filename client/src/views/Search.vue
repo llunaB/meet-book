@@ -49,13 +49,6 @@
               <TheBookcard :book="book" class="my-3 mx-auto" />
             </span>
           </div>
-          <!-- <v-row>
-            <template v-for="(book, idx) in searchResult.content">
-              <v-col :key="idx" cols="12" sm="6" align-self="">
-                <TheBookcard tile :book="book" class="my-3" />
-              </v-col>
-            </template>
-          </v-row> -->
           <v-pagination v-model="page" :length="searchResult.totalPages"></v-pagination>
         </div>
         <div v-else>
@@ -69,10 +62,6 @@
         </div>
         
       </v-col>
-      <!-- <v-col class="col-3">
-        <p>"{{ $route.query.keyword }}"에 대해 {{$route.params.type}}로 검색한 결과입니다.</p>
-        <p>{{ $route.query.title }}</p>
-      </v-col> -->
     </v-row>
   </div>
 </template>
@@ -92,8 +81,6 @@ export default {
   },
   data: function () {
     return {
-      // searchType: this.$route.params.type,
-      // keyword: this.$route.query.keyword,
       page: parseInt(this.$route.query.page),
       searchResult: {
         content: [],

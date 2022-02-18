@@ -73,14 +73,11 @@
 <script>
 const SERVER_URL = process.env.VUE_APP_SERVER_URL
 import axios from 'axios'
-// import ConferenceCard from '@/components/home/ConferenceCard'
 import ConferenceList from '@/components/home/ConferenceSlide'
-// import ProfileSmallcard from '@/components/ProfileSmallcard'
 export default {
   name: "Bookinfo",
   components: {
     ConferenceList,
-    // ProfileSmallcard,
   },
 
   data: function () {
@@ -133,7 +130,6 @@ export default {
         url: `books/${bookId}`,
       })
       .then(response => {
-        console.log(response)
         const book = response.data
         const [a, b] = this.getSlicedName(book.name)
         this.book = book

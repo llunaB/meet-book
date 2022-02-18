@@ -188,7 +188,6 @@ export default {
         thumbnailUrl: this.thumbnailUrl ? this.thumbnailUrl : this.book.thumbnailUrl,
       }
 
-      console.log(conference)
       // console.log(authheader())
       // 회의 개설 요청 보내기
       axios({
@@ -201,13 +200,12 @@ export default {
         // headers: authheader(),
         data: conference,
       })
-      .then(response => {
+      .then(() => {
         // 요청이 이루어지면
         // 1. 회의가 개설되었다는 알림 (Snackbar? Modal?) 띄우기
-        
-        console.log(response)
+        alert('회의가 개설되었습니다.')
         // 2. 일정 페이지 등으로 리다이렉트하기
-        this.$router.push({name: 'Profile'})
+        setTimeout(()=>this.$router.push({name: 'Profile'}), 500)
       })
       .catch(error => {
         console.log(error)
@@ -224,7 +222,6 @@ export default {
         url: `/search/book?book_name=${this.bookSearch}&page=0&size=10`,
       })
       .then(response => {
-        console.log('searching')
         this.bookEntries = response.data.content
       })
       .catch(error => {

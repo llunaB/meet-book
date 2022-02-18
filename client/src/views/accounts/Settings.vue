@@ -132,8 +132,7 @@ export default {
           }
         })
         .then(() => setTimeout(() => this.$router.push({name:'Profile'}), 1000))
-        .catch(e => {
-          console.log(e)
+        .catch(() => {
           this.submitMessage = '값을 입력해주세요'
           setTimeout(() => this.snackbar = !this.snackbar, 2000);
         })

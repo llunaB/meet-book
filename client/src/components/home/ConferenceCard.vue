@@ -24,7 +24,6 @@
         <h4>{{conference.user.nickname}}</h4>
         <p class="mt-3">{{conference.description}}</p>
         <p class="mt-5">책: {{conference.book.bookName}}</p>
-        <!-- <p>{{conference.id}}</p> -->
         <p>시작: {{formating(conference.callStartTime)}}</p>
         <p>종료: {{formating(conference.callEndTime)}}</p>
         <p v-bind:class="{'color-red': conference.attendMember >= conference.maxMembers}">참여인원 / 최대인원: {{conference.attendMember}} / {{conference.maxMembers}}</p>
@@ -77,7 +76,6 @@ export default {
     setBookmark: function () {
       // 로그인되어야 동작
       if (this.auth.user) {
-        console.log(this.auth.user)
         axios({
           baseURL: SERVER_URL,
           method: 'POST',
@@ -89,7 +87,6 @@ export default {
           this.isBookmarked = response.data.isBookmarked
         })
         .catch(error => {
-          console.log(`SetBookmarking ${this.conference.id} failed.`)
           console.log(error)
         })
       } else {

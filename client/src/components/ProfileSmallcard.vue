@@ -39,11 +39,7 @@ export default {
 
   data: function () {
     return {
-      // person: {
-      //   nickname: '닉네임',
-      //   email: 'email@mail.com',
-      //   profile_image: ''
-      // },
+      //
     }
   },
 

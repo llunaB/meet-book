@@ -36,50 +36,19 @@
             <img class="main_img" src="../assets/girl.svg" alt="">
           </div>
         </div>
-        <!-- <conference-slide :conferences="conferences">
-    </conference-slide> -->
-        <!-- <h2 class="my-3">화상회의 test</h2> -->
-        <div>
-          <!-- <v-btn class="primary" @click="goToMeeting()">
-        입장하기
-      </v-btn> -->
-        </div>
       </v-container>
 
     </div>
-    <!-- <div class="" style="background-color:#F1F6F3;">
-  </div> -->
   </div>
 </template>
 
 <script>
   import SearchBar from '@/components/SearchBar'
 
-
-  // import HelloWorld from '../components/HelloWorld'
-  // import Carousel from '../components/home/Carousel'
-  // import ConferenceSlide from '../components/home/ConferenceSlide'
-
-
   export default {
     name: 'Home',
     components: {
       SearchBar,
-    },
-    // 나중에 지울 것
-    methods: {
-      goToMeeting: function () {
-        if (this.$store.state.auth.user !== null) {
-          this.$router.push({
-            name: 'ConferenceMeeting',
-            params: "4"
-          })
-        } else {
-          this.$router.push({
-            name: 'Login'
-          })
-        }
-      }
     },
     onMount() {
       window.location.reload(true)
@@ -151,8 +120,4 @@
     line-height: 2rem;
   }
 
-  /* .btn-outline {
-  color: $primary;
-  border-color: $primary;
-} */
 </style>
