@@ -21,7 +21,7 @@
         <br>
         <div class="d-flex">
           <h3 v-if="conferences.length">{{ conferences.length }}개의 모임에 참가했습니다.</h3>
-          <v-img  :src="require(`@/assets/bookicon/book${iconUrl}page.svg`)" style="height:70px;" contain />
+          <!-- <v-img :src="require(`@/assets/bookicon/book${iconUrl}page.svg`)" style="height:70px;" contain /> -->
         </div>
       </v-col>
     </v-row>
@@ -112,7 +112,6 @@ export default {
     },
     userProfile() {
       if (this.searchUser === undefined || this.searchUser === null) this.searchUser = this.$store.state.auth.user.id
-      console.log(this.searchUser)
       axios({
         baseURL: SERVER_URL,
         url: '/users/' + this.searchUser,
@@ -123,6 +122,7 @@ export default {
       })
       .then(res => {
         this.user = res.data
+        return
       })
       .catch(() => {})
     },
@@ -134,23 +134,24 @@ export default {
       })
       .then(res => {
         this.conferences = res.data
-        if (this.conferences.length >= 500) {
-          this.iconUrl = "500"
-        } else if (this.conferences.length >= 250) {
-          this.iconUrl = "250"
-        } else if (this.conferences.length >= 100) {
-          this.iconUrl = "100"
-        } else if (this.conferences.length >= 50) {
-          this.iconUrl = "50"
-        } else if (this.conferences.length >= 25) {
-          this.iconUrl = "25"
-        } else if (this.conferences.length >= 10) {
-          this.iconUrl = "10"
-        } else if (this.conferences.length >= 5) {
-          this.iconUrl = "50"
-        } else{
-          this.iconUrl = "1"
-        }
+        return
+        // if (this.conferences.length >= 500) {
+        //   this.iconUrl = "500"
+        // } else if (this.conferences.length >= 250) {
+        //   this.iconUrl = "250"
+        // } else if (this.conferences.length >= 100) {
+        //   this.iconUrl = "100"
+        // } else if (this.conferences.length >= 50) {
+        //   this.iconUrl = "50"
+        // } else if (this.conferences.length >= 25) {
+        //   this.iconUrl = "25"
+        // } else if (this.conferences.length >= 10) {
+        //   this.iconUrl = "10"
+        // } else if (this.conferences.length >= 5) {
+        //   this.iconUrl = "50"
+        // } else{
+        //   this.iconUrl = "1"
+        // }
         })
       .catch(e => console.log(e))
     },
