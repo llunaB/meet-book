@@ -540,6 +540,12 @@ export default {
     // },
 
     sendMessage: function () {
+      // 공백은 전달하지 않습니다.
+      if (this.inputChat.trim() === '') {
+        this.inputChat= ''
+        return
+      }
+
       if(this.chatConnection === 0 || this.chatConnection === '0') {
         this.session.signal({
           data: this.inputChat,
