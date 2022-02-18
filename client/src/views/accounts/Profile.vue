@@ -55,9 +55,9 @@
                               종료 시간: {{ item.conference.callEndTime.slice(11, 19) }}
                             </v-card-subtitle>
                           </v-card-text>
-                          <div class="container" style="text-align: center;">
+                          <!-- <div class="container" style="text-align: center;">
                             <v-btn class="primary" v-if="isLive(item.conference.id)" @click="GoToConference(item.conference.id)">참여하기</v-btn>
-                          </div>
+                          </div> -->
                         </div>
                         <div class="page5" /><div class="page4" /><div class="page3" /><div class="page2" /><div class="page1" />
                         <div class="front">
@@ -88,7 +88,7 @@ export default {
       conference: '',
       conferences: [],
       searchUser : null,
-      iconUrl: '',
+      iconUrl: '1',
       cnt: 0,
       num: '',
 
@@ -98,15 +98,15 @@ export default {
     onclick(item) {
       this.conference = item
     },
-    isLive(id) {
-      axios({
-        baseURL: SERVER_URL,
-        url: `/conference/${id}/live`,
-        method: 'GET',
-      }).then(res => {
-        return res.data
-        })
-    },
+    // isLive(id) {
+    //   axios({
+    //     baseURL: SERVER_URL,
+    //     url: `/conference/${id}/live`,
+    //     method: 'GET',
+    //   }).then(res => {
+    //     return res.data
+    //     })
+    // },
     GoToConference(id) {
       this.$router.push({path: `/conference/${id}/main`})
     },
@@ -134,7 +134,6 @@ export default {
       })
       .then(res => {
         this.conferences = res.data
-        return
         // if (this.conferences.length >= 500) {
         //   this.iconUrl = "500"
         // } else if (this.conferences.length >= 250) {
