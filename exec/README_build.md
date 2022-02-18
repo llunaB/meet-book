@@ -1,4 +1,7 @@
 # 빌드 및 배포
+현재 빌드 파일은 GitLab `/builds` 에 업로드되어 있습니다.
+
+
 
 ## 백엔드
 ### 스택
@@ -14,6 +17,8 @@
 - 백그라운드로 실행
 `nohup java -jar -Duser.timezone=Asia/Seoul <jar 파일명> &`
 
+
+
 ## 프론트엔드
 ### 스택
 - Vue 2
@@ -24,7 +29,6 @@
 - 빌드
 `npm i`
 `npm run build`
-
 - nginx 상태 확인 (종료 후 작업하는 것이 안전)
 `sudo service nginx stop`
 - 기존 빌드 결과물 삭제 혹은 백업
@@ -34,6 +38,8 @@
 - nginx 재가동
 `sudo service nginx start`
 `systemctl nginx status`
+
+
 
 ## 화상회의: OpenVidu
 ### 빌드
@@ -58,6 +64,9 @@
 -- OpenVidu 동작에 필요한 각 Container에 대한 설정을 직접 입력할 수 있음
 -- 각 Container들이 서로 긴밀하게 연결되어 동작하는 만큼 설정에 주의해야 함
 
+
+
 ## 주요 계정 및 프로퍼티
 - MySql 계정
--- ID: 
+-- ID: ssafyA206
+-- PW: sAs2a0f6y
