@@ -134,6 +134,7 @@ export default {
       })
       .then(res => {
         this.conferences = res.data
+        console.log('1')
         // if (this.conferences.length >= 500) {
         //   this.iconUrl = "500"
         // } else if (this.conferences.length >= 250) {
