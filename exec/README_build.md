@@ -12,11 +12,11 @@
 - MySQL: 8.0.28-0ubuntu0.20.04.3
 
 ### 빌드
-- 탑재 위치: /home/ubuntu/server
 - jar 파일 빌드
 `./gradlew build`
 
 ### 실행
+- ec2 탑재 위치: /home/ubuntu/server
 - 백그라운드로 실행
 `nohup java -jar -Duser.timezone=Asia/Seoul <jar 파일명> &`
 
