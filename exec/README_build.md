@@ -12,7 +12,7 @@
 - MySQL: 8.0.28-0ubuntu0.20.04.3
 
 ### 빌드
-- 탑재 위치 /home/ubuntu/server
+- 탑재 위치: /home/ubuntu/server
 - jar 파일 빌드
 `./gradlew build`
 
