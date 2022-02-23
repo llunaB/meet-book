@@ -1,3 +1,46 @@
+
+## 실시간 화상 독서모임 서비스 밋북(MeetBook)
+### 핵심 기능
+- 도서 기반으로 화상모임 개최
+- 질문과 답변 통한 모임 접속
+- 회의 북마크 통한 사전 알림
+
+### 모임 설정기능
+- 도서 설정 기능
+- 모임 개최시간 설정 기능
+- 인원 설정 기능
+
+### 화상 모임기능
+- 화상통화
+- 실시간 채팅
+- 귓속말 및 유저강퇴기능
+
+### 기술 스택
+##### Frontend
+- Vue: 2.6.11
+- Vue / CLI: 4.5.8
+- Vuex: 3.4.0
+- Vueautify: 2.4.0
+- npm: 6.14.10
+- axios: 0.24.0
+
+##### Backend
+- Swagger 2.9.2
+- Spring Boot 2.6.2
+- Spring Security
+- Spring Scheduler
+- MySQL: 8.0.28-0ubuntu0.20.04.3
+- NGINX
+- EC2
+
+##### ETC
+- Json Web Token
+- GitLab
+- Jira
+- Webex
+- Openvidu
+
+
 ### 🌈 commit convention
 
 - `feat` : new feature for the user, not a new feature for build script
@@ -11,89 +54,4 @@
 feat: profile-history schrollbar add
 ```
 
-
-
-### ⭐️ git flow 
-
-##### 1. git clone
-
-```bash
-git clone https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A206.git
-```
-
-##### 2. develop 브랜치로 이동
-
-```bash
-git switch develop
-```
-
- ### 👉  feature work flow
-
- ##### 3. feature branch 생성
-
-```bash
-git branch feature/be/user/login
-```
-##### 4. feature branch 로 이동
-
-```bash
-git switch feature/be/user/login
-```
-
-##### 5. ‼️**중요**‼️ develop branch pull 진행 
-
-```bash
-git pull origin develop
-```
-
-##### 6. 개발 후 add - commit - push 진행
-
-- 일반적으로는 `develop` 브랜치에 바로 `push` 하지만,  ssafy project에서는 진행사항 확인을 위해  `feature branch` 도 `remote` 에 올립니다.
-
-```bash
-git add .
-git commit -m "feat: profile-history schrollbar add"
-
-# push 와 동시에 remote branch 생성
-git push --set-upstream origin feature/be/user/login
-```
-
-##### 7. feature branch 에서 개발 진행
-
-- `convention` 참고
-```bash
-git add .
-git commit -m "feat: profile-history schrollbar add"
-git push origin feature/be/user/login
-```
-
-##### 8. 테스트까지 진행 후 develop branch에 merge 진행
-- `assignee` 와 `reviewer`는 필요시 등록합니다.
-
-- 방법 1 : `feature branch` 에서 `develop branch` 로 `push` 
-
-```bash
-# feature 
-git push origin develop
-```
-
-- 방법 2 : `develop branch` 에서 `feature branch` 를 `merge` 
-
-```bash
-# develop 
-git merge feature/be/user/login
-```
-
-##### 9. merge request 작성
-
-- `gitlab` 의 푸시알림 확인
-- `merge request` 만들기
-- 내용 입력 후 `delete branch after merge request` 체크되어있는지 확인, ‼️**체크 해제**‼️
-- `merge` 
-
-##### 10. develop branch pull
-- `pull` 은 매번 해주기
-```bash
-git pull origin develop
-```
 
