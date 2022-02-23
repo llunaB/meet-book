@@ -1,5 +1,0 @@
-docker run -p 4443:4443 --rm  -e OPENVIDU_SECRET=MY_SECRET  -e OPENVIDU_RECORDING=true  -e OPENVIDU_RECORDING_PATH=/opt/openvidu/recordings  -v /var/run/docker.sock:/var/run/docker.sock    -v /opt/openvidu/recordings:/opt/openvidu/recordings openvidu/openvidu-server-kms:2.20.0
-
-docker run -p 4443:4443  -e OPENVIDU_SECRET=MY_SECRET  -e OPENVIDU_RECORDING=true  -e OPENVIDU_RECORDING_PATH=/opt/openvidu/recordings  -v /var/run/docker.sock:/var/run/docker.sock    -v /opt/openvidu/recordings:/opt/openvidu/recordings openvidu/openvidu-server-kms:2.20.0
-
-docker run -p 4443:4443  -e OPENVIDU_SECRET=MY_SECRET  -v /var/run/docker.sock:/var/run/docker.sock openvidu/openvidu-server-kms:2.20.0
