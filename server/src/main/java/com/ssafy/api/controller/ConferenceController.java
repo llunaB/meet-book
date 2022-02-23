@@ -119,10 +119,6 @@ public class ConferenceController {
 		PageRequest request =PageRequest.of(0, 5); //검색을 원하는 페이지, 개수
 		
 		try {
-//<<<<<<< HEAD
-//			response = conferenceService.getConferencesById(Integer.parseInt(id), request);
-//			return new ResponseEntity<Page<GetConferencesRes>>(response, HttpStatus.OK);
-//=======
 			response = conferenceService.getConferencesById(Integer.parseInt(id), userEntity, request);
 			new ResponseEntity<Page<GetConferencesRes>>(response, HttpStatus.OK);
 		}catch (Exception e){
