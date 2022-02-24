@@ -5,15 +5,18 @@
 
 ## 백엔드
 ### 스택
-- JVM
-- 웹서버 : Nginx
-- IDE 버젼 
+- Swagger 2.9.2
+- Spring Boot 2.6.2
+- Spring Security
+- Spring Scheduler
+- MySQL: 8.0.28-0ubuntu0.20.04.3
 
 ### 빌드
 - jar 파일 빌드
 `./gradlew build`
 
 ### 실행
+- ec2 탑재 위치: /home/ubuntu/server
 - 백그라운드로 실행
 `nohup java -jar -Duser.timezone=Asia/Seoul <jar 파일명> &`
 
@@ -21,8 +24,12 @@
 
 ## 프론트엔드
 ### 스택
-- Vue 2
-- Vuetify
+- Vue: 2.6.11
+- Vue / CLI: 4.5.8
+- Vuex: 3.4.0
+- Vueautify: 2.4.0
+- npm: 6.14.10
+- axios: 0.24.0
 
 ### 빌드
 - client 폴더에서 환경변수 확인 (env.production)
