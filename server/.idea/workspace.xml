@@ -5,217 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ed5c676-e1e6-4658-8de2-d3936a6e9f5c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/openvidu docker.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/DTO/BookDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/DTO/BookmarkDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/DTO/ConferenceDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/DTO/ConferenceHistoryDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/DTO/GenreDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/DTO/UserConferenceDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/DTO/UserDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/MeetBookApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/controller/BookController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/controller/ConferenceController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/controller/EmailController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/controller/ExceptionController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/controller/ImageController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/controller/OauthController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/controller/SearchController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/controller/UserController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/requestDto/DeleteUserReq.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/requestDto/EmailCheckReq.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/requestDto/EmailReq.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/requestDto/FindPwdReq.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/requestDto/LoginReq.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/requestDto/SignUpReq.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/requestDto/UpdatePasswordReq.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/requestDto/UpdateUserByDetailReq.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/requestDto/UpdateUserByProfileReq.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/requestDto/conference/ForceDisconnectReq.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/requestDto/conference/ForceUnpublishReq.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/requestDto/conference/LeaveConferenceReq.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/responseDto/GetBookRes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/responseDto/GetBookmarksRes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/responseDto/GetConferencesRes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/responseDto/GetSimpleBooksRes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/responseDto/GetUserByDetailRes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/responseDto/GetUserByProfileRes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/responseDto/LoginRes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/responseDto/MessageRes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/responseDto/OauthUserRes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/service/BookService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/service/BookmarkService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/service/ConferenceService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/service/GenreService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/service/JwtUserDetailService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/service/OAuthService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/service/SessionService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/service/UserConferenceService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/api/service/UserService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/config/CustomBasePathSerialize.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/config/JwtAuthenticationFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/config/JwtTokenProvider.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/config/SwaggerConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/config/WebConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/config/WebSecurityConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/config/job/EmailService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/config/job/JobA.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/config/job/JobConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/db/converter/ActionConverter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/db/entity/Book.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/db/entity/Bookmark.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/db/entity/Conference.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/db/entity/ConferenceHistory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/db/entity/Email.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/db/entity/Genre.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/db/entity/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/db/entity/UserConference.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/db/mapping/ConferenceOnly.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/db/openApi/OpenApiHelper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/db/openApi/OpenApiHelper2.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/db/repository/BookRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/db/repository/BookmarkRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/db/repository/ConferenceHistoryRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/db/repository/ConferenceRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/db/repository/EmailRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/db/repository/GenreRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/db/repository/UserConferenceRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/db/repository/UserRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/error/CustomGlobalExceptionHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/error/exception/AlreadyExistEmailException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/error/exception/AlreadyExistNicknameException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/error/exception/securityException/CAuthenticationEntryPointException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/error/exception/securityException/CommonResult.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/error/exception/securityException/CustomAccessDeniedHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/error/exception/securityException/CustomAuthenticationEntryPoint.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/error/exception/securityException/ErrorCode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/error/exception/securityException/ExceptionAdvice.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/error/exception/securityException/ResponseService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/application-container.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/application-email.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/application-oauth.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/openvidu-selfsigned.jks" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/ssafy/MeetBookApplicationTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/dataSources.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/dummy_server.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/gradle.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/jpa-buddy.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/sshConfigs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/SSAFY.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/Dockerfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/gradlew" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/gradlew.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/openvidu docker.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/settings.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/DTO/BookDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/DTO/BookmarkDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/DTO/ConferenceDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/DTO/ConferenceHistoryDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/DTO/GenreDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/DTO/UserConferenceDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/DTO/UserDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/DummyApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/controller/BookController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/controller/EmailController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/controller/ExceptionController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/controller/ImageController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/controller/OauthController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/DeleteUserReq.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/EmailCheckReq.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/EmailReq.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/FindPwdReq.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/LoginReq.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/SignUpReq.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/UpdatePasswordReq.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/UpdateUserByDetailReq.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/UpdateUserByProfileReq.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/conference/ForceDisconnectReq.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/conference/ForceUnpublishReq.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/requestDto/conference/LeaveConferenceReq.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/responseDto/GetBookRes.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/responseDto/GetConferencesRes.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/responseDto/GetSimpleBooksRes.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/responseDto/GetUserByDetailRes.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/responseDto/GetUserByProfileRes.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/responseDto/LoginRes.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/responseDto/MessageRes.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/responseDto/OauthUserRes.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/service/BookService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/service/GenreService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/service/JwtUserDetailService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/service/OAuthService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/service/SessionService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/service/UserConferenceService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/api/service/UserService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/config/CustomBasePathSerialize.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/config/JwtAuthenticationFilter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/config/JwtTokenProvider.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/config/SwaggerConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/config/WebConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/config/job/EmailService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/config/job/JobA.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/config/job/JobConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/converter/ActionConverter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/entity/Book.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/entity/Bookmark.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/entity/Conference.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/entity/ConferenceHistory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/entity/Email.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/entity/Genre.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/entity/User.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/entity/UserConference.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/mapping/ConferenceOnly.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/openApi/OpenApiHelper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/openApi/OpenApiHelper2.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/repository/BookRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/repository/ConferenceHistoryRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/repository/ConferenceRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/repository/EmailRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/repository/GenreRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/repository/UserConferenceRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/db/repository/UserRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/error/CustomGlobalExceptionHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/error/exception/AlreadyExistEmailException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/error/exception/AlreadyExistNicknameException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/error/exception/securityException/CAuthenticationEntryPointException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/error/exception/securityException/CommonResult.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/error/exception/securityException/CustomAccessDeniedHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/error/exception/securityException/CustomAuthenticationEntryPoint.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/error/exception/securityException/ErrorCode.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/error/exception/securityException/ExceptionAdvice.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/java/com/ssafy/error/exception/securityException/ResponseService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/resources/application-container.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/resources/application-email.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/resources/application-oauth.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/resources/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/main/resources/openvidu-selfsigned.jks" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/dummy/src/test/java/com/ssafy/DummyApplicationTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dummy_server/resources/upload/null.jpg" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/../package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/.env.production" beforeDir="false" afterPath="$PROJECT_DIR$/../client/.env.production" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/openvidu docker.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -250,6 +43,11 @@
                 <item name="meetBook" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="meetBook" type="f1a62948:ProjectNode" />
+                <item name="Run Configurations" type="7b0102dc:RunConfigurationsNode" />
               </path>
             </expand>
             <select />
@@ -338,7 +136,7 @@
       <recent name="com.ssafy.domain.user" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.dummy [build]">
+  <component name="RunManager" selected="Gradle.server [bootJar]">
     <configuration name="UserRepositoryTest.crud" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -383,6 +181,27 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
+    <configuration name="server [bootJar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="bootJar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
     <configuration name="DummyApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="dummy.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.ssafy.MeetBookApplication" />
@@ -399,6 +218,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.server [bootJar]" />
         <item itemvalue="Gradle.dummy [build]" />
         <item itemvalue="Spring Boot.MeetBookApplication" />
         <item itemvalue="Gradle.UserRepositoryTest.crud" />
