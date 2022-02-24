@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="SshConfigs">
-    <configs>
-      <sshConfig host="i6a206.p.ssafy.io" id="2ad9a4c6-a5e6-4984-892e-9deb41f4b971" keyPath="$PROJECT_DIR$/../../I6A206T.pem" port="22" nameFormat="DESCRIPTIVE" username="ubuntu" useOpenSSHConfig="true" />
-    </configs>
-  </component>
-</project>
