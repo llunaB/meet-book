@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ed5c676-e1e6-4658-8de2-d3936a6e9f5c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/.env.production" beforeDir="false" afterPath="$PROJECT_DIR$/../client/.env.production" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/openvidu docker.txt" beforeDir="false" />
-    </list>
+    <list default="true" id="9ed5c676-e1e6-4658-8de2-d3936a6e9f5c" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -243,6 +238,7 @@
       <workItem from="1644750617915" duration="15629000" />
       <workItem from="1645076416473" duration="2772000" />
       <workItem from="1645085937868" duration="549000" />
+      <workItem from="1645708659699" duration="7000" />
     </task>
     <servers />
   </component>
