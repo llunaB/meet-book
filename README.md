@@ -45,7 +45,7 @@
 - Openvidu
 
 ### 서버 아키텍쳐
-<img src="https://user-images.githubusercontent.com/78768769/156929819-aff7c17f-b082-4f2a-9135-a443d56ea6ea.png" width="600">
+<img width="600" alt="architecture" src="https://user-images.githubusercontent.com/78768769/156929937-71710193-5bb8-4fc5-9463-970664af0578.png">
 
 
 ### 🌈 commit convention
