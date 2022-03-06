@@ -32,9 +32,10 @@
 - Spring Boot 2.6.2
 - Spring Security
 - Spring Scheduler
-- MySQL: 8.0.28-0ubuntu0.20.04.3
+- MySQL: 8.0.28
 - NGINX
-- EC2
+- Jenkins
+- AWS EC2(Ubuntu 20.04 LTS)
 
 ##### ETC
 - Json Web Token
@@ -42,6 +43,9 @@
 - Jira
 - Webex
 - Openvidu
+
+### 서버 아키텍쳐
+<img src="https://user-images.githubusercontent.com/78768769/156929819-aff7c17f-b082-4f2a-9135-a443d56ea6ea.png" width="600">
 
 
 ### 🌈 commit convention
