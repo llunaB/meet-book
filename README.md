@@ -10,7 +10,7 @@ https://www.youtube.com/watch?v=ssAgi1jPhxo
 https://hilarious-belief-670.notion.site/afb96acfc684422ba883802cc2c4414a
 
 ### 최종 발표자료
-shorturl.at/foDY8
+https://shorturl.at/foDY8
 
 ### 핵심 기능
 - 도서 기반으로 화상모임 개최
