@@ -3,6 +3,9 @@
 ### 개발기간
 2022.01.10 ~ 02.18
 
+### 서비스 UCC
+https://www.youtube.com/watch?v=ssAgi1jPhxo
+
 ### 핵심 기능
 - 도서 기반으로 화상모임 개최
 - 질문과 답변 통한 모임 접속
