@@ -6,6 +6,12 @@
 ### 서비스 UCC
 https://www.youtube.com/watch?v=ssAgi1jPhxo
 
+### Notion 경로
+https://hilarious-belief-670.notion.site/afb96acfc684422ba883802cc2c4414a
+
+### 최종 발표자료
+shorturl.at/foDY8
+
 ### 핵심 기능
 - 도서 기반으로 화상모임 개최
 - 질문과 답변 통한 모임 접속
