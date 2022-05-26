@@ -10,7 +10,7 @@ https://www.youtube.com/watch?v=ssAgi1jPhxo
 https://hilarious-belief-670.notion.site/afb96acfc684422ba883802cc2c4414a
 
 ### 최종 발표자료
-https://shorturl.at/foDY8
+[https://shorturl.at/foDY8](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/d81e47a4-1ac6-455b-a8ca-f0820b1ae778/%E1%84%89%E1%85%A5%E1%84%8B%E1%85%AE%E1%86%AF_2%E1%84%87%E1%85%A1%E1%86%AB_A206_%E1%84%87%E1%85%A1%E1%86%AF%E1%84%91%E1%85%AD%E1%84%8C%E1%85%A1%E1%84%85%E1%85%AD.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220526%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220526T124122Z&X-Amz-Expires=86400&X-Amz-Signature=83f8639c3f4a5326a92d60c3386b51532eb1b54d2133ea2b94540cc6a7717b1a&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22%25E1%2584%2589%25E1%2585%25A5%25E1%2584%258B%25E1%2585%25AE%25E1%2586%25AF_2%25E1%2584%2587%25E1%2585%25A1%25E1%2586%25AB_A206_%25E1%2584%2587%25E1%2585%25A1%25E1%2586%25AF%25E1%2584%2591%25E1%2585%25AD%25E1%2584%258C%25E1%2585%25A1%25E1%2584%2585%25E1%2585%25AD.pdf%22&x-id=GetObject)
 
 ### 핵심 기능
 - 도서 기반으로 화상모임 개최
